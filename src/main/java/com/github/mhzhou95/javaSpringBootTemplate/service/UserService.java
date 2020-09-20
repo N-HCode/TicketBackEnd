@@ -28,7 +28,7 @@ public class UserService {
     }
 
     public User findById(Long id) {
-//        Optional<Person> person = personRepository.findById(id);
+//        Optional<User> user = userRepository.findById(id);
         User person = userRepository.findById(id).orElse(new User());
         return person;
     }
@@ -37,12 +37,12 @@ public class UserService {
     }
 
     public User delete(Long id) {
-        Optional<User> person = userRepository.findById(id);
+        Optional<User> user = userRepository.findById(id);
         userRepository.deleteById(id);
-        return person.get();
+        return user.get();
     }
 
-    public User editPerson(Long id, User person) {
+    public User editUser(Long id, User person) {
         User optionalUser = this.findById(id);
         User userBefore = optionalUser;
 
