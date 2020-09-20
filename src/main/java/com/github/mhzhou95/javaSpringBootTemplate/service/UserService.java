@@ -22,8 +22,8 @@ public class UserService {
 
     public User findById(Long id) {
 //        Optional<User> user = userRepository.findById(id);
-        User person = userRepository.findById(id).orElse(new User());
-        return person;
+        User user = userRepository.findById(id).orElse(new User());
+        return user;
     }
     public User createUser(User user) {
         return userRepository.save(user);
@@ -35,15 +35,15 @@ public class UserService {
         return user.get();
     }
 
-    public User editUser(Long id, User person) {
+    public User editUser(Long id, User user) {
         User optionalUser = this.findById(id);
         User userBefore = optionalUser;
 
-            if(person.getFirstName() != null){
-                userBefore.setFirstName(person.getFirstName());
+            if(user.getFirstName() != null){
+                userBefore.setFirstName(user.getFirstName());
             }
-            if(person.getLastName() != null){
-                userBefore.setLastName(person.getLastName());
+            if(user.getLastName() != null){
+                userBefore.setLastName(user.getLastName());
             }
             return userRepository.save(userBefore);
     }
