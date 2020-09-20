@@ -5,8 +5,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.util.Date;
-import
-import com.github.mhzhou95.javaSpringBootTemplate.UserRole;
 
 @Entity
 public class User {
@@ -22,14 +20,14 @@ public class User {
     public User() {
     }
 
-    public User(String firstName, String lastName, String email, Date dateCreated, Date lastLogin, Date lastModified) {
+    public User(String firstName, String lastName, String email, Date dateCreated, Date lastLogin, Date lastModified, String userRole) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.dateCreated = dateCreated;
         this.lastLogin = lastLogin;
         this.lastModified = lastModified;
-        this.userRole = UserRole.STANDARD.toString();
+        this.userRole = userRole;
     }
 
     public String getEmail() {
