@@ -12,6 +12,7 @@ public class User {
     private String firstName;
     private String lastName;
     private String email;
+    private String phoneNumber;
     private String userRole;
     private Date dateCreated;
     private Date lastLogin;
@@ -20,14 +21,20 @@ public class User {
     public User() {
     }
 
-    public User(String firstName, String lastName, String email, Date dateCreated, Date lastLogin, Date lastModified, String userRole) {
+    public User(String firstName, String lastName, String email, String userRole, String phoneNumber) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
-        this.dateCreated = dateCreated;
-        this.lastLogin = lastLogin;
-        this.lastModified = lastModified;
         this.userRole = userRole;
+        this.phoneNumber = phoneNumber;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
     public String getEmail() {
