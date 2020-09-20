@@ -1,7 +1,7 @@
 package com.github.mhzhou95.javaSpringBootTemplate.controller;
 
 import com.github.mhzhou95.javaSpringBootTemplate.model.Person;
-import com.github.mhzhou95.javaSpringBootTemplate.service.PersonService;
+import com.github.mhzhou95.javaSpringBootTemplate.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,15 +10,14 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 @RequestMapping(value = "/person")
 public class PersonController {
-    private PersonService service;
+    private UserService service;
 
     @Autowired
-    public PersonController(PersonService service) {
+    public PersonController(UserService service) {
         this.service = service;
     }
 
