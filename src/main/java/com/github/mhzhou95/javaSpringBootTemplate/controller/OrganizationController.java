@@ -1,7 +1,6 @@
 package com.github.mhzhou95.javaSpringBootTemplate.controller;
 
 import com.github.mhzhou95.javaSpringBootTemplate.model.Organization;
-import com.github.mhzhou95.javaSpringBootTemplate.model.User;
 import com.github.mhzhou95.javaSpringBootTemplate.service.OrganizationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
