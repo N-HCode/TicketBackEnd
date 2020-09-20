@@ -12,19 +12,19 @@ public class Organization {
     private String organizationName;
     private long accountNumber;
     private List<User> contacts = new ArrayList<>();
-    private List<Ticket> allUserCases = new ArrayList<>();
+    //private List<Ticket> allUserCases = new ArrayList<>();
     private String state;
     private String streetAddress;
     private String zipcode;
     private String Country;
     private String organizationPhoneNumber;
 
-    public Organization(Long id, String organizationName, long accountNumber, List<User> contacts, List<Ticket> allUserCases, String state, String streetAddress, String zipcode, String country, String organizationPhoneNumber) {
+    public Organization(Long id, String organizationName, long accountNumber/*,List<User> contacts, List<Ticket> allUserCases */, String state, String streetAddress, String zipcode, String country, String organizationPhoneNumber) {
         this.id = id;
         this.organizationName = organizationName;
         this.accountNumber = accountNumber;
         this.contacts = contacts;
-        this.allUserCases = allUserCases;
+//        this.allUserCases = allUserCases;
         this.state = state;
         this.streetAddress = streetAddress;
         this.zipcode = zipcode;
@@ -60,13 +60,13 @@ public class Organization {
         this.contacts = contacts;
     }
 
-    public List<Ticket> getAllUserCases() {
-        return allUserCases;
-    }
-
-    public void setAllUserCases(List<Ticket> allUserCases) {
-        this.allUserCases = allUserCases;
-    }
+//    public List<Ticket> getAllUserCases() {
+//        return allUserCases;
+//    }
+//
+//    public void setAllUserCases(List<Ticket> allUserCases) {
+//        this.allUserCases = allUserCases;
+//    }
 
     public String getState() {
         return state;
