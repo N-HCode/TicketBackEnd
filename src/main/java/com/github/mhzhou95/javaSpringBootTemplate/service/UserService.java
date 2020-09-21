@@ -5,6 +5,7 @@ import com.github.mhzhou95.javaSpringBootTemplate.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.Optional;
 
 @Service
@@ -20,31 +21,59 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public User findById(Long id) {
-//        Optional<User> user = userRepository.findById(id);
-        User user = userRepository.findById(id).orElse(new User());
+    public Optional<User> findById(Long id) {
+        // Use Spring's Crud Repository Method to findById to get back an optional
+        Optional<User> user = userRepository.findById(id);
+        // Return the optional and do the isPresent check on the controller
         return user;
     }
+
     public User createUser(User user) {
-        return userRepository.save(user);
+        // check if the username is already taken
+        User userToCheck = userRepository.findByUsernameEquals(user.getUsername());
+
+        // if we got back no User from the check save this new User
+        if(userToCheck == null) {
+            userRepository.save(user);
+            return user;
+        }
+        // return the user saved for the HTTP response
+        return null;
     }
 
     public User delete(Long id) {
+        // Use Spring's Crud Repository method to findById to get back an optional
         Optional<User> user = userRepository.findById(id);
-        userRepository.deleteById(id);
-        return user.get();
+        // Call the Crud Repository to deleteById if the Optional is Present
+        if(user.isPresent()) {
+            userRepository.deleteById(id);
+        }
+        // return the user that has been deleted or return null if not found
+        return user.orElse(null);
     }
 
     public User editUser(Long id, User user) {
-        User optionalUser = this.findById(id);
-        User userBefore = optionalUser;
+        // first use findById to look for user
+        Optional<User> optionalUser = this.findById(id);
 
-            if(user.getFirstName() != null){
-                userBefore.setFirstName(user.getFirstName());
+        // Declare a new empty User to be used to hold the user returned from calling this.findById
+        User checkForUser;
+
+        // Check the optional to see if anything is present then get the user object out else break out of this method
+        if(optionalUser.isPresent() ) {
+            checkForUser =  optionalUser.get();
+        }
+        else{
+            return null;
+        }
+
+        // check if there the fields from the JSON the user sent in are not empty
+        if(user.getFirstName() != null){
+                checkForUser.setFirstName(user.getFirstName());
             }
             if(user.getLastName() != null){
-                userBefore.setLastName(user.getLastName());
+                checkForUser.setLastName(user.getLastName());
             }
-            return userRepository.save(userBefore);
+            return userRepository.save(checkForUser);
     }
 }
