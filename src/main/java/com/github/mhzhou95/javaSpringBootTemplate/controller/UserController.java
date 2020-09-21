@@ -26,9 +26,10 @@ public class UserController {
     @RequestMapping(value = "/all", method = RequestMethod.GET)
     @GetMapping("all")
     public ResponseEntity<?> findAll(){
+        // Call the service to invoke the findAll method which returns a Iterable
         Iterable<User> allUser = service.findAll();
-        ResponseEntity<?> responseFindAll = new ResponseEntity<>(allUser, HttpStatus.OK);
-        return responseFindAll;
+        // Return the HTTP response with the Iterable, will be empty array if non created yet
+        return new ResponseEntity<>(allUser, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
@@ -39,14 +40,14 @@ public class UserController {
         if (userById.isPresent()){
             return new ResponseEntity<>(userById, HttpStatus.OK);
         }else{
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("User not found",HttpStatus.NOT_FOUND);
         }
     }
     @PostMapping("/create")
     public ResponseEntity<?> createUser(@RequestBody User user){
         // Call the service to create the user
         User responseBody = service.createUser(user);
-        // If the service accepts the Object it will return the User Object back otherwise null
+        // If the service accepts the Object it will return the User Object back otherwise null comes back
         if (responseBody != null){
             return new ResponseEntity<>(responseBody, HttpStatus.CREATED);
         }else{

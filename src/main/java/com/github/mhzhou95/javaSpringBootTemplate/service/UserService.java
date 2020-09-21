@@ -5,6 +5,7 @@ import com.github.mhzhou95.javaSpringBootTemplate.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -34,6 +35,7 @@ public class UserService {
 
         // if we got back no User from the check save this new User
         if(userToCheck == null) {
+            user.setDateCreated(Calendar.getInstance().getTime());
             userRepository.save(user);
             return user;
         }
