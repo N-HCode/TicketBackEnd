@@ -1,31 +1,40 @@
 package com.github.mhzhou95.javaSpringBootTemplate.model;
 
 import com.github.mhzhou95.javaSpringBootTemplate.model.Ticket;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import java.util.ArrayList;
+
+import javax.persistence.*;
+import java.util.Date;
 import java.util.List;
 
-public class Organization implements IOrganization {
+@Entity
+public class Organization {
+    //Id is auto generated. Do not add to constructor or create a getter/setter or it will create error.
+    //Most likely the error missing default constructor for the Id
     @Id @GeneratedValue(strategy = GenerationType.AUTO) private Long id;
 
     private String organizationName;
     private long accountNumber;
-    private List<User> contacts = new ArrayList<>();
-    private List<Ticket> allUserCases = new ArrayList<>();
+    //Need this tag for collections for some reason. Don't know why it fixed the issue:
+    //"Could not determine type for: java.util.List."
+    @ElementCollection
+    private List<User> contacts;
+    @ElementCollection
+    private List<Ticket> allUserCases;
     private boolean isForeignAddress;
     private String state;
     private String streetAddress;
     private String zipcode;
     private String country;
     private String organizationPhoneNumber;
+    private Date dateCreated;
+    private Date dateModified;
 
+    //Kept getting the error "error missing default constructor"
+    //For some reason adding in an empty constructor seems to solve the issue. Not sure why
     public Organization() {
     }
 
-    public Organization(Long id, String organizationName, long accountNumber, List<User> contacts, List<Ticket> allUserCases , boolean isForeignAddress, String state, String streetAddress, String zipcode, String country, String organizationPhoneNumber) {
-        this.id = id;
+    public Organization(String organizationName, long accountNumber, List<User> contacts, List<Ticket> allUserCases, boolean isForeignAddress, String state, String streetAddress, String zipcode, String country, String organizationPhoneNumber, Date dateCreated, Date dateModified) {
         this.organizationName = organizationName;
         this.accountNumber = accountNumber;
         this.contacts = contacts;
@@ -36,110 +45,128 @@ public class Organization implements IOrganization {
         this.zipcode = zipcode;
         this.country = country;
         this.organizationPhoneNumber = organizationPhoneNumber;
+        this.dateCreated = dateCreated;
+        this.dateModified = dateModified;
     }
 
-    @Override
+    //Id is auto-generated so we do not have a setter.
+    //However, we need this getter so that the Json response will give the Id
+    //in its http response.
     public Long getId() {
-        return id;
-    }
+           return id;
+       }
 
-    @Override
     public String getOrganizationName() {
         return organizationName;
     }
 
-    @Override
+
     public void setOrganizationName(String organizationName) {
         this.organizationName = organizationName;
     }
 
-    @Override
+
     public long getAccountNumber() {
         return accountNumber;
     }
 
-    @Override
+
     public void setAccountNumber(long accountNumber) {
         this.accountNumber = accountNumber;
     }
 
-    @Override
+
     public List<User> getContacts() {
         return contacts;
     }
 
-    @Override
+
     public void setContacts(List<User> contacts) {
         this.contacts = contacts;
     }
 
-    @Override
+
     public List<Ticket> getAllUserCases() {
         return allUserCases;
     }
 
-////    A set contact list is probably not needed.
-//    public void setAllUserCases(List<Ticket> allUserCases) {
-//        this.allUserCases = allUserCases;
-//    }
-
-    @Override
-    public String getState() {
-        return state;
+    public void setAllUserCases(List<Ticket> allUserCases) {
+        this.allUserCases = allUserCases;
     }
 
-    @Override
-    public void setState(String state) {
-        this.state = state;
-    }
 
-    @Override
-    public String getStreetAddress() {
-        return streetAddress;
-    }
-
-    @Override
-    public void setStreetAddress(String streetAddress) {
-        this.streetAddress = streetAddress;
-    }
-
-    @Override
-    public String getZipcode() {
-        return zipcode;
-    }
-
-    @Override
-    public void setZipcode(String zipcode) {
-        this.zipcode = zipcode;
-    }
-
-    @Override
-    public String getCountry() {
-        return country;
-    }
-
-    @Override
-    public void setCountry(String country) {
-        this.country = country;
-    }
-
-    @Override
-    public String getOrganizationPhoneNumber() {
-        return organizationPhoneNumber;
-    }
-
-    @Override
-    public void setOrganizationPhoneNumber(String organizationPhoneNumber) {
-        this.organizationPhoneNumber = organizationPhoneNumber;
-    }
-
-    @Override
     public boolean isForeignAddress() {
         return isForeignAddress;
     }
 
-    @Override
+
     public void setForeignAddress(boolean foreignAddress) {
-        this.isForeignAddress = foreignAddress;
+        isForeignAddress = foreignAddress;
+    }
+
+
+    public String getState() {
+        return state;
+    }
+
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+
+    public String getStreetAddress() {
+        return streetAddress;
+    }
+
+
+    public void setStreetAddress(String streetAddress) {
+        this.streetAddress = streetAddress;
+    }
+
+
+    public String getZipcode() {
+        return zipcode;
+    }
+
+
+    public void setZipcode(String zipcode) {
+        this.zipcode = zipcode;
+    }
+
+
+    public String getCountry() {
+        return country;
+    }
+
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+
+    public String getOrganizationPhoneNumber() {
+        return organizationPhoneNumber;
+    }
+
+
+    public void setOrganizationPhoneNumber(String organizationPhoneNumber) {
+        this.organizationPhoneNumber = organizationPhoneNumber;
+    }
+
+    public Date getDateCreated() {
+        return dateCreated;
+    }
+
+    public void setDateCreated(Date dateCreated) {
+        this.dateCreated = dateCreated;
+    }
+
+    public Date getDateModified() {
+        return dateModified;
+    }
+
+    public void setDateModified(Date dateModified) {
+        this.dateModified = dateModified;
     }
 }

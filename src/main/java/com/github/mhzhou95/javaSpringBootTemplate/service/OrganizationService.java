@@ -1,13 +1,13 @@
 package com.github.mhzhou95.javaSpringBootTemplate.service;
 
 import com.github.mhzhou95.javaSpringBootTemplate.model.Organization;
-import com.github.mhzhou95.javaSpringBootTemplate.model.User;
 import com.github.mhzhou95.javaSpringBootTemplate.repository.OrganizationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -20,8 +20,10 @@ public class OrganizationService {
         this.organizationRepository = organizationRepository;
     }
 
-    public Iterable<Organization> findAll() {
-        return organizationRepository.findAll();
+    public ResponseEntity<?> findAll()
+    {
+        Iterable<Organization> AllOrg = organizationRepository.findAll();
+        return new ResponseEntity<>(AllOrg, HttpStatus.OK);
     }
 
     public ResponseEntity<?> findById(Long id) {
@@ -34,9 +36,9 @@ public class OrganizationService {
 
         //See if there is a value in the Optional. If not, send back a 404 error.
         if (organization.isPresent()){
-            responseFindId = new ResponseEntity(organization, HttpStatus.OK);
+            responseFindId = new ResponseEntity<>(organization, HttpStatus.OK);
         }else{
-            responseFindId = new ResponseEntity(HttpStatus.NOT_FOUND);
+            responseFindId = new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
         return responseFindId;
@@ -44,25 +46,27 @@ public class OrganizationService {
 
     public ResponseEntity<?> createOrganization(Organization organization)
     {
-        ResponseEntity<?> responseCreateUser;
+        ResponseEntity<?> responseCreateOrg;
 
         //make sure the body is not null
         if (organization != null){
             Organization response = organizationRepository.save(organization);
-            responseCreateUser = new ResponseEntity(response, HttpStatus.CREATED);
+            responseCreateOrg = new ResponseEntity(response, HttpStatus.CREATED);
         } else {
-            responseCreateUser = new ResponseEntity(HttpStatus.BAD_REQUEST);
+            responseCreateOrg = new ResponseEntity(HttpStatus.BAD_REQUEST);
         }
 
 
-        return responseCreateUser;
+        return responseCreateOrg;
     }
 
     public ResponseEntity<?> delete(Long id) {
+        //Could not write JSON: failed to lazily initialize a collection
         ResponseEntity<?> responseFindId = this.findById(id);
 
         if(responseFindId.getStatusCode() == HttpStatus.OK ){
             organizationRepository.deleteById(id);
+            responseFindId = new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
 
         return responseFindId;
