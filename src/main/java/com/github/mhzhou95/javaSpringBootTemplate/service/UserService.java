@@ -22,10 +22,10 @@ public class UserService {
         return userRepository.findAll();
     }
 
+
     public Optional<User> findById(Long id) {
         // Use Spring's Crud Repository Method to findById to get back an optional
         Optional<User> user = userRepository.findById(id);
-        // Return the optional and do the isPresent check on the controller
         return user;
     }
 
