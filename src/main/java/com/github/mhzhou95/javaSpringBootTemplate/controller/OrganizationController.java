@@ -58,12 +58,14 @@ public class OrganizationController {
     public ResponseEntity<?> createOrg(@RequestBody Organization organization){
         ResponseEntity<?> responseCreateOrg;
 
+        //create org returns the org that it created. If it could not create
+        //then something may have happened.
         Organization responseOrg = service.createOrganization(organization);
 
         if(responseOrg != null){
             responseCreateOrg = new ResponseEntity<>(responseOrg,HttpStatus.CREATED);
         }else{
-            responseCreateOrg = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            responseCreateOrg = new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         return responseCreateOrg;
