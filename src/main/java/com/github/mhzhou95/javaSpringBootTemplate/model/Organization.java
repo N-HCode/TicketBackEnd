@@ -4,7 +4,7 @@ import com.github.mhzhou95.javaSpringBootTemplate.model.Ticket;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.List;
+import java.util.Set;
 
 @Entity
 public class Organization {
@@ -15,11 +15,11 @@ public class Organization {
     private String organizationName;
     private long accountNumber;
     //Need this tag for collections for some reason. Don't know why it fixed the issue:
-    //"Could not determine type for: java.util.List."
-    @ElementCollection
-    private List<User> contacts;
-    @ElementCollection
-    private List<Ticket> allUserCases;
+    //"Could not determine type for: java.util.Set."
+    @OneToMany(fetch = FetchType.LAZY)
+    private Set<User> contacts;
+    @OneToMany(fetch = FetchType.LAZY)
+    private Set<Ticket> allUserCases;
     private boolean isForeignAddress;
     private String state;
     private String streetAddress;
@@ -34,7 +34,7 @@ public class Organization {
     public Organization() {
     }
 
-    public Organization(String organizationName, long accountNumber, List<User> contacts, List<Ticket> allUserCases, boolean isForeignAddress, String state, String streetAddress, String zipcode, String country, String organizationPhoneNumber, Date dateCreated, Date dateModified) {
+    public Organization(String organizationName, long accountNumber, Set<User> contacts, Set<Ticket> allUserCases, boolean isForeignAddress, String state, String streetAddress, String zipcode, String country, String organizationPhoneNumber, Date dateCreated, Date dateModified) {
         this.organizationName = organizationName;
         this.accountNumber = accountNumber;
         this.contacts = contacts;
@@ -76,21 +76,21 @@ public class Organization {
     }
 
 
-    public List<User> getContacts() {
+    public Set<User> getContacts() {
         return contacts;
     }
 
 
-    public void setContacts(List<User> contacts) {
+    public void setContacts(Set<User> contacts) {
         this.contacts = contacts;
     }
 
 
-    public List<Ticket> getAllUserCases() {
+    public Set<Ticket> getAllUserCases() {
         return allUserCases;
     }
 
-    public void setAllUserCases(List<Ticket> allUserCases) {
+    public void setAllUserCases(Set<Ticket> allUserCases) {
         this.allUserCases = allUserCases;
     }
 

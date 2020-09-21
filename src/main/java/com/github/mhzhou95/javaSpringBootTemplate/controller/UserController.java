@@ -20,8 +20,8 @@ public class UserController {
         this.service = service;
     }
 
-    @RequestMapping(value = "/", method = RequestMethod.GET)
-    @GetMapping("/")
+    @RequestMapping(value = "/all", method = RequestMethod.GET)
+    @GetMapping("all")
     public ResponseEntity<?> findAll(){
         Iterable<User> allUser = service.findAll();
         List<User> list = new ArrayList<>();
@@ -36,7 +36,7 @@ public class UserController {
         ResponseEntity responseFindId = new ResponseEntity(userById, HttpStatus.OK);
         return responseFindId;
     }
-    @PostMapping("/")
+    @PostMapping("/create")
     public ResponseEntity<?> createUser(@RequestBody User user){
         User responseBody = service.createUser(user);
         ResponseEntity<?> responseCreateUser = new ResponseEntity<>(responseBody, HttpStatus.CREATED);
