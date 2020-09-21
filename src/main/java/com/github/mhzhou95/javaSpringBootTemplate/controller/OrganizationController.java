@@ -20,7 +20,7 @@ public class OrganizationController {
         this.service = service;
     }
 
-    @GetMapping("/findAll")
+    @GetMapping("/all")
     public ResponseEntity<?> findAll(){
         return service.findAll();
     }
@@ -31,7 +31,7 @@ public class OrganizationController {
         return service.findById(id);
     }
 
-    @PostMapping("/create-org")
+    @PostMapping("/create")
     public ResponseEntity<?> createOrg(@RequestBody Organization organization){
         return service.createOrganization(organization);
 

@@ -1,7 +1,6 @@
 package com.github.mhzhou95.javaSpringBootTemplate.model;
 
 import com.github.mhzhou95.javaSpringBootTemplate.model.Ticket;
-
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
