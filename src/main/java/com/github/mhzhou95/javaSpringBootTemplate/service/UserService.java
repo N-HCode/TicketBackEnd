@@ -22,7 +22,7 @@ public class UserService {
 
     public User findById(Long id) {
 //        Optional<User> user = userRepository.findById(id);
-        User user = userRepository.findById(id).orElse(new User());
+        User user = userRepository.findById(id).orElse(null);
         return user;
     }
     public User createUser(User user) {
