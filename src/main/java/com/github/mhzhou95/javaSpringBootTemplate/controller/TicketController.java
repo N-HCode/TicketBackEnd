@@ -23,8 +23,8 @@ public class TicketController {
         this.service = service;
     }
 
-    @RequestMapping(value = "/", method = RequestMethod.GET)
-    @GetMapping("/")
+    @RequestMapping(value = "/all", method = RequestMethod.GET)
+    @GetMapping("/all")
     public ResponseEntity<?> findAll(){
         Iterable<Ticket> allTicket = service.findAll();
         ResponseEntity<?> responseFindAll = new ResponseEntity<>(allTicket, HttpStatus.OK);
@@ -37,7 +37,7 @@ public class TicketController {
         ResponseEntity responseFindId = new ResponseEntity(ticketById, HttpStatus.OK);
         return responseFindId;
     }
-    @PostMapping("/")
+    @PostMapping("/create")
     public ResponseEntity<?> createTicket(@RequestBody Ticket ticket){
         Ticket responseBody = service.createTicket(ticket);
         ResponseEntity<?> responseCreateTicket = new ResponseEntity<>(responseBody, HttpStatus.CREATED);
