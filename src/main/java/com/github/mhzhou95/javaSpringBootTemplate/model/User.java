@@ -1,11 +1,11 @@
 package com.github.mhzhou95.javaSpringBootTemplate.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class User {
@@ -21,6 +21,12 @@ public class User {
     private Date lastLogin;
     private Date lastModified;
 
+    @OneToMany(fetch = FetchType.LAZY)
+    private Set<Ticket> tickets;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    private Set<Organization> organizations;
+
     public User() {
     }
 
@@ -32,14 +38,12 @@ public class User {
         this.email = email;
         this.userRole = userRole;
         this.phoneNumber = phoneNumber;
+        this.tickets = new HashSet<>();
+        this.organizations = new HashSet<>();
     }
 
     public String getUsername() {
         return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
     }
 
     public String getPassword() {
@@ -117,4 +121,20 @@ public class User {
     public void setLastModified(Date lastModified) {
         this.lastModified = lastModified;
     }
+
+    public Set<Ticket> getTickets() {
+        return tickets;
+    }
+
+    public void addTicket(Ticket ticket){
+        this.tickets.add(ticket);
+    }
+
+    public Set<Organization> getOrganizations() {
+        return organizations;
+    }
+
+   public void addOrganization(Organization organization){
+        this.organizations.add(organization);
+   }
 }
