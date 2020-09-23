@@ -1,6 +1,8 @@
 package com.github.mhzhou95.javaSpringBootTemplate.controller;
 
+
 import com.github.mhzhou95.javaSpringBootTemplate.model.Organization;
+import com.github.mhzhou95.javaSpringBootTemplate.model.Ticket;
 import com.github.mhzhou95.javaSpringBootTemplate.model.User;
 import com.github.mhzhou95.javaSpringBootTemplate.service.OrganizationService;
 import com.github.mhzhou95.javaSpringBootTemplate.service.UserService;
@@ -11,6 +13,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 //Added Swagger documentation. Can be viewed at http://localhost:8080/swagger-ui/#/
@@ -56,8 +61,8 @@ public class OrganizationController {
 
     @PostMapping("/create")
     public ResponseEntity<?> createOrg(@RequestBody Organization organization){
-        ResponseEntity<?> responseCreateOrg;
 
+        ResponseEntity<?> responseCreateOrg;
         //create org returns the org that it created. If it could not create
         //then something may have happened.
         Organization responseOrg = service.createOrganization(organization);
@@ -88,8 +93,11 @@ public class OrganizationController {
     }
 
     @PutMapping("/{id}/edit-name")
-    public ResponseEntity<?> editOrg(@PathVariable Long id, @RequestBody String name){
+    public ResponseEntity<?> editOrgName(@PathVariable Long id, @RequestBody String name){
 
+        //Should we check if the organization is in the database?
+        //Or will we assume that it is in the database because the user can
+        //access the organization
         Organization editableOrg = service.findById(id);
 
         if(editableOrg != null){
@@ -102,19 +110,35 @@ public class OrganizationController {
         }else{
             return new ResponseEntity<>("Organization not found", HttpStatus.NOT_FOUND);
         }
+    }
 
+    @PutMapping("/{id}/edit-address")
+    public ResponseEntity<?> editOrgAddress(@PathVariable Long id, @RequestBody Organization newOrgInfo){
 
+        Organization editableOrg = service.findById(id);
+
+        if(editableOrg != null){
+            if (newOrgInfo != null){
+                Organization editedOrg= service.editOrgAddress(editableOrg, newOrgInfo);
+                return new ResponseEntity<>(editedOrg, HttpStatus.OK);
+            }else{
+                return new ResponseEntity<>("New Organziation not valid", HttpStatus.BAD_REQUEST);
+            }
+        }else{
+            return new ResponseEntity<>("Organization not found", HttpStatus.NOT_FOUND);
+        }
 
     }
 
+
     @PutMapping("/{id}/add-user")
-    public ResponseEntity<?> editOrg(@PathVariable Long id, @RequestBody Long userId){
+    public ResponseEntity<?> addUserToOrg(@PathVariable Long id, @RequestBody Long userId){
 
         Organization editableOrg = service.findById(id);
         if(editableOrg != null){
-            User user = userService.findById(userId);
-            if (user != null){
-                Set<User> newOrgContacts= service.addUsertoOrgContacts(editableOrg, user);
+            Optional<User> user = userService.findById(userId);
+            if (user.isPresent()){
+                Set<User> newOrgContacts= service.addUserToOrgContacts(editableOrg, user.get());
                 return new ResponseEntity<>(newOrgContacts, HttpStatus.OK);
             }else{
                 return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
@@ -124,7 +148,25 @@ public class OrganizationController {
             return new ResponseEntity<>("Organization not found", HttpStatus.NOT_FOUND);
         }
 
+    }
+
+    @PutMapping("/{id}/add-ticket")
+    public ResponseEntity<?> addTicketToOrg(@PathVariable Long id, @RequestBody Ticket ticket){
+
+        Organization editableOrg = service.findById(id);
+        if(editableOrg != null){
+            if (ticket != null){
+                Set<Ticket> newOrgTickets= service.addTicketToOrgCases(editableOrg, ticket);
+                return new ResponseEntity<>(newOrgTickets, HttpStatus.OK);
+            }else{
+                return new ResponseEntity<>("Invalid Ticket", HttpStatus.BAD_REQUEST);
+            }
+
+        }else{
+            return new ResponseEntity<>("Organization not found", HttpStatus.NOT_FOUND);
+        }
 
     }
+
 
 }
