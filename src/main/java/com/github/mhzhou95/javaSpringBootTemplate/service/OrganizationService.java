@@ -69,13 +69,19 @@ public class OrganizationService {
         return editableOrg;
     }
 
-    public Organization editOrgAddress(Organization editableOrg, Organization newOrgInfo) {
+    public Organization editOrgAddress(Long id, Organization newOrgInfo) {
+
+        Organization editableOrg = this.findById(id);
+
         editableOrg.setForeignAddress(newOrgInfo.isForeignAddress());
+        editableOrg.setOrganizationName(newOrgInfo.getOrganizationName());
         editableOrg.setDateModified(ZonedDateTime.now());
         if(newOrgInfo.isForeignAddress()){
             editableOrg.setCity(newOrgInfo.getCity());
+            editableOrg.setState("");
             editableOrg.setStreetAddress(newOrgInfo.getStreetAddress());
             editableOrg.setCountry(newOrgInfo.getCountry());
+            editableOrg.setZipcode("");
         }else{
             editableOrg.setCity(newOrgInfo.getCity());
             editableOrg.setState(newOrgInfo.getState());

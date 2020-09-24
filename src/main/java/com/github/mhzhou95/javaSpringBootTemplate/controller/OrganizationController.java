@@ -92,40 +92,14 @@ public class OrganizationController {
 
     }
 
-    @PutMapping("/{id}/edit-name")
-    public ResponseEntity<?> editOrgName(@PathVariable Long id, @RequestBody String name){
-
-        //Should we check if the organization is in the database?
-        //Or will we assume that it is in the database because the user can
-        //access the organization
-        Organization editableOrg = service.findById(id);
-
-        if(editableOrg != null){
-            if (name != null && !name.equals("")){
-                editableOrg = service.editOrgName(editableOrg, name);
-                return new ResponseEntity<>(editableOrg, HttpStatus.OK);
-            }else{
-                return new ResponseEntity<>("Name not valid", HttpStatus.BAD_REQUEST);
-            }
-        }else{
-            return new ResponseEntity<>("Organization not found", HttpStatus.NOT_FOUND);
-        }
-    }
-
-    @PutMapping("/{id}/edit-address")
+    @PutMapping("/{id}/edit-org-info")
     public ResponseEntity<?> editOrgAddress(@PathVariable Long id, @RequestBody Organization newOrgInfo){
 
-        Organization editableOrg = service.findById(id);
-
-        if(editableOrg != null){
-            if (newOrgInfo != null){
-                Organization editedOrg= service.editOrgAddress(editableOrg, newOrgInfo);
-                return new ResponseEntity<>(editedOrg, HttpStatus.OK);
-            }else{
-                return new ResponseEntity<>("New Organziation not valid", HttpStatus.BAD_REQUEST);
-            }
+        if (newOrgInfo != null){
+            Organization editedOrg= service.editOrgAddress(id, newOrgInfo);
+            return new ResponseEntity<>(editedOrg, HttpStatus.OK);
         }else{
-            return new ResponseEntity<>("Organization not found", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("New Organization not valid", HttpStatus.BAD_REQUEST);
         }
 
     }

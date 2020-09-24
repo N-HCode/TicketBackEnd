@@ -3,6 +3,7 @@ package com.github.mhzhou95.javaSpringBootTemplate.model;
 
 import com.github.mhzhou95.javaSpringBootTemplate.model.Ticket;
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.Set;
 import java.time.ZonedDateTime;
@@ -13,7 +14,11 @@ public class Organization {
     //Most likely the error missing default constructor for the Id
     @Id @GeneratedValue(strategy = GenerationType.AUTO) private Long id;
 
+    @NotNull
+    @Column(unique = true)
     private String organizationName;
+    @NotNull
+    @Column(unique = true)
     private long accountNumber;
     //Need this tag for collections for some reason. Don't know why it fixed the issue:
     //"Could not determine type for: java.util.Set."
@@ -21,7 +26,7 @@ public class Organization {
     private Set<User> contacts;
     @OneToMany(fetch = FetchType.LAZY)
     Set<Ticket> allUsersTickets;
-    private boolean isForeignAddress = false;
+    private boolean isForeignAddress;
     private String city;
     private String state;
     private String streetAddress;
@@ -29,11 +34,13 @@ public class Organization {
     private String country;
     private String organizationPhoneNumber;
     //the java.time is the newest java date API
-    private ZonedDateTime dateCreated = ZonedDateTime.now();
-    private ZonedDateTime dateModified;
+    private final ZonedDateTime dateCreated = ZonedDateTime.now();
+    private ZonedDateTime dateModified = ZonedDateTime.now();;
 
     //Kept getting the error "error missing default constructor"
     //For some reason adding in an empty constructor seems to solve the issue. Not sure why
+
+
     public Organization() {
     }
 
