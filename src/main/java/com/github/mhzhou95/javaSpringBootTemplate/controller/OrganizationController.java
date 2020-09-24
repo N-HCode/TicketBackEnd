@@ -1,6 +1,8 @@
 package com.github.mhzhou95.javaSpringBootTemplate.controller;
 
+
 import com.github.mhzhou95.javaSpringBootTemplate.model.Organization;
+import com.github.mhzhou95.javaSpringBootTemplate.model.Ticket;
 import com.github.mhzhou95.javaSpringBootTemplate.model.User;
 import com.github.mhzhou95.javaSpringBootTemplate.service.OrganizationService;
 import com.github.mhzhou95.javaSpringBootTemplate.service.UserService;
@@ -11,6 +13,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 //Added Swagger documentation. Can be viewed at http://localhost:8080/swagger-ui/#/
@@ -56,14 +61,16 @@ public class OrganizationController {
 
     @PostMapping("/create")
     public ResponseEntity<?> createOrg(@RequestBody Organization organization){
-        ResponseEntity<?> responseCreateOrg;
 
+        ResponseEntity<?> responseCreateOrg;
+        //create org returns the org that it created. If it could not create
+        //then something may have happened.
         Organization responseOrg = service.createOrganization(organization);
 
         if(responseOrg != null){
             responseCreateOrg = new ResponseEntity<>(responseOrg,HttpStatus.CREATED);
         }else{
-            responseCreateOrg = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            responseCreateOrg = new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         return responseCreateOrg;
@@ -85,34 +92,27 @@ public class OrganizationController {
 
     }
 
-    @PutMapping("/{id}/edit-name")
-    public ResponseEntity<?> editOrg(@PathVariable Long id, @RequestBody String name){
+    @PutMapping("/{id}/edit-org-info")
+    public ResponseEntity<?> editOrgAddress(@PathVariable Long id, @RequestBody Organization newOrgInfo){
 
-        Organization editableOrg = service.findById(id);
-
-        if(editableOrg != null){
-            if (name != null && !name.equals("")){
-                editableOrg = service.editOrgName(editableOrg, name);
-                return new ResponseEntity<>(editableOrg, HttpStatus.OK);
-            }else{
-                return new ResponseEntity<>("Name not valid", HttpStatus.BAD_REQUEST);
-            }
+        if (newOrgInfo != null){
+            Organization editedOrg= service.editOrgAddress(id, newOrgInfo);
+            return new ResponseEntity<>(editedOrg, HttpStatus.OK);
         }else{
-            return new ResponseEntity<>("Organization not found", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("New Organization not valid", HttpStatus.BAD_REQUEST);
         }
-
-
 
     }
 
+
     @PutMapping("/{id}/add-user")
-    public ResponseEntity<?> editOrg(@PathVariable Long id, @RequestBody Long userId){
+    public ResponseEntity<?> addUserToOrg(@PathVariable Long id, @RequestBody Long userId){
 
         Organization editableOrg = service.findById(id);
         if(editableOrg != null){
-            User user = userService.findById(userId);
-            if (user != null){
-                Set<User> newOrgContacts= service.addUsertoOrgContacts(editableOrg, user);
+            Optional<User> user = userService.findById(userId);
+            if (user.isPresent()){
+                Set<User> newOrgContacts= service.addUserToOrgContacts(editableOrg, user.get());
                 return new ResponseEntity<>(newOrgContacts, HttpStatus.OK);
             }else{
                 return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
@@ -122,7 +122,25 @@ public class OrganizationController {
             return new ResponseEntity<>("Organization not found", HttpStatus.NOT_FOUND);
         }
 
+    }
+
+    @PutMapping("/{id}/add-ticket")
+    public ResponseEntity<?> addTicketToOrg(@PathVariable Long id, @RequestBody Ticket ticket){
+
+        Organization editableOrg = service.findById(id);
+        if(editableOrg != null){
+            if (ticket != null){
+                Set<Ticket> newOrgTickets= service.addTicketToOrgCases(editableOrg, ticket);
+                return new ResponseEntity<>(newOrgTickets, HttpStatus.OK);
+            }else{
+                return new ResponseEntity<>("Invalid Ticket", HttpStatus.BAD_REQUEST);
+            }
+
+        }else{
+            return new ResponseEntity<>("Organization not found", HttpStatus.NOT_FOUND);
+        }
 
     }
+
 
 }
