@@ -64,15 +64,16 @@ public class UserService {
 
         // Check the optional to see if anything is present then get the user object out else break out of this method
         if(findUser.isPresent() ) {
-            User returnedUser = findUser.get();
+//            User returnedUser = findUser.get();
             // Set the changeable fields to the new fields if any change
-            returnedUser.setFirstName(user.getFirstName());
-            returnedUser.setLastName(user.getLastName());
-            returnedUser.setEmail(user.getEmail());
-            returnedUser.setPassword(user.getPassword());
-            returnedUser.setPhoneNumber(user.getPhoneNumber());
-            returnedUser.setLastModified(Calendar.getInstance().getTime());
-            return userRepository.save(returnedUser);
+//            returnedUser.setFirstName(user.getFirstName());
+//            returnedUser.setLastName(user.getLastName());
+//            returnedUser.setEmail(user.getEmail());
+//            returnedUser.setPassword(user.getPassword());
+//            returnedUser.setPhoneNumber(user.getPhoneNumber());
+//            returnedUser.setLastModified(Calendar.getInstance().getTime());
+//            return userRepository.save(returnedUser);
+            return userRepository.save(user);
         }
         else{
             return null;
@@ -105,7 +106,7 @@ public class UserService {
         // check if the user was found
         if(user.isPresent()) {
             // set the organization as the user
-            user.get().addOrganization(organization);
+            user.get().setOrganization(organization);
             return organization;
         }
         return null;

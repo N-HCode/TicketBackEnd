@@ -31,9 +31,9 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity findById(@PathVariable Long idOfUserToFind){
+    public ResponseEntity findById(@PathVariable Long id){
         // Call the service to invoke findById method
-        Optional<User> userById = service.findById(idOfUserToFind);
+        Optional<User> userById = service.findById(id);
         
         // check if the user was sent back from service to see if it passed
         if (userById.isPresent()){
@@ -60,9 +60,9 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteUser(@PathVariable Long idUserToDelete){
+    public ResponseEntity<?> deleteUser(@PathVariable Long id){
         // Call the service to delete the User using Id
-        User responseDeleteUser = service.delete(idUserToDelete);
+        User responseDeleteUser = service.delete(id);
 
         // check if the User was sent back from service to see if it passed
         if (responseDeleteUser != null){
@@ -75,9 +75,9 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> editUser(@PathVariable Long idUserToEdit, @RequestBody User userToEdit){
+    public ResponseEntity<?> editUser(@PathVariable Long id, @RequestBody User userToEdit){
         // call the service to try to edit the User using id and body
-        User responseEditUser = service.editUser(idUserToEdit, userToEdit);
+        User responseEditUser = service.editUser(id, userToEdit);
 
         // check if the user was sent back from service to see if it passed
         if (responseEditUser != null){
@@ -105,9 +105,9 @@ public class UserController {
     }
 
     @PostMapping("/ticket")
-    public ResponseEntity<?> addTicketToUser(@RequestParam Long idOfUser,@RequestBody Ticket ticketToAddToUser){
+    public ResponseEntity<?> addTicketToUser(@RequestParam Long id,@RequestBody Ticket ticketToAddToUser){
         // call the service to look for the user and then add the ticket to the user
-        Ticket responseAddTicket = service.addTicketToUser(idOfUser, ticketToAddToUser);
+        Ticket responseAddTicket = service.addTicketToUser(id, ticketToAddToUser);
         // check if the ticket was sent back from service to see if it passed
         if( responseAddTicket != null) {
             // response to send back if success
@@ -119,9 +119,9 @@ public class UserController {
     }
 
     @PostMapping("/organization")
-    public ResponseEntity<?> addOrganizationToUser(@RequestParam Long idOfUser, @RequestBody Organization organization){
+    public ResponseEntity<?> addOrganizationToUser(@RequestParam Long id, @RequestBody Organization organization){
         // call the service to add the organization to the user
-        Organization responseAddOrganization = service.addOrganizationToUser(idOfUser, organization);
+        Organization responseAddOrganization = service.addOrganizationToUser(id, organization);
 
         // check if the organization was sent back from service to see if it passed
         if(responseAddOrganization != null){

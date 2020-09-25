@@ -2,7 +2,6 @@ package com.github.mhzhou95.javaSpringBootTemplate.model;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -10,7 +9,7 @@ import java.util.Set;
 @Entity
 public class User {
     @Id @GeneratedValue(strategy = GenerationType.AUTO) private Long id;
-    @NotNull String username;
+    @NotNull @Column(unique = true) String username;
     @NotNull String password;
     private String firstName;
     private String lastName;
@@ -21,11 +20,11 @@ public class User {
     private Date lastLogin;
     private Date lastModified;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.EAGER)
     private Set<Ticket> tickets;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    private Set<Organization> organizations;
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Organization organization;
 
     public User() {
     }
@@ -39,7 +38,6 @@ public class User {
         this.userRole = userRole;
         this.phoneNumber = phoneNumber;
         this.tickets = new HashSet<>();
-        this.organizations = new HashSet<>();
     }
 
     public String getUsername() {
@@ -130,11 +128,11 @@ public class User {
         this.tickets.add(ticket);
     }
 
-    public Set<Organization> getOrganizations() {
-        return organizations;
+    public Organization getOrganization() {
+        return organization;
     }
 
-   public void addOrganization(Organization organization){
-        this.organizations.add(organization);
-   }
+    public void setOrganization(Organization organization) {
+        this.organization = organization;
+    }
 }
