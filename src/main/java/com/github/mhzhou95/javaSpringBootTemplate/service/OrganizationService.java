@@ -95,7 +95,7 @@ public class OrganizationService {
     }
 
     public Set<User> addUserToOrgContacts(Organization org, User user){
-        Set<User> orgContacts = org.getContacts();
+        Set<User> orgContacts = org.getUsers();
         orgContacts.add(user);
         return orgContacts;
     }
