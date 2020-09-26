@@ -4,9 +4,8 @@ package com.github.mhzhou95.javaSpringBootTemplate.model;
 import com.github.mhzhou95.javaSpringBootTemplate.model.Ticket;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.Set;
-import java.time.ZonedDateTime;
 
 @Entity
 public class Organization {
@@ -34,8 +33,8 @@ public class Organization {
     private String country;
     private String organizationPhoneNumber;
     //the java.time is the newest java date API
-    private final ZonedDateTime dateCreated = ZonedDateTime.now();
-    private ZonedDateTime dateModified = ZonedDateTime.now();;
+    private final LocalDateTime dateCreated = LocalDateTime.now();
+    private LocalDateTime dateModified = LocalDateTime.now();;
 
     //Kept getting the error "error missing default constructor"
     //For some reason adding in an empty constructor seems to solve the issue. Not sure why
@@ -72,9 +71,6 @@ public class Organization {
         return accountNumber;
     }
 
-    public ZonedDateTime getDateCreated() {
-        return dateCreated;
-    }
 
     public Set<Ticket> getAllUsersTickets() {
         return allUsersTickets;
@@ -152,11 +148,15 @@ public class Organization {
         this.organizationPhoneNumber = organizationPhoneNumber;
     }
 
-    public ZonedDateTime getDateModified() {
+    public LocalDateTime getDateCreated() {
+        return dateCreated;
+    }
+
+    public LocalDateTime getDateModified() {
         return dateModified;
     }
 
-    public void setDateModified(ZonedDateTime dateModified) {
+    public void setDateModified(LocalDateTime dateModified) {
         this.dateModified = dateModified;
     }
 }

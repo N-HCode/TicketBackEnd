@@ -73,6 +73,23 @@
 			<version>0.9.4</version>
 		</dependency>
 
+		<!-- jqwik
+		https://jqwik.net/docs/current/user-guide.html#maven-->
+		<dependency>
+			<groupId>net.jqwik</groupId>
+			<artifactId>jqwik</artifactId>
+			<version>1.3.6</version>
+		</dependency>
+
+
+<!--		Need the latest version of commons for jqwik to work-->
+
+		<dependency>
+			<groupId>org.junit.platform</groupId>
+			<artifactId>junit-platform-commons</artifactId>
+			<version>1.7.0</version>
+			<scope>test</scope>
+		</dependency>
 
 	</dependencies>
 
