@@ -4,9 +4,8 @@ package com.github.mhzhou95.javaSpringBootTemplate.model;
 import com.github.mhzhou95.javaSpringBootTemplate.model.Ticket;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.Set;
-import java.time.ZonedDateTime;
 
 @Entity
 public class Organization {
@@ -23,7 +22,7 @@ public class Organization {
     //Need this tag for collections for some reason. Don't know why it fixed the issue:
     //"Could not determine type for: java.util.Set."
     @OneToMany(fetch = FetchType.LAZY)
-    private Set<User> contacts;
+    private Set<User> users;
     @OneToMany(fetch = FetchType.LAZY)
     Set<Ticket> allUsersTickets;
     private boolean isForeignAddress;
@@ -34,8 +33,8 @@ public class Organization {
     private String country;
     private String organizationPhoneNumber;
     //the java.time is the newest java date API
-    private final ZonedDateTime dateCreated = ZonedDateTime.now();
-    private ZonedDateTime dateModified = ZonedDateTime.now();;
+    private final LocalDateTime dateCreated = LocalDateTime.now();
+    private LocalDateTime dateModified = LocalDateTime.now();;
 
     //Kept getting the error "error missing default constructor"
     //For some reason adding in an empty constructor seems to solve the issue. Not sure why
@@ -44,10 +43,10 @@ public class Organization {
     public Organization() {
     }
 
-    public Organization(String organizationName, long accountNumber, Set<User> contacts, boolean isForeignAddress, String city, String state, String streetAddress, String zipcode, String country, String organizationPhoneNumber) {
+    public Organization(String organizationName, long accountNumber, Set<User> users, boolean isForeignAddress, String city, String state, String streetAddress, String zipcode, String country, String organizationPhoneNumber) {
         this.organizationName = organizationName;
         this.accountNumber = accountNumber;
-        this.contacts = contacts;
+        this.users = users;
         this.isForeignAddress = isForeignAddress;
         this.city = city;
         this.state = state;
@@ -72,9 +71,6 @@ public class Organization {
         return accountNumber;
     }
 
-    public ZonedDateTime getDateCreated() {
-        return dateCreated;
-    }
 
     public Set<Ticket> getAllUsersTickets() {
         return allUsersTickets;
@@ -88,12 +84,12 @@ public class Organization {
         this.organizationName = organizationName;
     }
 
-    public Set<User> getContacts() {
-        return contacts;
+    public Set<User> getUsers() {
+        return users;
     }
 
-    public void setContacts(Set<User> contacts) {
-        this.contacts = contacts;
+    public void setUsers(Set<User> users) {
+        this.users = users;
     }
 
     public boolean isForeignAddress() {
@@ -152,11 +148,15 @@ public class Organization {
         this.organizationPhoneNumber = organizationPhoneNumber;
     }
 
-    public ZonedDateTime getDateModified() {
+    public LocalDateTime getDateCreated() {
+        return dateCreated;
+    }
+
+    public LocalDateTime getDateModified() {
         return dateModified;
     }
 
-    public void setDateModified(ZonedDateTime dateModified) {
+    public void setDateModified(LocalDateTime dateModified) {
         this.dateModified = dateModified;
     }
 }
