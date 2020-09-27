@@ -5,6 +5,7 @@ import com.github.mhzhou95.javaSpringBootTemplate.model.Ticket;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -22,9 +23,9 @@ public class Organization {
     //Need this tag for collections for some reason. Don't know why it fixed the issue:
     //"Could not determine type for: java.util.Set."
     @OneToMany(fetch = FetchType.LAZY)
-    private Set<User> users;
+    private Set<User> users = new HashSet<>();
     @OneToMany(fetch = FetchType.LAZY)
-    Set<Ticket> allUsersTickets;
+    Set<Ticket> allUsersTickets = new HashSet<>();
     private boolean isForeignAddress;
     private String city;
     private String state;
@@ -43,10 +44,9 @@ public class Organization {
     public Organization() {
     }
 
-    public Organization(String organizationName, long accountNumber, Set<User> users, boolean isForeignAddress, String city, String state, String streetAddress, String zipcode, String country, String organizationPhoneNumber) {
+    public Organization(@NotNull String organizationName, @NotNull long accountNumber, boolean isForeignAddress, String city, String state, String streetAddress, String zipcode, String country, String organizationPhoneNumber, LocalDateTime dateModified) {
         this.organizationName = organizationName;
         this.accountNumber = accountNumber;
-        this.users = users;
         this.isForeignAddress = isForeignAddress;
         this.city = city;
         this.state = state;
@@ -54,6 +54,7 @@ public class Organization {
         this.zipcode = zipcode;
         this.country = country;
         this.organizationPhoneNumber = organizationPhoneNumber;
+        this.dateModified = dateModified;
     }
 
     //Id is auto-generated so we do not have a setter.

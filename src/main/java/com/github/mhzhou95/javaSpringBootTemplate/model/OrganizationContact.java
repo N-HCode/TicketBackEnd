@@ -2,7 +2,9 @@ package com.github.mhzhou95.javaSpringBootTemplate.model;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -13,11 +15,16 @@ public class OrganizationContact {
 
     @NotNull
     @Column(unique = true)
+    private long OrgContactAccountNumber;
+
+    @NotNull
+    @Column(unique = true)
     private String organizationContactName;
 
     @OneToMany(fetch = FetchType.LAZY)
-    private Set<PersonContact> contacts;
-
+    private Set<PersonContact> contacts = new HashSet<>();
+    @OneToMany(fetch = FetchType.LAZY)
+    Set<Ticket> allContactsTickets = new HashSet<>();
     private boolean isForeignAddress;
     private String city;
     private String state;
@@ -26,15 +33,15 @@ public class OrganizationContact {
     private String country;
     private String organizationPhoneNumber;
     //the java.time is the newest java date API
-    private final ZonedDateTime dateCreated = ZonedDateTime.now();
-    private ZonedDateTime dateModified = ZonedDateTime.now();
+    private final LocalDateTime dateCreated = LocalDateTime.now();
+    private LocalDateTime dateModified = LocalDateTime.now();
 
     public OrganizationContact() {
     }
 
-    public OrganizationContact(@NotNull String organizationContactName, Set<PersonContact> contacts, boolean isForeignAddress, String city, String state, String streetAddress, String zipcode, String country, String organizationPhoneNumber, ZonedDateTime dateModified) {
+    public OrganizationContact(@NotNull long orgContactAccountNumber, @NotNull String organizationContactName, boolean isForeignAddress, String city, String state, String streetAddress, String zipcode, String country, String organizationPhoneNumber, LocalDateTime dateModified) {
+        OrgContactAccountNumber = orgContactAccountNumber;
         this.organizationContactName = organizationContactName;
-        this.contacts = contacts;
         this.isForeignAddress = isForeignAddress;
         this.city = city;
         this.state = state;
@@ -117,15 +124,27 @@ public class OrganizationContact {
         this.organizationPhoneNumber = organizationPhoneNumber;
     }
 
-    public ZonedDateTime getDateModified() {
+    public LocalDateTime getDateCreated() {
+        return dateCreated;
+    }
+
+    public LocalDateTime getDateModified() {
         return dateModified;
     }
 
-    public void setDateModified(ZonedDateTime dateModified) {
+    public void setDateModified(LocalDateTime dateModified) {
         this.dateModified = dateModified;
     }
 
-    public ZonedDateTime getDateCreated() {
-        return dateCreated;
+    public Set<Ticket> getAllContactsTickets() {
+        return allContactsTickets;
+    }
+
+    public void setAllContactsTickets(Set<Ticket> allContactsTickets) {
+        this.allContactsTickets = allContactsTickets;
+    }
+
+    public long getOrgContactAccountNumber() {
+        return OrgContactAccountNumber;
     }
 }

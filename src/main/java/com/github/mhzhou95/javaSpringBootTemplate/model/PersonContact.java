@@ -3,6 +3,8 @@ package com.github.mhzhou95.javaSpringBootTemplate.model;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 
 @Entity
@@ -17,6 +19,8 @@ public class PersonContact {
     private String lastName;
     @NotNull
     private String email;
+    @OneToMany(fetch = FetchType.LAZY)
+    Set<Ticket> contactsTickets = new HashSet<>();
     private OrganizationContact organizationContact;
     private String phoneNumber;
     private final LocalDateTime dateCreated = LocalDateTime.now();
@@ -92,5 +96,13 @@ public class PersonContact {
 
     public void setLastModified(LocalDateTime lastModified) {
         this.lastModified = lastModified;
+    }
+
+    public Set<Ticket> getContactsTickets() {
+        return contactsTickets;
+    }
+
+    public void setContactsTickets(Set<Ticket> contactsTickets) {
+        this.contactsTickets = contactsTickets;
     }
 }
