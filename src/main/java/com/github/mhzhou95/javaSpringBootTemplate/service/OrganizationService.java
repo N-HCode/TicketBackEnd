@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
+import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.Calendar;
 import java.util.List;
@@ -60,7 +61,7 @@ public class OrganizationService {
     public Organization editOrgName(Organization editableOrg, String name) {
             if(editableOrg != null){
                 editableOrg.setOrganizationName(name);
-                editableOrg.setDateModified(ZonedDateTime.now());
+                editableOrg.setDateModified(LocalDateTime.now());
                 organizationRepository.save(editableOrg);
             }else{
                 return null;
@@ -75,7 +76,7 @@ public class OrganizationService {
 
         editableOrg.setForeignAddress(newOrgInfo.isForeignAddress());
         editableOrg.setOrganizationName(newOrgInfo.getOrganizationName());
-        editableOrg.setDateModified(ZonedDateTime.now());
+        editableOrg.setDateModified(LocalDateTime.now());
         if(newOrgInfo.isForeignAddress()){
             editableOrg.setCity(newOrgInfo.getCity());
             editableOrg.setState("");
