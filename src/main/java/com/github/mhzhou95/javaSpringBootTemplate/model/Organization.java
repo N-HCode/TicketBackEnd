@@ -25,7 +25,9 @@ public class Organization {
     @OneToMany(fetch = FetchType.LAZY)
     private Set<User> users = new HashSet<>();
     @OneToMany(fetch = FetchType.LAZY)
-    Set<Ticket> allUsersTickets = new HashSet<>();
+    private Set<Ticket> allUsersTickets = new HashSet<>();
+    @OneToMany(fetch = FetchType.LAZY)
+    private Set<OrganizationContact> allOrgContacts = new HashSet<>();
     private boolean isForeignAddress;
     private String city;
     private String state;
@@ -159,5 +161,13 @@ public class Organization {
 
     public void setDateModified(LocalDateTime dateModified) {
         this.dateModified = dateModified;
+    }
+
+    public Set<OrganizationContact> getAllOrgContacts() {
+        return allOrgContacts;
+    }
+
+    public void setAllOrgContacts(Set<OrganizationContact> allOrgContacts) {
+        this.allOrgContacts = allOrgContacts;
     }
 }
