@@ -20,10 +20,10 @@ public class User {
     private Date lastLogin;
     private Date lastModified;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.LAZY)
     private Set<Ticket> tickets;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.LAZY)
     private Organization organization;
 
     public User() {
