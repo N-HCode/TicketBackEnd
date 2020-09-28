@@ -40,6 +40,7 @@ public class UserService {
             Date timeAsOfNow = Calendar.getInstance().getTime();
             user.setDateCreated(timeAsOfNow);
             user.setLastModified(timeAsOfNow);
+               Date date =  ZonedDateTime.now();
             userRepository.save(user);
             return user;
         }
