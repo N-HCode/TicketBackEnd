@@ -1,33 +1,30 @@
 package com.github.mhzhou95.javaSpringBootTemplate.model;
 
-
-import com.github.mhzhou95.javaSpringBootTemplate.model.Ticket;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-public class Organization {
-    //Id is auto generated. Do not add to constructor or create a getter/setter or it will create error.
-    //Most likely the error missing default constructor for the Id
-    @Id @GeneratedValue(strategy = GenerationType.AUTO) private Long id;
+public class OrganizationContact {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO) private Long id;
 
     @NotNull
     @Column(unique = true)
-    private String organizationName;
+    private long OrgContactAccountNumber;
+
     @NotNull
     @Column(unique = true)
-    private long accountNumber;
-    //Need this tag for collections for some reason. Don't know why it fixed the issue:
-    //"Could not determine type for: java.util.Set."
+    private String organizationContactName;
+
     @OneToMany(fetch = FetchType.LAZY)
-    private Set<User> users = new HashSet<>();
+    private Set<PersonContact> contacts = new HashSet<>();
     @OneToMany(fetch = FetchType.LAZY)
-    private Set<Ticket> allUsersTickets = new HashSet<>();
-    @OneToMany(fetch = FetchType.LAZY)
-    private Set<OrganizationContact> allOrgContacts = new HashSet<>();
+    Set<Ticket> allContactsTickets = new HashSet<>();
     private boolean isForeignAddress;
     private String city;
     private String state;
@@ -37,18 +34,14 @@ public class Organization {
     private String organizationPhoneNumber;
     //the java.time is the newest java date API
     private final LocalDateTime dateCreated = LocalDateTime.now();
-    private LocalDateTime dateModified = LocalDateTime.now();;
+    private LocalDateTime dateModified = LocalDateTime.now();
 
-    //Kept getting the error "error missing default constructor"
-    //For some reason adding in an empty constructor seems to solve the issue. Not sure why
-
-
-    public Organization() {
+    public OrganizationContact() {
     }
 
-    public Organization(@NotNull String organizationName, @NotNull long accountNumber, boolean isForeignAddress, String city, String state, String streetAddress, String zipcode, String country, String organizationPhoneNumber, LocalDateTime dateModified) {
-        this.organizationName = organizationName;
-        this.accountNumber = accountNumber;
+    public OrganizationContact(@NotNull long orgContactAccountNumber, @NotNull String organizationContactName, boolean isForeignAddress, String city, String state, String streetAddress, String zipcode, String country, String organizationPhoneNumber, LocalDateTime dateModified) {
+        OrgContactAccountNumber = orgContactAccountNumber;
+        this.organizationContactName = organizationContactName;
         this.isForeignAddress = isForeignAddress;
         this.city = city;
         this.state = state;
@@ -59,40 +52,20 @@ public class Organization {
         this.dateModified = dateModified;
     }
 
-    //Id is auto-generated so we do not have a setter.
-    //However, we need this getter so that the Json response will give the Id
-    //in its http response.
-    public Long getId() {
-           return id;
-       }
-
-    public String getOrganizationName() {
-        return organizationName;
+    public String getOrganizationContactName() {
+        return organizationContactName;
     }
 
-    public long getAccountNumber() {
-        return accountNumber;
+    public void setOrganizationContactName(String organizationContactName) {
+        this.organizationContactName = organizationContactName;
     }
 
-
-    public Set<Ticket> getAllUsersTickets() {
-        return allUsersTickets;
+    public Set<PersonContact> getContacts() {
+        return contacts;
     }
 
-    public void setAllUsersTickets(Set<Ticket> allUsersTickets) {
-        this.allUsersTickets = allUsersTickets;
-    }
-
-    public void setOrganizationName(String organizationName) {
-        this.organizationName = organizationName;
-    }
-
-    public Set<User> getUsers() {
-        return users;
-    }
-
-    public void setUsers(Set<User> users) {
-        this.users = users;
+    public void setContacts(Set<PersonContact> contacts) {
+        this.contacts = contacts;
     }
 
     public boolean isForeignAddress() {
@@ -163,11 +136,15 @@ public class Organization {
         this.dateModified = dateModified;
     }
 
-    public Set<OrganizationContact> getAllOrgContacts() {
-        return allOrgContacts;
+    public Set<Ticket> getAllContactsTickets() {
+        return allContactsTickets;
     }
 
-    public void setAllOrgContacts(Set<OrganizationContact> allOrgContacts) {
-        this.allOrgContacts = allOrgContacts;
+    public void setAllContactsTickets(Set<Ticket> allContactsTickets) {
+        this.allContactsTickets = allContactsTickets;
+    }
+
+    public long getOrgContactAccountNumber() {
+        return OrgContactAccountNumber;
     }
 }
