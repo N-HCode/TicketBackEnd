@@ -58,19 +58,8 @@ public class OrganizationService {
 
     }
 
-    public Organization editOrgName(Organization editableOrg, String name) {
-            if(editableOrg != null){
-                editableOrg.setOrganizationName(name);
-                editableOrg.setDateModified(LocalDateTime.now());
-                organizationRepository.save(editableOrg);
-            }else{
-                return null;
-            }
 
-        return editableOrg;
-    }
-
-    public Organization editOrgAddress(Long id, Organization newOrgInfo) {
+    public Organization editOrganization(Long id, Organization newOrgInfo) {
 
         Organization editableOrg = this.findById(id);
 

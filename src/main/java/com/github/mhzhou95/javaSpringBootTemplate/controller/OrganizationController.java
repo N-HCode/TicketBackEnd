@@ -93,10 +93,10 @@ public class OrganizationController {
     }
 
     @PutMapping("/{id}/edit-org-info")
-    public ResponseEntity<?> editOrgAddress(@PathVariable Long id, @RequestBody Organization newOrgInfo){
+    public ResponseEntity<?> editOrganization(@PathVariable Long id, @RequestBody Organization newOrgInfo){
 
         if (newOrgInfo != null){
-            Organization editedOrg= service.editOrgAddress(id, newOrgInfo);
+            Organization editedOrg= service.editOrganization(id, newOrgInfo);
             return new ResponseEntity<>(editedOrg, HttpStatus.OK);
         }else{
             return new ResponseEntity<>("New Organization not valid", HttpStatus.BAD_REQUEST);
