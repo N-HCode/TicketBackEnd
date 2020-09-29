@@ -1,7 +1,6 @@
 package com.github.mhzhou95.javaSpringBootTemplate.controller;
 
 import com.github.mhzhou95.javaSpringBootTemplate.model.*;
-
 import com.github.mhzhou95.javaSpringBootTemplate.service.OrganizationContactService;
 import io.swagger.annotations.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,10 +82,10 @@ public class OrganizationContactController {
     }
 
     @PutMapping("/{id}/edit-org-info")
-    public ResponseEntity<?> editOrgAddress(@PathVariable Long id, @RequestBody OrganizationContact newOrgInfo){
+    public ResponseEntity<?> editOrganizationContact(@PathVariable Long id, @RequestBody OrganizationContact newOrgInfo){
 
         if (newOrgInfo != null){
-            OrganizationContact editedOrg= service.editOrgAddress(id, newOrgInfo);
+            OrganizationContact editedOrg= service.editOrganizationContact(id, newOrgInfo);
             return new ResponseEntity<>(editedOrg, HttpStatus.OK);
         }else{
             return new ResponseEntity<>("New Organization not valid", HttpStatus.BAD_REQUEST);

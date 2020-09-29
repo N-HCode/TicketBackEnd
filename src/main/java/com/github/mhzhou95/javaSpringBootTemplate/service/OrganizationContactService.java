@@ -54,19 +54,8 @@ public class OrganizationContactService {
 
     }
 
-    public OrganizationContact editOrgName(OrganizationContact editableOrg, String name) {
-        if(editableOrg != null){
-            editableOrg.setOrganizationContactName(name);
-            editableOrg.setDateModified(LocalDateTime.now());
-            organizationContactRepository.save(editableOrg);
-        }else{
-            return null;
-        }
 
-        return editableOrg;
-    }
-
-    public OrganizationContact editOrgAddress(Long id, OrganizationContact newOrgInfo) {
+    public OrganizationContact editOrganizationContact(Long id, OrganizationContact newOrgInfo) {
 
         OrganizationContact editableOrg = this.findById(id);
 
