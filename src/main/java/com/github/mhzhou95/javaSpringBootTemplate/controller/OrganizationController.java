@@ -124,6 +124,25 @@ public class OrganizationController {
 
     }
 
+//    @PutMapping("/{id}/add-user")
+//    public ResponseEntity<?> editOrg(@PathVariable Long id, @RequestBody Long userId){
+//
+//        Organization editableOrg = service.findById(id);
+//        if(editableOrg != null){
+//            User user = userService.findById(userId);
+//            //if (user != null){
+//                Set<User> newOrgContacts= service.addUsertoOrgContacts(editableOrg, user);
+//                return new ResponseEntity<>(newOrgContacts, HttpStatus.OK);
+//            }else{
+//                return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
+//            }
+//
+//        }else{
+//            return new ResponseEntity<>("Organization not found", HttpStatus.NOT_FOUND);
+//        }
+//
+//
+//    }
     @PutMapping("/{id}/add-ticket")
     public ResponseEntity<?> addTicketToOrg(@PathVariable Long id, @RequestBody Ticket ticket){
 
@@ -141,6 +160,7 @@ public class OrganizationController {
         }
 
     }
+
 
 
 }

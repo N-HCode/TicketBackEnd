@@ -1,11 +1,6 @@
 package com.github.mhzhou95.javaSpringBootTemplate.model;
 
-import org.springframework.beans.factory.annotation.Required;
-
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
@@ -18,13 +13,15 @@ public class Ticket {
     private String userPhoneNumber;
     @NotNull private String userEmail;
     private String organizationNumber;
-    private String ticketOwner;
     private String priority;
     private Date dateOpened;
     private Date dateClosed;
     private String ticketNotes;
     private String emailHistory;
     private String history;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    private User ticketOwner;
 
     public Ticket() {
     }
@@ -36,7 +33,6 @@ public class Ticket {
         this. userPhoneNumber = userPhoneNumber;
         this.userEmail = userEmail;
         this.organizationNumber = organizationNumber;
-        this.ticketOwner = ticketOwner;
         this.priority = priority;
     }
 
@@ -88,11 +84,11 @@ public class Ticket {
         this.organizationNumber = organizationNumber;
     }
 
-    public String getTicketOwner() {
+    public User getTicketOwner() {
         return ticketOwner;
     }
 
-    public void setTicketOwner(String ticketOwner) {
+    public void setTicketOwner(User ticketOwner) {
         this.ticketOwner = ticketOwner;
     }
 
