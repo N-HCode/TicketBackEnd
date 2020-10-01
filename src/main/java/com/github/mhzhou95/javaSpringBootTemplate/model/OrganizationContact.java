@@ -3,7 +3,6 @@ package com.github.mhzhou95.javaSpringBootTemplate.model;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -24,7 +23,7 @@ public class OrganizationContact {
     @OneToMany(fetch = FetchType.LAZY)
     private Set<PersonContact> contacts = new HashSet<>();
     @OneToMany(fetch = FetchType.LAZY)
-    Set<Ticket> allContactsTickets = new HashSet<>();
+    private Set<Ticket> allContactsTickets = new HashSet<>();
     private boolean isForeignAddress;
     private String city;
     private String state;
