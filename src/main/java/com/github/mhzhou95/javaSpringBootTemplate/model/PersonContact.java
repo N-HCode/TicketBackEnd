@@ -21,6 +21,7 @@ public class PersonContact {
     private String email;
     @OneToMany(fetch = FetchType.LAZY)
     Set<Ticket> contactsTickets = new HashSet<>();
+    @OneToOne
     private OrganizationContact organizationContact;
     private String phoneNumber;
     private final LocalDateTime dateCreated = LocalDateTime.now();

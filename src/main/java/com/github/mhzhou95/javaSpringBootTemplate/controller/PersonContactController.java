@@ -1,6 +1,5 @@
 package com.github.mhzhou95.javaSpringBootTemplate.controller;
 
-import com.github.mhzhou95.javaSpringBootTemplate.model.OrganizationContact;
 import com.github.mhzhou95.javaSpringBootTemplate.model.PersonContact;
 import com.github.mhzhou95.javaSpringBootTemplate.model.Ticket;
 import com.github.mhzhou95.javaSpringBootTemplate.service.PersonContactService;
@@ -14,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Set;
 
 @Controller
+@RequestMapping(value = "/personcontact")
 public class PersonContactController {
 
     PersonContactService service;
@@ -42,7 +42,7 @@ public class PersonContactController {
         if (foundPersonContact != null){
             return new ResponseEntity<>(foundPersonContact, HttpStatus.OK);
         }else{
-            return new ResponseEntity<>("Organization not found",HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Contact not found",HttpStatus.NOT_FOUND);
         }
 
     }
@@ -70,9 +70,9 @@ public class PersonContactController {
         PersonContact organization = service.delete(id);
 
         if ( organization != null) {
-            return new ResponseEntity<>("Deleted Organization",HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>("Deleted Contact",HttpStatus.NO_CONTENT);
         }else{
-            return new ResponseEntity<>("Organization not found",HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Contact not found",HttpStatus.NOT_FOUND);
         }
 
     }
@@ -84,7 +84,7 @@ public class PersonContactController {
             PersonContact editedOrg= service.editPersonContact(id, personContact);
             return new ResponseEntity<>(editedOrg, HttpStatus.OK);
         }else{
-            return new ResponseEntity<>("New Organization not valid", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("New Contact not valid", HttpStatus.BAD_REQUEST);
         }
 
     }
@@ -103,7 +103,7 @@ public class PersonContactController {
             }
 
         }else{
-            return new ResponseEntity<>("Organization not found", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Contact not found", HttpStatus.NOT_FOUND);
         }
 
     }
