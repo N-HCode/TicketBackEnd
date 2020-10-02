@@ -9,19 +9,30 @@ import java.util.Set;
 @Entity
 public class OrganizationContact {
 
+    //OrganizationContact are organization/companies that our users manages.
+    //We manage our users organizations, but our users have organization they manage
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO) private Long id;
 
+    //Account number and Id number are similar, however it may be good to just have
+    //an account number.
     @NotNull
     @Column(unique = true)
     private long OrgContactAccountNumber;
 
+    //organization name do not need to be unique, as we have a ID and account number
+    //as identifiers. We recognize that there is a chance that two organization
+    //somehow have the same name. Although, it may cause some confusion, we
+    //believe the flexibility provided will be worth it.
     @NotNull
-    @Column(unique = true)
     private String organizationContactName;
 
+    //One organization to many PersonContacts.
     @OneToMany(fetch = FetchType.LAZY)
     private Set<PersonContact> contacts = new HashSet<>();
+
+    //One organization to many tickets
     @OneToMany(fetch = FetchType.LAZY)
     private Set<Ticket> allContactsTickets = new HashSet<>();
     private boolean isForeignAddress;
