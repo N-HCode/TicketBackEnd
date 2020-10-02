@@ -13,17 +13,24 @@ public class PersonContact {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO) private Long id;
 
+    //not unique as contact can have the same name
     @NotNull
     private String firstName;
     @NotNull
     private String lastName;
+    //We could make the email unique, but we recognize one person can be a contact
+    //for many clients. For example an outsourced IT team. The Id will help us
+    //differentiate between the contacts with same information.
     @NotNull
     private String email;
+    //One PersonContact to many Tickets
     @OneToMany(fetch = FetchType.LAZY)
     Set<Ticket> contactsTickets = new HashSet<>();
+    //One PersonContact to one organization
     @OneToOne
     private OrganizationContact organizationContact;
     private String phoneNumber;
+    //date created should not be editable
     private final LocalDateTime dateCreated = LocalDateTime.now();
     private LocalDateTime lastModified;
 
