@@ -12,9 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -93,10 +90,10 @@ public class OrganizationController {
     }
 
     @PutMapping("/{id}/edit-org-info")
-    public ResponseEntity<?> editOrgAddress(@PathVariable Long id, @RequestBody Organization newOrgInfo){
+    public ResponseEntity<?> editOrganization(@PathVariable Long id, @RequestBody Organization newOrgInfo){
 
         if (newOrgInfo != null){
-            Organization editedOrg= service.editOrgAddress(id, newOrgInfo);
+            Organization editedOrg= service.editOrganization(id, newOrgInfo);
             return new ResponseEntity<>(editedOrg, HttpStatus.OK);
         }else{
             return new ResponseEntity<>("New Organization not valid", HttpStatus.BAD_REQUEST);
