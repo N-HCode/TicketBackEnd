@@ -2,6 +2,7 @@ package com.github.mhzhou95.javaSpringBootTemplate.model;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -16,9 +17,9 @@ public class User {
     private String email;
     private String phoneNumber;
     private String userRole;
-    private Date dateCreated;
-    private Date lastLogin;
-    private Date lastModified;
+    private ZonedDateTime dateCreated;
+    private ZonedDateTime lastLogin;
+    private ZonedDateTime lastModified;
 
     @OneToMany(fetch = FetchType.LAZY)
     private Set<Ticket> tickets;
@@ -96,27 +97,27 @@ public class User {
         this.lastName = lastName;
     }
 
-    public Date getDateCreated() {
+    public ZonedDateTime getDateCreated() {
         return dateCreated;
     }
 
-    public void setDateCreated(Date dateCreated) {
+    public void setDateCreated(ZonedDateTime dateCreated) {
         this.dateCreated = dateCreated;
     }
 
-    public Date getLastLogin() {
+    public ZonedDateTime getLastLogin() {
         return lastLogin;
     }
 
-    public void setLastLogin(Date lastLogin) {
+    public void setLastLogin(ZonedDateTime lastLogin) {
         this.lastLogin = lastLogin;
     }
 
-    public Date getLastModified() {
+    public ZonedDateTime getLastModified() {
         return lastModified;
     }
 
-    public void setLastModified(Date lastModified) {
+    public void setLastModified(ZonedDateTime lastModified) {
         this.lastModified = lastModified;
     }
 
