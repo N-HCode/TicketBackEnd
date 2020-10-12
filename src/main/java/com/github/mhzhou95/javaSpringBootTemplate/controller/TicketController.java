@@ -23,6 +23,7 @@ public class TicketController {
         this.service = service;
     }
 
+    @CrossOrigin
     @RequestMapping(value = "/all", method = RequestMethod.GET)
     @GetMapping("/all")
     public ResponseEntity<?> findAll(){
@@ -31,12 +32,15 @@ public class TicketController {
         return responseFindAll;
     }
 
+    @CrossOrigin
     @GetMapping("/{id}")
     public ResponseEntity findById(@PathVariable Long id){
        Ticket ticketById = service.findById(id);
         ResponseEntity responseFindId = new ResponseEntity(ticketById, HttpStatus.OK);
         return responseFindId;
     }
+
+    @CrossOrigin
     @PostMapping("/create")
     public ResponseEntity<?> createTicket(@RequestBody Ticket ticket){
         Ticket responseBody = service.createTicket(ticket);
@@ -44,6 +48,7 @@ public class TicketController {
         return responseCreateTicket;
     }
 
+    @CrossOrigin
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable Long id){
         Ticket responseTicket = service.delete(id);
@@ -51,6 +56,7 @@ public class TicketController {
         return responseDeleteTicket;
     }
 
+    @CrossOrigin
     @PutMapping("/{id}")
     public ResponseEntity<?> editUser(@PathVariable Long id, @RequestBody Ticket ticket){
         Ticket editedTicket = service.editTicket(id, ticket);
