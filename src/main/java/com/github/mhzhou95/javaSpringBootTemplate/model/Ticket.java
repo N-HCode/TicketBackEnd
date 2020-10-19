@@ -36,6 +36,10 @@ public class Ticket {
         this.priority = priority;
     }
 
+    public long getTicketNumber() {
+        return ticketNumber;
+    }
+
     public String getSubject() {
         return subject;
     }

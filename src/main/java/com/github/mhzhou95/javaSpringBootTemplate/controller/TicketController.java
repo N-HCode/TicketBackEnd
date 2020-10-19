@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping(value = "/ticket")
@@ -24,7 +25,6 @@ public class TicketController {
     }
 
     @CrossOrigin
-    @RequestMapping(value = "/all", method = RequestMethod.GET)
     @GetMapping("/all")
     public ResponseEntity<?> findAll(){
         Iterable<Ticket> allTicket = service.findAll();
@@ -35,9 +35,14 @@ public class TicketController {
     @CrossOrigin
     @GetMapping("/{id}")
     public ResponseEntity findById(@PathVariable Long id){
-       Ticket ticketById = service.findById(id);
-        ResponseEntity responseFindId = new ResponseEntity(ticketById, HttpStatus.OK);
-        return responseFindId;
+       Optional<Ticket> ticketById = service.findById(id);
+        if (ticketById.isPresent()){
+            // response to send back if success
+            return new ResponseEntity<>(ticketById, HttpStatus.OK);
+        }else{
+            // response to send back if failure
+            return new ResponseEntity<>("Ticket not found",HttpStatus.NOT_FOUND);
+        }
     }
 
     @CrossOrigin
@@ -50,7 +55,7 @@ public class TicketController {
 
     @CrossOrigin
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteUser(@PathVariable Long id){
+    public ResponseEntity<?> deleteTicket(@PathVariable Long id){
         Ticket responseTicket = service.delete(id);
         ResponseEntity<?> responseDeleteTicket = new ResponseEntity(responseTicket, HttpStatus.OK);
         return responseDeleteTicket;
@@ -58,7 +63,7 @@ public class TicketController {
 
     @CrossOrigin
     @PutMapping("/{id}")
-    public ResponseEntity<?> editUser(@PathVariable Long id, @RequestBody Ticket ticket){
+    public ResponseEntity<?> editTicket(@PathVariable Long id, @RequestBody Ticket ticket){
         Ticket editedTicket = service.editTicket(id, ticket);
         ResponseEntity<?> responseEditTicket = new ResponseEntity<>(editedTicket, HttpStatus.OK);
         return responseEditTicket;

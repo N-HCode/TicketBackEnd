@@ -22,9 +22,8 @@ public class TicketService {
         return ticketRepository.findAll();
     }
 
-    public Ticket findById(Long id) {
-//        Optional<User> user = userRepository.findById(id);
-        Ticket ticket = ticketRepository.findById(id).orElse(new Ticket());
+    public Optional<Ticket> findById(Long id) {
+        Optional<Ticket> ticket = ticketRepository.findById(id);
         return ticket;
     }
     public Ticket createTicket(Ticket ticket) {
@@ -38,9 +37,24 @@ public class TicketService {
     }
 
     public Ticket editTicket(Long id, Ticket ticket) {
-        Ticket optionalTicket = this.findById(id);
-        Ticket ticketBefore = optionalTicket;
-        // to do logic to check if the right ticket
-        return ticketRepository.save(ticketBefore);
+
+        // Check the optional to see if anything is present then get the user object out else break out of this method
+        Optional<Ticket> findTicket = this.findById(id);
+
+        // Check the optional to see if anything is present then get the user object out else break out of this method
+        if (findTicket.isPresent()) {
+//            User returnedUser = findUser.get();
+            // Set the changeable fields to the new fields if any change
+//            returnedUser.setFirstName(user.getFirstName());
+//            returnedUser.setLastName(user.getLastName());
+//            returnedUser.setEmail(user.getEmail());
+//            returnedUser.setPassword(user.getPassword());
+//            returnedUser.setPhoneNumber(user.getPhoneNumber());
+//            returnedUser.setLastModified(Calendar.getInstance().getTime());
+//            return userRepository.save(returnedUser);
+            return ticketRepository.save(ticket);
+        } else {
+            return null;
+        }
     }
 }
