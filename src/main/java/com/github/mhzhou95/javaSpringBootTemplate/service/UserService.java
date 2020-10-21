@@ -85,6 +85,8 @@ public class UserService {
     public User loginUser(String username, String password) {
         // Use Spring's Crud Repository method to find a user that equals the params
         User user = userRepository.findByUsernameEqualsAndPasswordEquals(username, password);
+        // temp will use Spring's Bcrypt in future builds
+        user.setPassword("********");
         return user;
     }
 
