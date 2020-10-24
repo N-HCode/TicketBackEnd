@@ -41,6 +41,7 @@ public class OrganizationService {
     {
         //make sure the body is not null
         if (organization != null){
+            organization.setAccountNumber(Organization.getAccSeq());
             return organizationRepository.save(organization);
         } else {
             return null;

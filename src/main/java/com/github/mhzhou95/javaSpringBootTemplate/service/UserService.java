@@ -20,6 +20,9 @@ public class UserService {
     @Autowired
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
+        // create default user for testing
+        User defaultUser = new User("admin", "password", "firstname", "lastname", "admin@gmail.com", "admin", "666-666-6666");
+        createUser(defaultUser);
     }
 
     public Iterable<User> findAll() {
@@ -85,7 +88,8 @@ public class UserService {
     public User loginUser(String username, String password) {
         // Use Spring's Crud Repository method to find a user that equals the params
         User user = userRepository.findByUsernameEqualsAndPasswordEquals(username, password);
-        // temp will use Spring's Bcrypt in future builds
+        // temp build will use Spring's Bcrypt in future builds
+        user.setLastLogin(ZonedDateTime.now());
         user.setPassword("********");
         return user;
     }
