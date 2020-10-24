@@ -16,6 +16,9 @@ public class TicketService {
     @Autowired
     public TicketService(TicketRepository ticketRepository) {
         this.ticketRepository = ticketRepository;
+        // create default ticket for testing
+        Ticket defaultTicket = new Ticket("Subject0001", "Description 001", "John Doe", "555-555-5555", "test@gmail.com", "700001", "low");
+        createTicket(defaultTicket);
     }
 
     public Iterable<Ticket> findAll() {

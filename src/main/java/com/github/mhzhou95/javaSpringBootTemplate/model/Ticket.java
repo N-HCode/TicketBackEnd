@@ -26,7 +26,7 @@ public class Ticket {
     public Ticket() {
     }
 
-    public Ticket(String subject, String description, String userContact, String userPhoneNumber, String userEmail, String organizationNumber, String ticketOwner, String priority){
+    public Ticket(String subject, String description, String userContact, String userPhoneNumber, String userEmail, String organizationNumber, String priority){
         this.subject = subject;
         this.description = description;
         this.userContact = userContact;

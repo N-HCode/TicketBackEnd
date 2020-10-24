@@ -10,6 +10,9 @@ import java.util.Set;
 
 @Entity
 public class Organization {
+    // testing account number builder
+    private static long accSeq= 1000000;
+
     //Id is auto generated. Do not add to constructor or create a getter/setter or it will create error.
     //Most likely the error missing default constructor for the Id
     @Id @GeneratedValue(strategy = GenerationType.AUTO) private Long id;
@@ -46,9 +49,8 @@ public class Organization {
     public Organization() {
     }
 
-    public Organization(@NotNull String organizationName, @NotNull long accountNumber, boolean isForeignAddress, String city, String state, String streetAddress, String zipcode, String country, String organizationPhoneNumber, LocalDateTime dateModified) {
+    public Organization(@NotNull String organizationName, boolean isForeignAddress, String city, String state, String streetAddress, String zipcode, String country, String organizationPhoneNumber, LocalDateTime dateModified) {
         this.organizationName = organizationName;
-        this.accountNumber = accountNumber;
         this.isForeignAddress = isForeignAddress;
         this.city = city;
         this.state = state;
@@ -74,6 +76,13 @@ public class Organization {
         return accountNumber;
     }
 
+    public void setAccountNumber(long accountNumber) {
+        this.accountNumber = accountNumber;
+    }
+
+    public static long getAccSeq() {
+        return accSeq += 100;
+    }
 
     public Set<Ticket> getAllUsersTickets() {
         return allUsersTickets;
@@ -170,4 +179,5 @@ public class Organization {
     public void setAllOrgContacts(Set<OrganizationContact> allOrgContacts) {
         this.allOrgContacts = allOrgContacts;
     }
+
 }

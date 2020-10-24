@@ -21,6 +21,7 @@ public class UserController {
         this.service = service;
     }
 
+    @CrossOrigin
     @RequestMapping(value = "/all", method = RequestMethod.GET)
     @GetMapping("all")
     public ResponseEntity<?> findAll(){
@@ -30,6 +31,7 @@ public class UserController {
         return new ResponseEntity<>(allUser, HttpStatus.OK);
     }
 
+    @CrossOrigin
     @GetMapping("/{id}")
     public ResponseEntity findById(@PathVariable Long id){
         // Call the service to invoke findById method
@@ -44,6 +46,8 @@ public class UserController {
             return new ResponseEntity<>("User not found",HttpStatus.NOT_FOUND);
         }
     }
+
+    @CrossOrigin
     @PostMapping("/create")
     public ResponseEntity<?> createUser(@RequestBody User userToCreate){
         // Call the service to create the User
@@ -59,6 +63,7 @@ public class UserController {
         }
     }
 
+    @CrossOrigin
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable Long id){
         // Call the service to delete the User using Id
@@ -74,6 +79,7 @@ public class UserController {
         }
     }
 
+    @CrossOrigin
     @PutMapping("/{id}")
     public ResponseEntity<?> editUser(@PathVariable Long id, @RequestBody User userToEdit){
         // call the service to try to edit the User using id and body
@@ -89,6 +95,7 @@ public class UserController {
         }
     }
 
+    @CrossOrigin
     @GetMapping("/login")
     public ResponseEntity<?> LoginUser(@RequestParam String username, @RequestParam String password){
         // call the service to get a User back using the username and password
@@ -104,6 +111,7 @@ public class UserController {
         }
     }
 
+    @CrossOrigin
     @PostMapping("/ticket")
     public ResponseEntity<?> addTicketToUser(@RequestParam Long id,@RequestBody Ticket ticketToAddToUser){
         // call the service to look for the user and then add the ticket to the user
@@ -118,6 +126,7 @@ public class UserController {
         }
     }
 
+    @CrossOrigin
     @PostMapping("/organization")
     public ResponseEntity<?> addOrganizationToUser(@RequestParam Long id, @RequestBody Organization organization){
         // call the service to add the organization to the user
