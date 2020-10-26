@@ -47,8 +47,8 @@ public class TicketController {
 
     @CrossOrigin
     @PostMapping("/create")
-    public ResponseEntity<?> createTicket(@RequestBody Ticket ticket){
-        Ticket responseBody = service.createTicket(ticket);
+    public ResponseEntity<?> createTicket(@RequestParam Long userId, @RequestBody Ticket ticket){
+        Ticket responseBody = service.createTicket(userId, ticket);
         ResponseEntity<?> responseCreateTicket = new ResponseEntity<>(responseBody, HttpStatus.CREATED);
         return responseCreateTicket;
     }

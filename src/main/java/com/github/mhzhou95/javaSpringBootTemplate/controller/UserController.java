@@ -22,13 +22,21 @@ public class UserController {
     }
 
     @CrossOrigin
-    @RequestMapping(value = "/all", method = RequestMethod.GET)
-    @GetMapping("all")
+    @GetMapping("/")
     public ResponseEntity<?> findAll(){
         // Call the service to invoke the findAll method which returns a Iterable
-        Iterable<User> allUser = service.findAll();
+        Iterable<User> allUsers = service.findAll();
         // Return the HTTP response with the Iterable, it will be an empty array if no users created
-        return new ResponseEntity<>(allUser, HttpStatus.OK);
+        return new ResponseEntity<>(allUsers, HttpStatus.OK);
+    }
+
+    @CrossOrigin
+    @GetMapping("/all")
+    public ResponseEntity<?> findByOrg(@RequestBody Organization organization){
+        // Call the service to invoke the findAll method which returns a Iterable
+        Iterable<User> usersInOrg = service.findByOrg(organization);
+        // Return the HTTP response with the Iterable, it will be an empty array if no users created
+        return new ResponseEntity<>(usersInOrg, HttpStatus.OK);
     }
 
     @CrossOrigin
@@ -112,25 +120,10 @@ public class UserController {
     }
 
     @CrossOrigin
-    @PostMapping("/ticket")
-    public ResponseEntity<?> addTicketToUser(@RequestParam Long id,@RequestBody Ticket ticketToAddToUser){
-        // call the service to look for the user and then add the ticket to the user
-        Ticket responseAddTicket = service.addTicketToUser(id, ticketToAddToUser);
-        // check if the ticket was sent back from service to see if it passed
-        if( responseAddTicket != null) {
-            // response to send back if success
-            return new ResponseEntity<>(responseAddTicket, HttpStatus.OK);
-        }else{
-            // response to send back if failure
-            return new ResponseEntity<>("Failed to add ticket to User",HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    @CrossOrigin
     @PostMapping("/organization")
-    public ResponseEntity<?> addOrganizationToUser(@RequestParam Long id, @RequestBody Organization organization){
+    public ResponseEntity<?> addOrganizationToUser(@RequestParam Long id, @RequestParam Long organizationId){
         // call the service to add the organization to the user
-        Organization responseAddOrganization = service.addOrganizationToUser(id, organization);
+        Organization responseAddOrganization = service.addOrganizationToUser(id, organizationId);
 
         // check if the organization was sent back from service to see if it passed
         if(responseAddOrganization != null){

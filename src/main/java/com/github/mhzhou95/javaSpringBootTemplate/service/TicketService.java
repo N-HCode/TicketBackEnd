@@ -7,18 +7,21 @@ import com.github.mhzhou95.javaSpringBootTemplate.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.ZonedDateTime;
 import java.util.Optional;
 
 @Service
 public class TicketService {
     private TicketRepository ticketRepository;
+    private UserRepository userRepository;
 
     @Autowired
-    public TicketService(TicketRepository ticketRepository) {
+    public TicketService(TicketRepository ticketRepository, UserRepository userRepository) {
         this.ticketRepository = ticketRepository;
+        this.userRepository = userRepository;
         // create default ticket for testing
-        Ticket defaultTicket = new Ticket("Subject0001", "Description 001", "John Doe", "555-555-5555", "test@gmail.com", "700001", "low");
-        createTicket(defaultTicket);
+//        Ticket defaultTicket = new Ticket("Subject0001", "Description 001", "low");
+//        createTicket((long) 1, defaultTicket);
     }
 
     public Iterable<Ticket> findAll() {
@@ -29,8 +32,19 @@ public class TicketService {
         Optional<Ticket> ticket = ticketRepository.findById(id);
         return ticket;
     }
-    public Ticket createTicket(Ticket ticket) {
-        return ticketRepository.save(ticket);
+
+    public Ticket createTicket(Long userId, Ticket ticket) {
+        Optional<User> user = userRepository.findById(userId);
+        if(user.isPresent()){
+            ticket.setUser(user.get());
+            ZonedDateTime timeAsOfNow = ZonedDateTime.now();
+            ticket.setDateCreated(timeAsOfNow);
+            ticket.setLastModified(timeAsOfNow);
+            ticket.setAssignedTo(ticket.getUser().getFirstName());
+
+            return ticketRepository.save(ticket);
+        }
+        return null;
     }
 
     public Ticket delete(Long id) {
@@ -60,4 +74,8 @@ public class TicketService {
             return null;
         }
     }
+
+//    public User assignedTo(Ticket ticket){
+//        return userRepository.findByUserIdIn(ticket);
+//    }
 }

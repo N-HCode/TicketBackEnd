@@ -2,6 +2,8 @@ package com.github.mhzhou95.javaSpringBootTemplate.model;
 
 
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
@@ -9,7 +11,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
+@Table(name = "organizations" )
 public class Organization {
+
     // testing account number builder
     private static long accSeq= 1000000;
 
@@ -25,12 +29,10 @@ public class Organization {
     private long accountNumber;
     //Need this tag for collections for some reason. Don't know why it fixed the issue:
     //"Could not determine type for: java.util.Set."
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "organization", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonManagedReference
     private Set<User> users = new HashSet<>();
-    @OneToMany(fetch = FetchType.LAZY)
-    private Set<Ticket> allUsersTickets = new HashSet<>();
-    @OneToMany(fetch = FetchType.LAZY)
-    private Set<OrganizationContact> allOrgContacts = new HashSet<>();
+
     private boolean isForeignAddress;
     private String city;
     private String state;
@@ -84,13 +86,6 @@ public class Organization {
         return accSeq += 100;
     }
 
-    public Set<Ticket> getAllUsersTickets() {
-        return allUsersTickets;
-    }
-
-    public void setAllUsersTickets(Set<Ticket> allUsersTickets) {
-        this.allUsersTickets = allUsersTickets;
-    }
 
     public void setOrganizationName(String organizationName) {
         this.organizationName = organizationName;
@@ -170,14 +165,6 @@ public class Organization {
 
     public void setDateModified(LocalDateTime dateModified) {
         this.dateModified = dateModified;
-    }
-
-    public Set<OrganizationContact> getAllOrgContacts() {
-        return allOrgContacts;
-    }
-
-    public void setAllOrgContacts(Set<OrganizationContact> allOrgContacts) {
-        this.allOrgContacts = allOrgContacts;
     }
 
 }

@@ -2,7 +2,6 @@ package com.github.mhzhou95.javaSpringBootTemplate.controller;
 
 
 import com.github.mhzhou95.javaSpringBootTemplate.model.Organization;
-import com.github.mhzhou95.javaSpringBootTemplate.model.Ticket;
 import com.github.mhzhou95.javaSpringBootTemplate.model.User;
 import com.github.mhzhou95.javaSpringBootTemplate.service.OrganizationService;
 import com.github.mhzhou95.javaSpringBootTemplate.service.UserService;
@@ -30,14 +29,16 @@ public class OrganizationController {
 
     }
 
+    @CrossOrigin
     @GetMapping("/all")
     public ResponseEntity<?> findAll(){
         //Doing a find all will just return an OK because even if it is empty
         //that is find. As we are not trying to find something specific.
-        Iterable<Organization> allOrgs = service.findAll();
-        return new ResponseEntity<>(allOrgs, HttpStatus.OK);
+        Iterable<Organization> allOrganizations = service.findAll();
+        return new ResponseEntity<>(allOrganizations, HttpStatus.OK);
     }
 
+    @CrossOrigin
     @GetMapping("/{id}")
     public ResponseEntity<?> findById(@PathVariable Long id){
 
@@ -56,13 +57,14 @@ public class OrganizationController {
         return responseFindId;
     }
 
+    @CrossOrigin
     @PostMapping("/create")
-    public ResponseEntity<?> createOrg(@RequestBody Organization organization){
+    public ResponseEntity<?> createOrg(@RequestParam String username, @RequestParam String password, @RequestBody Organization organization){
 
         ResponseEntity<?> responseCreateOrg;
         //create org returns the org that it created. If it could not create
         //then something may have happened.
-        Organization responseOrg = service.createOrganization(organization);
+        Organization responseOrg = service.createOrganization(username, password, organization);
 
         if(responseOrg != null){
             responseCreateOrg = new ResponseEntity<>(responseOrg,HttpStatus.CREATED);
@@ -74,6 +76,7 @@ public class OrganizationController {
 
     }
 
+    @CrossOrigin
     @DeleteMapping("/{id}")
     //Add another response code for the Swagger Documentation
     @ApiResponse(code = 404, message = "Not Found")
@@ -89,6 +92,7 @@ public class OrganizationController {
 
     }
 
+    @CrossOrigin
     @PutMapping("/{id}/edit-org-info")
     public ResponseEntity<?> editOrganization(@PathVariable Long id, @RequestBody Organization newOrgInfo){
 
@@ -101,7 +105,7 @@ public class OrganizationController {
 
     }
 
-
+    @CrossOrigin
     @PutMapping("/{id}/add-user")
     public ResponseEntity<?> addUserToOrg(@PathVariable Long id, @RequestBody Long userId){
 
@@ -121,43 +125,23 @@ public class OrganizationController {
 
     }
 
-//    @PutMapping("/{id}/add-user")
-//    public ResponseEntity<?> editOrg(@PathVariable Long id, @RequestBody Long userId){
-//
-//        Organization editableOrg = service.findById(id);
-//        if(editableOrg != null){
-//            User user = userService.findById(userId);
-//            //if (user != null){
-//                Set<User> newOrgContacts= service.addUsertoOrgContacts(editableOrg, user);
-//                return new ResponseEntity<>(newOrgContacts, HttpStatus.OK);
-//            }else{
-//                return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
-//            }
-//
-//        }else{
-//            return new ResponseEntity<>("Organization not found", HttpStatus.NOT_FOUND);
-//        }
-//
-//
-//    }
-    @PutMapping("/{id}/add-ticket")
-    public ResponseEntity<?> addTicketToOrg(@PathVariable Long id, @RequestBody Ticket ticket){
+    @CrossOrigin
+    @GetMapping("/user/{id}")
+    public ResponseEntity<?> findByUserId(@PathVariable Long id){
 
-        Organization editableOrg = service.findById(id);
-        if(editableOrg != null){
-            if (ticket != null){
-                Set<Ticket> newOrgTickets= service.addTicketToOrgCases(editableOrg, ticket);
-                return new ResponseEntity<>(newOrgTickets, HttpStatus.OK);
-            }else{
-                return new ResponseEntity<>("Invalid Ticket", HttpStatus.BAD_REQUEST);
-            }
+        //services.findById will return a null if it does not find a
+        //org with the Id
+        Organization organization = service.findByUserId(id);
+        //initialize the HTTP response
+        ResponseEntity<?> responseFindId;
 
+        //See if there is a value other than null. If not, send back a 404 error.
+        if (organization != null){
+            responseFindId = new ResponseEntity<>(organization, HttpStatus.OK);
         }else{
-            return new ResponseEntity<>("Organization not found", HttpStatus.NOT_FOUND);
+            responseFindId = new ResponseEntity<>("Organization not found",HttpStatus.NOT_FOUND);
         }
-
+        return responseFindId;
     }
-
-
 
 }
