@@ -1,5 +1,7 @@
 package com.github.mhzhou95.javaSpringBootTemplate.repository;
 
+import com.github.mhzhou95.javaSpringBootTemplate.model.Organization;
+import com.github.mhzhou95.javaSpringBootTemplate.model.Ticket;
 import com.github.mhzhou95.javaSpringBootTemplate.model.User;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
@@ -8,4 +10,8 @@ import org.springframework.stereotype.Repository;
 public interface UserRepository extends CrudRepository<User, Long> {
     User findByUsernameEqualsAndPasswordEquals(String username, String password);
     User findByUsernameEquals(String username);
+
+//    User findByUserIdIn(Ticket ticket);
+
+    Iterable<User> findAllByOrganizationEquals(Organization organization);
 }

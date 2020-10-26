@@ -4,25 +4,27 @@ import com.github.mhzhou95.javaSpringBootTemplate.model.Organization;
 import com.github.mhzhou95.javaSpringBootTemplate.model.Ticket;
 import com.github.mhzhou95.javaSpringBootTemplate.model.User;
 import com.github.mhzhou95.javaSpringBootTemplate.repository.OrganizationRepository;
+import com.github.mhzhou95.javaSpringBootTemplate.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class OrganizationService {
 
     private OrganizationRepository organizationRepository;
+    private UserRepository userRepository;
+    private UserService userService;
 
     @Autowired
-    public OrganizationService(OrganizationRepository organizationRepository) {
+    public OrganizationService(OrganizationRepository organizationRepository, UserRepository userRepository, UserService userService) {
         this.organizationRepository = organizationRepository;
+        this.userRepository = userRepository;
+        this.userService = userService;
     }
 
     public Iterable<Organization> findAll()
@@ -37,11 +39,20 @@ public class OrganizationService {
 
     }
 
-    public Organization createOrganization(Organization organization)
-    {
+    public Organization createOrganization(String username, String password, Organization organization)
+    {   User rootUser = new User();
+        rootUser.setUsername(username);
+        rootUser.setPassword(password);
+        rootUser.setUserRole("root");
+
+        User createUser = userService.createUser(rootUser);
+
+//        Boolean isAdmin = user.map( user1 -> user1.getUserRole().equals("admin")).orElse(false);
+
         //make sure the body is not null
         if (organization != null){
             organization.setAccountNumber(Organization.getAccSeq());
+            createUser.setOrganization(organization);
             return organizationRepository.save(organization);
         } else {
             return null;
@@ -91,10 +102,10 @@ public class OrganizationService {
         return orgContacts;
     }
 
-    public Set<Ticket> addTicketToOrgCases(Organization org, Ticket ticket){
-        Set<Ticket> orgTickets  = org.getAllUsersTickets();
-        orgTickets.add(ticket);
-        return orgTickets;
-    }
 
+    public Organization findByUserId(Long id) {
+        User user = userRepository.findById(id).orElse(null);
+
+        return organizationRepository.findByUsersContains(user).orElse(null);
+    }
 }

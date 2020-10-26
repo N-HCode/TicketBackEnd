@@ -1,39 +1,41 @@
 package com.github.mhzhou95.javaSpringBootTemplate.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.Date;
+import java.time.ZonedDateTime;
 
+// it has red underline here but the table is still made to be called tickets. Runs with no problems because using h2 db
 @Entity
+@Table(name = "tickets")
 public class Ticket {
-    @Id @GeneratedValue (strategy = GenerationType.AUTO) private long ticketNumber;
+    @Id @GeneratedValue (strategy = GenerationType.IDENTITY) private long ticketNumber;
     @NotNull private String subject;
     @NotNull private String description;
-    private String userContact;
-    private String userPhoneNumber;
-    @NotNull private String userEmail;
-    private String organizationNumber;
     private String priority;
-    private Date dateOpened;
-    private Date dateClosed;
+    private ZonedDateTime dateCreated;
+    private ZonedDateTime dateClosed;
+    private ZonedDateTime lastModified;
     private String ticketNotes;
-    private String emailHistory;
-    private String history;
+    private String responses;
+    private String status;
+    private String assignedTo;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    private User ticketOwner;
+    // @JsonManagedReference and @JsonBackReference to solve infinite recursion problem
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn( name = "user_foreign_key")
+    @JsonBackReference
+    private User user;
 
     public Ticket() {
     }
 
-    public Ticket(String subject, String description, String userContact, String userPhoneNumber, String userEmail, String organizationNumber, String priority){
+    public Ticket(String subject, String description, String priority){
         this.subject = subject;
         this.description = description;
-        this.userContact = userContact;
-        this. userPhoneNumber = userPhoneNumber;
-        this.userEmail = userEmail;
-        this.organizationNumber = organizationNumber;
         this.priority = priority;
+        this.status = "new";
     }
 
     public long getTicketNumber() {
@@ -56,46 +58,6 @@ public class Ticket {
         this.description = description;
     }
 
-    public String getUserContact() {
-        return userContact;
-    }
-
-    public void setUserContact(String userContact) {
-        this.userContact = userContact;
-    }
-
-    public String getUserPhoneNumber() {
-        return userPhoneNumber;
-    }
-
-    public void setUserPhoneNumber(String userPhoneNumber) {
-        this.userPhoneNumber = userPhoneNumber;
-    }
-
-    public String getUserEmail() {
-        return userEmail;
-    }
-
-    public void setUserEmail(String userEmail) {
-        this.userEmail = userEmail;
-    }
-
-    public String getOrganizationNumber() {
-        return organizationNumber;
-    }
-
-    public void setOrganizationNumber(String organizationNumber) {
-        this.organizationNumber = organizationNumber;
-    }
-
-    public User getTicketOwner() {
-        return ticketOwner;
-    }
-
-    public void setTicketOwner(User ticketOwner) {
-        this.ticketOwner = ticketOwner;
-    }
-
     public String getPriority() {
         return priority;
     }
@@ -112,19 +74,59 @@ public class Ticket {
         this.ticketNotes = ticketNotes;
     }
 
-    public String getEmailHistory() {
-        return emailHistory;
+    public User getUser() {
+        return user;
     }
 
-    public void setEmailHistory(String emailHistory) {
-        this.emailHistory = emailHistory;
+    public void setUser(User user) {
+        this.user = user;
     }
 
-    public String getHistory() {
-        return history;
+    public ZonedDateTime getDateCreated() {
+        return dateCreated;
     }
 
-    public void setHistory(String history) {
-        this.history = history;
+    public void setDateCreated(ZonedDateTime dateCreated) {
+        this.dateCreated = dateCreated;
+    }
+
+    public ZonedDateTime getDateClosed() {
+        return dateClosed;
+    }
+
+    public void setDateClosed(ZonedDateTime dateClosed) {
+        this.dateClosed = dateClosed;
+    }
+
+    public ZonedDateTime getLastModified() {
+        return lastModified;
+    }
+
+    public void setLastModified(ZonedDateTime lastModified) {
+        this.lastModified = lastModified;
+    }
+
+    public String getResponses() {
+        return responses;
+    }
+
+    public void setResponses(String responses) {
+        this.responses = responses;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getAssignedTo() {
+        return assignedTo;
+    }
+
+    public void setAssignedTo(String assignedTo) {
+        this.assignedTo = assignedTo;
     }
 }

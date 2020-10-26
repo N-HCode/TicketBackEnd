@@ -3,6 +3,7 @@ package com.github.mhzhou95.javaSpringBootTemplate.service;
 import com.github.mhzhou95.javaSpringBootTemplate.model.Organization;
 import com.github.mhzhou95.javaSpringBootTemplate.model.Ticket;
 import com.github.mhzhou95.javaSpringBootTemplate.model.User;
+import com.github.mhzhou95.javaSpringBootTemplate.repository.OrganizationRepository;
 import com.github.mhzhou95.javaSpringBootTemplate.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,13 +17,15 @@ import java.util.Optional;
 @Service
 public class UserService {
     private UserRepository userRepository;
+    private OrganizationRepository organizationRepository;
 
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, OrganizationRepository organizationRepository) {
         this.userRepository = userRepository;
+        this.organizationRepository = organizationRepository;
         // create default user for testing
-        User defaultUser = new User("admin", "password", "firstname", "lastname", "admin@gmail.com", "admin", "666-666-6666");
-        createUser(defaultUser);
+//        User defaultUser = new User("admin", "password", "firstname", "lastname", "admin@gmail.com", "admin", "666-666-6666");
+//        createUser(defaultUser);
     }
 
     public Iterable<User> findAll() {
@@ -31,8 +34,11 @@ public class UserService {
 
     public Optional<User> findById(Long idOfUser) {
         // Use Spring's Crud Repository Method to findById to get back an optional
-        Optional<User> user = userRepository.findById(idOfUser);
-        return user;
+        return userRepository.findById(idOfUser);
+    }
+
+    public Iterable<User> findByOrg(Organization organization) {
+        return userRepository.findAllByOrganizationEquals(organization);
     }
 
     public User createUser(User user) {
@@ -94,29 +100,21 @@ public class UserService {
         return user;
     }
 
-    public Ticket addTicketToUser(Long idOfUser, Ticket ticket) {
+    public Organization addOrganizationToUser(Long idOfUser, Long idOfOrganization) {
         // find the user first
         Optional<User> user = findById(idOfUser);
-
+        Optional<Organization> organization = organizationRepository.findById(idOfOrganization);
         // check if the user was found
-        if( user.isPresent()) {
-            // add the ticket to the User's Set
-            user.get().addTicket(ticket);
-            return ticket;
-        }
-        return null;
-    }
+        if(user.isPresent() && organization.isPresent()) {
+            Organization organizationExist = organization.get();
+            User userExist = user.get();
 
-    public Organization addOrganizationToUser(Long idOfUser, Organization organization) {
-        // find the user first
-        Optional<User> user = findById(idOfUser);
-
-        // check if the user was found
-        if(user.isPresent()) {
             // set the organization as the user
-            user.get().setOrganization(organization);
-            return organization;
+            return organization.get();
         }
         return null;
     }
+
+
+
 }
