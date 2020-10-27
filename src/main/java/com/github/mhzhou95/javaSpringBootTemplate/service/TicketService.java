@@ -40,7 +40,7 @@ public class TicketService {
             ZonedDateTime timeAsOfNow = ZonedDateTime.now();
             ticket.setDateCreated(timeAsOfNow);
             ticket.setLastModified(timeAsOfNow);
-            ticket.setAssignedTo(ticket.getUser().getFirstName());
+            ticket.setAssignedTo(user.get().getFirstName());
 
             return ticketRepository.save(ticket);
         }
