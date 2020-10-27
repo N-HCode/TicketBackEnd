@@ -3,22 +3,28 @@ package com.github.mhzhou95.javaSpringBootTemplate.controller;
 import com.github.mhzhou95.javaSpringBootTemplate.model.Organization;
 import com.github.mhzhou95.javaSpringBootTemplate.model.Ticket;
 import com.github.mhzhou95.javaSpringBootTemplate.model.User;
+import com.github.mhzhou95.javaSpringBootTemplate.service.OrganizationService;
 import com.github.mhzhou95.javaSpringBootTemplate.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @Controller
 @RequestMapping(value = "/user")
 public class UserController {
     private UserService service;
+    private OrganizationService organizationService;
 
     @Autowired
-    public UserController(UserService service) {
+    public UserController(UserService service, OrganizationService organizationService) {
         this.service = service;
+        this.organizationService = organizationService;
     }
 
     @CrossOrigin
@@ -108,11 +114,17 @@ public class UserController {
     public ResponseEntity<?> LoginUser(@RequestParam String username, @RequestParam String password){
         // call the service to get a User back using the username and password
         User responseLoginUser = service.loginUser(username, password);
+        // call the organization Service to get the organization back user the id from username and password
+        Organization responseOrganization = organizationService.findByUserId(responseLoginUser.getUserId());
 
+        // combine both objects into a HashMap
+        HashMap<String, Object> map = new HashMap<>();
+            map.put("user", responseLoginUser);
+            map.put("organization", responseOrganization);
         // check if the user was sent back from service to see if it passed
         if(responseLoginUser != null ) {
             // response to send back if success
-            return new ResponseEntity<>(responseLoginUser, HttpStatus.OK);
+            return new ResponseEntity<>(map, HttpStatus.OK);
         }else{
             // response to send back if failure
             return new ResponseEntity<>("Login failed",HttpStatus.NOT_FOUND);

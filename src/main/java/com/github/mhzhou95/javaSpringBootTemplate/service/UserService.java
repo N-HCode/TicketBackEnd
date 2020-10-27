@@ -96,6 +96,8 @@ public class UserService {
         User user = userRepository.findByUsernameEqualsAndPasswordEquals(username, password);
         // temp build will use Spring's Bcrypt in future builds
         user.setLastLogin(ZonedDateTime.now());
+        userRepository.save(user);
+
         user.setPassword("********");
         return user;
     }
@@ -108,7 +110,8 @@ public class UserService {
         if(user.isPresent() && organization.isPresent()) {
             Organization organizationExist = organization.get();
             User userExist = user.get();
-
+            userExist.setOrganization(organizationExist);
+            userRepository.save(userExist);
             // set the organization as the user
             return organization.get();
         }

@@ -44,7 +44,7 @@ public class OrganizationService {
         rootUser.setUsername(username);
         rootUser.setPassword(password);
         rootUser.setUserRole("root");
-
+        rootUser.setFirstName("root user");
         User createUser = userService.createUser(rootUser);
 
 //        Boolean isAdmin = user.map( user1 -> user1.getUserRole().equals("admin")).orElse(false);
