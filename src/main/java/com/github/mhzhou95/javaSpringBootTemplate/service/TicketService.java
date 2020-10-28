@@ -36,11 +36,12 @@ public class TicketService {
     public Ticket createTicket(Long userId, Ticket ticket) {
         Optional<User> user = userRepository.findById(userId);
         if(user.isPresent()){
-            ticket.setUser(user.get());
+            User foundUser = user.get();
+            ticket.setUser(foundUser);
             ZonedDateTime timeAsOfNow = ZonedDateTime.now();
             ticket.setDateCreated(timeAsOfNow);
             ticket.setLastModified(timeAsOfNow);
-            ticket.setAssignedTo(user.get().getFirstName());
+            ticket.setAssignedTo(foundUser.getFullName());
 
             return ticketRepository.save(ticket);
         }
@@ -60,16 +61,16 @@ public class TicketService {
 
         // Check the optional to see if anything is present then get the user object out else break out of this method
         if (findTicket.isPresent()) {
-//            User returnedUser = findUser.get();
-            // Set the changeable fields to the new fields if any change
-//            returnedUser.setFirstName(user.getFirstName());
-//            returnedUser.setLastName(user.getLastName());
-//            returnedUser.setEmail(user.getEmail());
-//            returnedUser.setPassword(user.getPassword());
-//            returnedUser.setPhoneNumber(user.getPhoneNumber());
-//            returnedUser.setLastModified(Calendar.getInstance().getTime());
-//            return userRepository.save(returnedUser);
-            return ticketRepository.save(ticket);
+            Ticket foundTicket = findTicket.get();
+            foundTicket.setSubject(ticket.getSubject());
+            foundTicket.setDescription(ticket.getDescription());
+            foundTicket.setPriority(ticket.getPriority());
+            foundTicket.setStatus(ticket.getStatus());
+            
+            foundTicket.setAssignedTo(ticket.getAssignedTo());
+            User newAssignedTo = userRepository.findByFullNameEquals(ticket.getAssignedTo());
+            foundTicket.setUser(newAssignedTo);
+            return ticketRepository.save(foundTicket);
         } else {
             return null;
         }
