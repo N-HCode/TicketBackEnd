@@ -50,7 +50,7 @@ public class UserService {
             ZonedDateTime timeAsOfNow = ZonedDateTime.now();
             user.setDateCreated(timeAsOfNow);
             user.setLastModified(timeAsOfNow);
-               ZonedDateTime date =  ZonedDateTime.now();
+            user.setFullName(user.getFirstName() + " " + user.getLastName());
             userRepository.save(user);
             return user;
         }

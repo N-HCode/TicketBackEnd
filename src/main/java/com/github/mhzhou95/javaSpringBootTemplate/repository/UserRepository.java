@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 public interface UserRepository extends CrudRepository<User, Long> {
     User findByUsernameEqualsAndPasswordEquals(String username, String password);
     User findByUsernameEquals(String username);
+    User findByFullNameEquals(String fullName);
 
 //    User findByUserIdIn(Ticket ticket);
 

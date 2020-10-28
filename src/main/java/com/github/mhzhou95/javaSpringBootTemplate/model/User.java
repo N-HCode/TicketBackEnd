@@ -16,6 +16,7 @@ public class User {
     @NotNull String password;
     private String firstName;
     private String lastName;
+    private String fullName;
     private String email;
     private String phoneNumber;
     private String userRole;
@@ -85,6 +86,14 @@ public class User {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 
     public String getEmail() {
