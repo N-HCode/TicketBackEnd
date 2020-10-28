@@ -102,7 +102,8 @@ public class UserController {
         // check if the user was sent back from service to see if it passed
         if (responseEditUser != null){
             // response to send back if success
-            return new ResponseEntity<>(responseEditUser, HttpStatus.OK);
+//            return new ResponseEntity<>(responseEditUser, HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }else{
             // response to send back if failure
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

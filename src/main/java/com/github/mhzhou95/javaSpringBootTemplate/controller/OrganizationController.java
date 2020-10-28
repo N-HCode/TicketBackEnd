@@ -1,6 +1,5 @@
 package com.github.mhzhou95.javaSpringBootTemplate.controller;
 
-
 import com.github.mhzhou95.javaSpringBootTemplate.model.Organization;
 import com.github.mhzhou95.javaSpringBootTemplate.model.User;
 import com.github.mhzhou95.javaSpringBootTemplate.service.OrganizationService;
