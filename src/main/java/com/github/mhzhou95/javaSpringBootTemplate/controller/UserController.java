@@ -146,4 +146,21 @@ public class UserController {
             return new ResponseEntity<>("Failed to add organization to User",HttpStatus.BAD_REQUEST);
         }
     }
+
+    @CrossOrigin
+    @GetMapping("check/{id}")
+    public ResponseEntity check(@PathVariable Long id, @RequestParam String password){
+        System.out.println(password);
+        // Call the service to invoke findById method
+        Optional<User> userById = service.findById(id);
+        System.out.println(userById.get().getPassword());
+        // check if the user was sent back from service to see if it passed
+        if (userById.get().getPassword().equals(password)){
+            // response to send back if success
+            return new ResponseEntity<>(HttpStatus.OK);
+        }else{
+            // response to send back if failure
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
 }
