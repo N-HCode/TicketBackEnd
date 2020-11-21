@@ -57,6 +57,26 @@ public class OrganizationController {
     }
 
     @CrossOrigin
+    @GetMapping("/getAllUser/{id}")
+    public ResponseEntity<?> getAllUsersInOrg(@PathVariable Long id){
+
+        //services.findById will return a null if it does not find a
+        //org with the Id
+        Organization organization = service.findById(id);
+        //initialize the HTTP response
+        ResponseEntity<?> responseFindId;
+
+        //See if there is a value other than null. If not, send back a 404 error.
+        if (organization != null){
+            responseFindId = new ResponseEntity<>(organization.getUsers(), HttpStatus.OK);
+        }else{
+            responseFindId = new ResponseEntity<>("Organization not found",HttpStatus.NOT_FOUND);
+        }
+        return responseFindId;
+    }
+
+
+    @CrossOrigin
     @PostMapping("/create")
     public ResponseEntity<?> createOrg(@RequestParam String username, @RequestParam String password, @RequestBody Organization organization){
 

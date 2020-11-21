@@ -66,7 +66,7 @@ public class TicketService {
             foundTicket.setDescription(ticket.getDescription());
             foundTicket.setPriority(ticket.getPriority());
             foundTicket.setStatus(ticket.getStatus());
-            
+
             foundTicket.setAssignedTo(ticket.getAssignedTo());
             User newAssignedTo = userRepository.findByFullNameEquals(ticket.getAssignedTo());
             foundTicket.setUser(newAssignedTo);
