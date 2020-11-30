@@ -153,7 +153,6 @@ public class UserController {
         System.out.println(password);
         // Call the service to invoke findById method
         Optional<User> userById = service.findById(id);
-        System.out.println(userById.get().getPassword());
         // check if the user was sent back from service to see if it passed
         if (userById.get().getPassword().equals(password)){
             // response to send back if success
