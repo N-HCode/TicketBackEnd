@@ -148,9 +148,8 @@ public class UserController {
     }
 
     @CrossOrigin
-    @GetMapping("check/{id}")
+    @GetMapping("/check/{id}")
     public ResponseEntity check(@PathVariable Long id, @RequestParam String password){
-        System.out.println(password);
         // Call the service to invoke findById method
         Optional<User> userById = service.findById(id);
         // check if the user was sent back from service to see if it passed
@@ -162,4 +161,18 @@ public class UserController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
+
+    @CrossOrigin
+    @GetMapping("/checkusername")
+    public ResponseEntity checkUsername(@RequestParam String username){
+        if (!service.checkUsernameIsTaken(username)){
+            return new ResponseEntity<>(HttpStatus.OK);
+        }else{
+            return new ResponseEntity<>("Username already exists", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+
+
+
 }

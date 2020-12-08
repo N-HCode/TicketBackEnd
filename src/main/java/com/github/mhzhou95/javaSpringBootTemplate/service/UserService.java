@@ -119,6 +119,18 @@ public class UserService {
         return null;
     }
 
+    public boolean checkUsernameIsTaken(String username) {
+        // check if the username is already taken
+        User userToCheck = userRepository.findByUsernameEquals(username);
+
+        // if this username is not taken
+        if(userToCheck == null) {
+            return false;
+        }
+        // return the user saved for the HTTP response
+        return true;
+    }
+
 
 
 }
