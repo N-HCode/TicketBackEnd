@@ -150,7 +150,7 @@ public class UserController {
     @CrossOrigin
     @GetMapping("check/{id}")
     public ResponseEntity check(@PathVariable Long id, @RequestParam String password){
-        System.out.println(password);
+
         // Call the service to invoke findById method
         Optional<User> userById = service.findById(id);
         System.out.println(userById.get().getPassword());
