@@ -21,6 +21,9 @@ public class Ticket {
     private String responses;
     private String status;
     private String assignedTo;
+//    Blob example
+//    @Lob
+//    private byte[] blobData;
 
     // @JsonManagedReference and @JsonBackReference to solve infinite recursion problem
     @ManyToOne(fetch = FetchType.LAZY)
