@@ -109,4 +109,10 @@ public class OrganizationService {
 
         return organizationRepository.findByUsersContains(user).orElse(null);
     }
+
+    public void addStatusListIdToOrg(Long organizationId,Long statusListId){
+        Organization editableOrg = this.findById(organizationId);
+        editableOrg.setStatusListId(statusListId);
+        organizationRepository.save(editableOrg);
+    }
 }

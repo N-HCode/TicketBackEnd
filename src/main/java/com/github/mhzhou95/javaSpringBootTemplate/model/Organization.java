@@ -33,6 +33,7 @@ public class Organization {
     @JsonManagedReference
     private Set<User> users = new HashSet<>();
 
+    private long statusListId;
     private boolean isForeignAddress;
     private String city;
     private String state;
@@ -86,6 +87,13 @@ public class Organization {
         return accSeq += 100;
     }
 
+    public long getStatusListId() {
+        return statusListId;
+    }
+
+    public void setStatusListId(long statusListId) {
+        this.statusListId = statusListId;
+    }
 
     public void setOrganizationName(String organizationName) {
         this.organizationName = organizationName;
