@@ -3,6 +3,7 @@ package com.github.mhzhou95.javaSpringBootTemplate.controller;
 import com.github.mhzhou95.javaSpringBootTemplate.model.Organization;
 import com.github.mhzhou95.javaSpringBootTemplate.model.User;
 import com.github.mhzhou95.javaSpringBootTemplate.service.OrganizationService;
+import com.github.mhzhou95.javaSpringBootTemplate.service.StatusListService;
 import com.github.mhzhou95.javaSpringBootTemplate.service.UserService;
 import io.swagger.annotations.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,12 +21,15 @@ import java.util.Set;
 public class OrganizationController {
     private OrganizationService service;
     private UserService userService;
+    private StatusListService statusListService;
 
     @Autowired
-    public OrganizationController(OrganizationService service, UserService userService) {
+    public OrganizationController(OrganizationService service,
+                                  UserService userService,
+                                  StatusListService statusListService) {
         this.service = service;
         this.userService = userService;
-
+        this.statusListService = statusListService;
     }
 
     @CrossOrigin
@@ -162,5 +166,37 @@ public class OrganizationController {
         }
         return responseFindId;
     }
+
+    @CrossOrigin
+    @PostMapping("/status/create/{organizationId}")
+    public ResponseEntity<?> createStatusList(@PathVariable Long organizationId){
+
+        Organization organization = service.findById(organizationId);
+        //Long values you use an L. Default value of a long is 0L.
+        //if it is the default value, that means a statusList does not exist and we should create one.
+        //Otherwise, we will return that it already has a list.
+
+        if(organization == null){
+            return new ResponseEntity<>("Organization not found",HttpStatus.NOT_FOUND);
+        }
+
+
+        if (organization.getStatusListId() != 0L){
+            return new ResponseEntity<>("Status List already exist for this Org",HttpStatus.BAD_REQUEST);
+        }else{
+            long statusListId = statusListService.createNewStatusList(organizationId);
+
+            if (statusListId != -1){
+                service.addStatusListIdToOrg(organizationId, statusListId);
+                return new ResponseEntity<>(statusListId,HttpStatus.CREATED);
+            }else{
+
+                return new ResponseEntity<>("Failed to create Status List",HttpStatus.BAD_REQUEST);
+            }
+        }
+
+    }
+
+
 
 }

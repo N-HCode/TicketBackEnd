@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -68,4 +69,18 @@ public class TicketController {
         ResponseEntity<?> responseEditTicket = new ResponseEntity<>(editedTicket, HttpStatus.OK);
         return responseEditTicket;
     }
+
+    @CrossOrigin
+    @PutMapping("/close/{id}")
+    public ResponseEntity<?> closeTicket(@PathVariable Long id){
+
+        ZonedDateTime closedDate = service.closeTicket(id);
+
+        if (closedDate != null){
+            return new ResponseEntity<>(closedDate ,HttpStatus.OK);
+        }else{
+            return new ResponseEntity<>("Ticket Not Found",HttpStatus.NOT_FOUND);
+        }
+    }
+
 }

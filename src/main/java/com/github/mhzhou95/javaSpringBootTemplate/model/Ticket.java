@@ -13,6 +13,7 @@ public class Ticket {
     @Id @GeneratedValue (strategy = GenerationType.IDENTITY) private long ticketNumber;
     @NotNull private String subject;
     @NotNull private String description;
+    private String resolution;
     private String priority;
     private ZonedDateTime dateCreated;
     private ZonedDateTime dateClosed;
@@ -59,6 +60,14 @@ public class Ticket {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getResolution() {
+        return resolution;
+    }
+
+    public void setResolution(String resolution) {
+        this.resolution = resolution;
     }
 
     public String getPriority() {
