@@ -34,6 +34,7 @@ public class Organization {
     private Set<User> users = new HashSet<>();
 
     private long statusListId;
+    private long priorityListId;
     private boolean isForeignAddress;
     private String city;
     private String state;
@@ -93,6 +94,14 @@ public class Organization {
 
     public void setStatusListId(long statusListId) {
         this.statusListId = statusListId;
+    }
+
+    public long getPriorityListId() {
+        return priorityListId;
+    }
+
+    public void setPriorityListId(long priorityListId) {
+        this.priorityListId = priorityListId;
     }
 
     public void setOrganizationName(String organizationName) {

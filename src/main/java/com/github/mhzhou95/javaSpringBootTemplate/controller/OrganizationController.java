@@ -3,6 +3,7 @@ package com.github.mhzhou95.javaSpringBootTemplate.controller;
 import com.github.mhzhou95.javaSpringBootTemplate.model.Organization;
 import com.github.mhzhou95.javaSpringBootTemplate.model.User;
 import com.github.mhzhou95.javaSpringBootTemplate.service.OrganizationService;
+import com.github.mhzhou95.javaSpringBootTemplate.service.PriorityListService;
 import com.github.mhzhou95.javaSpringBootTemplate.service.StatusListService;
 import com.github.mhzhou95.javaSpringBootTemplate.service.UserService;
 import io.swagger.annotations.ApiResponse;
@@ -22,14 +23,17 @@ public class OrganizationController {
     private OrganizationService service;
     private UserService userService;
     private StatusListService statusListService;
+    private PriorityListService priorityListService;
 
     @Autowired
     public OrganizationController(OrganizationService service,
                                   UserService userService,
-                                  StatusListService statusListService) {
+                                  StatusListService statusListService,
+                                  PriorityListService priorityListService) {
         this.service = service;
         this.userService = userService;
         this.statusListService = statusListService;
+        this.priorityListService = priorityListService;
     }
 
     @CrossOrigin
@@ -90,6 +94,11 @@ public class OrganizationController {
         Organization responseOrg = service.createOrganization(username, password, organization);
 
         if(responseOrg != null){
+            long statusListId = statusListService.createNewStatusList();
+            service.addStatusListIdToOrg(responseOrg, statusListId);
+
+            long priorityListId = priorityListService.createNewPriorityList();
+            service.addPriorityListIdToOrg(responseOrg,priorityListId);
             responseCreateOrg = new ResponseEntity<>(responseOrg,HttpStatus.CREATED);
         }else{
             responseCreateOrg = new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -166,37 +175,5 @@ public class OrganizationController {
         }
         return responseFindId;
     }
-
-    @CrossOrigin
-    @PostMapping("/status/create/{organizationId}")
-    public ResponseEntity<?> createStatusList(@PathVariable Long organizationId){
-
-        Organization organization = service.findById(organizationId);
-        //Long values you use an L. Default value of a long is 0L.
-        //if it is the default value, that means a statusList does not exist and we should create one.
-        //Otherwise, we will return that it already has a list.
-
-        if(organization == null){
-            return new ResponseEntity<>("Organization not found",HttpStatus.NOT_FOUND);
-        }
-
-
-        if (organization.getStatusListId() != 0L){
-            return new ResponseEntity<>("Status List already exist for this Org",HttpStatus.BAD_REQUEST);
-        }else{
-            long statusListId = statusListService.createNewStatusList(organizationId);
-
-            if (statusListId != -1){
-                service.addStatusListIdToOrg(organizationId, statusListId);
-                return new ResponseEntity<>(statusListId,HttpStatus.CREATED);
-            }else{
-
-                return new ResponseEntity<>("Failed to create Status List",HttpStatus.BAD_REQUEST);
-            }
-        }
-
-    }
-
-
 
 }
