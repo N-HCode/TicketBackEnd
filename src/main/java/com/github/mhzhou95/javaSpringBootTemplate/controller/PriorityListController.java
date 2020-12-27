@@ -1,6 +1,6 @@
 package com.github.mhzhou95.javaSpringBootTemplate.controller;
 
-
+import com.github.mhzhou95.javaSpringBootTemplate.service.PriorityListService;
 import com.github.mhzhou95.javaSpringBootTemplate.service.StatusListService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,25 +11,24 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 
-
 @Controller
-@RequestMapping(value = "/statuslist")
-public class StatusListController {
+@RequestMapping(value = "/prioritylist")
+public class PriorityListController {
 
-    private StatusListService statusListService;
+    private PriorityListService priorityListService;
 
     @Autowired
-    public StatusListController(StatusListService statusListService) {
-        this.statusListService = statusListService;
+    public PriorityListController(PriorityListService priorityListService) {
+        this.priorityListService = priorityListService;
     }
 
     @CrossOrigin
     @GetMapping("/{id}")
-    public ResponseEntity<?> getAllStatus(@PathVariable Long id){
-        List<String> listOfStatus = statusListService.findStatusListById(id);
+    public ResponseEntity<?> getAllPriorities(@PathVariable Long id){
+        List<String> priorityList = priorityListService.findPriorityListById(id);
 
-        if (listOfStatus != null){
-            return new ResponseEntity<>(listOfStatus, HttpStatus.OK);
+        if (priorityList != null){
+            return new ResponseEntity<>(priorityList, HttpStatus.OK);
         }else{
             return new ResponseEntity<>("Status List Not Found", HttpStatus.NOT_FOUND);
         }
@@ -37,8 +36,8 @@ public class StatusListController {
 
     @CrossOrigin
     @PutMapping("/add/{id}")
-    public ResponseEntity<?> addAStatus(@PathVariable Long id, @RequestBody String Status){
-        if (statusListService.addToStatusList(id,Status)){
+    public ResponseEntity<?> addAPriority(@PathVariable Long id, @RequestBody String priority){
+        if (priorityListService.addToPriorityList(id,priority)){
             return new ResponseEntity<>( HttpStatus.OK);
         }else{
 
@@ -49,8 +48,8 @@ public class StatusListController {
 
     @CrossOrigin
     @PutMapping("/remove/{id}")
-    public ResponseEntity<?> removeAStatus(@PathVariable Long id, @RequestBody String Status){
-        if (statusListService.removeFromStatusList(id,Status)){
+    public ResponseEntity<?> removeAPriority(@PathVariable Long id, @RequestBody String priority){
+        if (priorityListService.removeFromPriorityList(id,priority)){
             return new ResponseEntity<>( HttpStatus.OK);
         }else{
             return new ResponseEntity<>("Failed to Remove Status", HttpStatus.BAD_REQUEST);

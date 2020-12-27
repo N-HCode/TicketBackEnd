@@ -6,6 +6,8 @@ import com.github.mhzhou95.javaSpringBootTemplate.repository.StatusListRepositor
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -21,7 +23,7 @@ public class StatusListService {
 
     }
 
-    public Set<String> findStatusListById(Long id){
+    public List<String> findStatusListById(Long id){
 
         Optional<StatusList> statusListOfOrg = statusListRepository.findById(id);
 
@@ -62,7 +64,7 @@ public class StatusListService {
         }
     }
 
-    public Long createNewStatusList(Long organizationId){
+    public Long createNewStatusList(){
 
         try{
             StatusList newStatusList = new StatusList();
@@ -78,9 +80,6 @@ public class StatusListService {
             e.printStackTrace();
             return (long) -1;
         }
-
-
-
     }
 
 
