@@ -58,15 +58,16 @@ public class UserService {
         return null;
     }
 
-    public User delete(Long idOfUser) {
+    public boolean delete(Long idOfUser) {
         // Use Spring's Crud Repository method to findById to get back an optional
         Optional<User> user = userRepository.findById(idOfUser);
         // Call the Crud Repository to deleteById if the Optional is Present
         if(user.isPresent()) {
             userRepository.deleteById(idOfUser);
+            return true;
         }
         // return the user that has been deleted or return null if not found
-        return user.orElse(null);
+        return false;
     }
 
     public User editUser(Long idOfUser, User user) {

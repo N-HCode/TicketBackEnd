@@ -3,6 +3,8 @@ package com.github.mhzhou95.javaSpringBootTemplate.controller;
 import com.github.mhzhou95.javaSpringBootTemplate.model.Organization;
 import com.github.mhzhou95.javaSpringBootTemplate.model.User;
 import com.github.mhzhou95.javaSpringBootTemplate.service.OrganizationService;
+import com.github.mhzhou95.javaSpringBootTemplate.service.PriorityListService;
+import com.github.mhzhou95.javaSpringBootTemplate.service.StatusListService;
 import com.github.mhzhou95.javaSpringBootTemplate.service.UserService;
 import io.swagger.annotations.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,12 +22,18 @@ import java.util.Set;
 public class OrganizationController {
     private OrganizationService service;
     private UserService userService;
+    private StatusListService statusListService;
+    private PriorityListService priorityListService;
 
     @Autowired
-    public OrganizationController(OrganizationService service, UserService userService) {
+    public OrganizationController(OrganizationService service,
+                                  UserService userService,
+                                  StatusListService statusListService,
+                                  PriorityListService priorityListService) {
         this.service = service;
         this.userService = userService;
-
+        this.statusListService = statusListService;
+        this.priorityListService = priorityListService;
     }
 
     @CrossOrigin
@@ -86,6 +94,11 @@ public class OrganizationController {
         Organization responseOrg = service.createOrganization(username, password, organization);
 
         if(responseOrg != null){
+            long statusListId = statusListService.createNewStatusList();
+            service.addStatusListIdToOrg(responseOrg, statusListId);
+
+            long priorityListId = priorityListService.createNewPriorityList();
+            service.addPriorityListIdToOrg(responseOrg,priorityListId);
             responseCreateOrg = new ResponseEntity<>(responseOrg,HttpStatus.CREATED);
         }else{
             responseCreateOrg = new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

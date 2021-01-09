@@ -64,9 +64,9 @@ public class TicketService {
             Ticket foundTicket = findTicket.get();
             foundTicket.setSubject(ticket.getSubject());
             foundTicket.setDescription(ticket.getDescription());
+            foundTicket.setResolution(ticket.getResolution());
             foundTicket.setPriority(ticket.getPriority());
             foundTicket.setStatus(ticket.getStatus());
-
             foundTicket.setAssignedTo(ticket.getAssignedTo());
             User newAssignedTo = userRepository.findByFullNameEquals(ticket.getAssignedTo());
             foundTicket.setUser(newAssignedTo);
@@ -76,7 +76,18 @@ public class TicketService {
         }
     }
 
-//    public User assignedTo(Ticket ticket){
-//        return userRepository.findByUserIdIn(ticket);
-//    }
+    public ZonedDateTime closeTicket(Long id) {
+        // Check the optional to see if anything is present then get the user object out else break out of this method
+        Optional<Ticket> findTicket = this.findById(id);
+
+        // Check the optional to see if anything is present then get the user object out else break out of this method
+        if (findTicket.isPresent()) {
+            Ticket foundTicket = findTicket.get();
+            foundTicket.setDateClosed(ZonedDateTime.now());
+            ticketRepository.save(foundTicket);
+            return foundTicket.getDateClosed();
+        } else {
+            return null;
+        }
+    }
 }

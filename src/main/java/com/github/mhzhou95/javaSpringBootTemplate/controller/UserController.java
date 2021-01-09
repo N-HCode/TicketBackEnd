@@ -80,13 +80,11 @@ public class UserController {
     @CrossOrigin
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable Long id){
-        // Call the service to delete the User using Id
-        User responseDeleteUser = service.delete(id);
 
         // check if the User was sent back from service to see if it passed
-        if (responseDeleteUser != null){
+        if (service.delete(id)){
             // response to send back if success
-            return new ResponseEntity<>(responseDeleteUser, HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.OK);
         }else{
             // response to send back if failure
             return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
