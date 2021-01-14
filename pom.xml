@@ -47,7 +47,7 @@
 		</dependency>
 
 		<!-- This is spring security it will lock everything down
-				just from being added-->
+				with form authentication just from being added-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
