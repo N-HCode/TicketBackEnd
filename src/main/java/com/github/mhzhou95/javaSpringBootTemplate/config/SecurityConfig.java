@@ -11,8 +11,9 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 @EnableGlobalMethodSecurity(prePostEnabled = true) //This allows us to use annotations for authorization on the Controllers
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+    //This may be needed in case we do form authentication
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-       
+
     }
 }
