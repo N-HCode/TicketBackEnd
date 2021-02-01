@@ -11,6 +11,11 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+
+import java.util.Arrays;
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -38,6 +43,28 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .authenticated()
                     .and()
                     .formLogin()
+//                    .loginPage("/login").permitAll()
+//                    .defaultSuccessUrl("/swagger-ui/#")
+                    .and()
+                    .cors( //This is used to configure Cors
+                        c -> { // inside is a customizer. a customizer is an interface with only 1 abstract method
+                            //since it is a customizer, we can just use a lambda function.
+
+                            CorsConfigurationSource cs = request -> {
+                                // if you look in CorsConfigurationSource it has CorsConfiguration
+                                // as a field. so we just make it like this.
+                                CorsConfiguration cc = new CorsConfiguration();
+
+                                //then we can set the allowed origins
+                                cc.setAllowedOrigins(Arrays.asList("*"));
+                                //You will also need to set the allowed methods
+                                cc.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
+
+                                return cc;
+                            };
+                            c.configurationSource(cs);
+                        }
+                    )
             ;
 
     }
