@@ -38,35 +38,40 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .csrf().disable()
                     .authorizeRequests()
                     .antMatchers("/organization/create").permitAll()
+                    .antMatchers("/login").permitAll()
 //                    .antMatchers("/user/login").permitAll()
                     .anyRequest()
                     .authenticated()
                     .and()
-                    .formLogin()
+                    .formLogin();
 //                    .loginPage("/login").permitAll()
 //                    .defaultSuccessUrl("/swagger-ui/#")
-                    .and()
-                    .cors( //This is used to configure Cors
-                        c -> { // inside is a customizer. a customizer is an interface with only 1 abstract method
-                            //since it is a customizer, we can just use a lambda function.
 
-                            CorsConfigurationSource cs = request -> {
-                                // if you look in CorsConfigurationSource it has CorsConfiguration
-                                // as a field. so we just make it like this.
-                                CorsConfiguration cc = new CorsConfiguration();
+                http.cors( //This is used to configure Cors
+                    c -> { // inside is a customizer. a customizer is an interface with only 1 abstract method
+                        //since it is a customizer, we can just use a lambda function.
 
-                                //then we can set the allowed origins
-                                cc.setAllowedOrigins(Arrays.asList("*"));
-                                //You will also need to set the allowed methods
-                                cc.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
+                        CorsConfigurationSource cs = request -> {
+                            // if you look in CorsConfigurationSource it has CorsConfiguration
+                            // as a field. so we just make it like this.
+                            CorsConfiguration cc = new CorsConfiguration();
 
-                                return cc;
-                            };
-                            c.configurationSource(cs);
-                        }
-                    )
-            ;
+                            //then we can set the allowed origins
+                            cc.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
+                            //Need to add the allowed headers as well.
+                            cc.setAllowedHeaders(Arrays.asList("x-requested-with", "authorization", "content-type"));
+//                            cc.setAllowedHeaders(Arrays.asList("*"));
+//                            cc.addExposedHeader("Access-Control-Allow-Credentials");
+                            //This will allow the front end to use the withCredentials in the axios configuration
+                            cc.setAllowCredentials(true);
+                            //You will also need to set the allowed methods
+                            cc.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "OPTIONS", "DELETE"));
 
+                            return cc;
+                        };
+                        c.configurationSource(cs);
+                    }
+                );
     }
 
     @Bean
