@@ -1,16 +1,15 @@
 package com.github.mhzhou95.javaSpringBootTemplate.service;
 
 import com.github.mhzhou95.javaSpringBootTemplate.model.Organization;
-import com.github.mhzhou95.javaSpringBootTemplate.model.Ticket;
 import com.github.mhzhou95.javaSpringBootTemplate.model.User;
 import com.github.mhzhou95.javaSpringBootTemplate.repository.OrganizationRepository;
 import com.github.mhzhou95.javaSpringBootTemplate.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 
 import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
 import java.util.*;
 
 @Service
@@ -19,12 +18,14 @@ public class OrganizationService {
     private OrganizationRepository organizationRepository;
     private UserRepository userRepository;
     private UserService userService;
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
-    public OrganizationService(OrganizationRepository organizationRepository, UserRepository userRepository, UserService userService) {
+    public OrganizationService(OrganizationRepository organizationRepository, UserRepository userRepository, UserService userService, PasswordEncoder passwordEncoder) {
         this.organizationRepository = organizationRepository;
         this.userRepository = userRepository;
         this.userService = userService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public Iterable<Organization> findAll()
@@ -42,7 +43,7 @@ public class OrganizationService {
     public Organization createOrganization(String username, String password, Organization organization)
     {   User rootUser = new User();
         rootUser.setUsername(username);
-        rootUser.setPassword(password);
+        rootUser.setPassword(passwordEncoder.encode(password));
         rootUser.setUserRole("root");
         rootUser.setFirstName("root");
         rootUser.setLastName("user");

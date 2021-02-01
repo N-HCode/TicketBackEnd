@@ -2,6 +2,8 @@ package com.github.mhzhou95.javaSpringBootTemplate.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -10,7 +12,7 @@ import java.util.*;
 
 @Entity
 @Table(name = "users")
-public class User {
+public class User implements UserDetails {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY) private Long userId;
     @NotNull @Column(unique = true) String username;
     @NotNull String password;
@@ -23,6 +25,12 @@ public class User {
     private ZonedDateTime dateCreated;
     private ZonedDateTime lastLogin;
     private ZonedDateTime lastModified;
+
+//    private Set<? extends GrantedAuthority> grantedAuthorities ;
+    private boolean isAccountNonExpired = true;
+    private boolean isAccountNonLocked = true;
+    private boolean isCredentialsNonExpired = true;
+    private boolean isEnabled = true;
 
     // @JsonManagedReference and @JsonBackReference to solve infinite recursion problem
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
@@ -60,8 +68,33 @@ public class User {
         return username;
     }
 
+    @Override
+    public boolean isAccountNonExpired() {
+        return isAccountNonExpired;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return isAccountNonLocked;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return isCredentialsNonExpired;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return isEnabled;
+    }
+
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return null;
     }
 
     public String getPassword() {
