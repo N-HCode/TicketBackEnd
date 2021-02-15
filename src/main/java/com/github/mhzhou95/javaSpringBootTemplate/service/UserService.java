@@ -1,31 +1,31 @@
 package com.github.mhzhou95.javaSpringBootTemplate.service;
 
 import com.github.mhzhou95.javaSpringBootTemplate.model.Organization;
-import com.github.mhzhou95.javaSpringBootTemplate.model.Ticket;
 import com.github.mhzhou95.javaSpringBootTemplate.model.User;
 import com.github.mhzhou95.javaSpringBootTemplate.repository.OrganizationRepository;
 import com.github.mhzhou95.javaSpringBootTemplate.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
 import java.time.ZonedDateTime;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.Optional;
 
 @Service
 public class UserService {
     private UserRepository userRepository;
     private OrganizationRepository organizationRepository;
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserService(UserRepository userRepository, OrganizationRepository organizationRepository) {
+    public UserService(UserRepository userRepository, OrganizationRepository organizationRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.organizationRepository = organizationRepository;
+        this.passwordEncoder = passwordEncoder;
         // create default user for testing
 //        User defaultUser = new User("admin", "password", "firstname", "lastname", "admin@gmail.com", "admin", "666-666-6666");
 //        createUser(defaultUser);
+
     }
 
     public Iterable<User> findAll() {
@@ -94,8 +94,11 @@ public class UserService {
     }
 
     public User loginUser(String username, String password) {
+
+        String encodedPW = passwordEncoder.encode(password);
+
         // Use Spring's Crud Repository method to find a user that equals the params
-        User user = userRepository.findByUsernameEqualsAndPasswordEquals(username, password);
+        User user = userRepository.findByUsernameEqualsAndPasswordEquals(username, encodedPW);
         // temp build will use Spring's Bcrypt in future builds
         user.setLastLogin(ZonedDateTime.now());
         userRepository.save(user);

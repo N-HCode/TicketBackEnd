@@ -1,6 +1,7 @@
 package com.github.mhzhou95.javaSpringBootTemplate.config;
 
 import com.github.mhzhou95.javaSpringBootTemplate.auth.CustomUserDetailService;
+import com.github.mhzhou95.javaSpringBootTemplate.jwt.JwtUsernameAndPasswordAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,6 +11,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -36,14 +38,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
             http
                     .csrf().disable()
+                    //This is implemented because we are using JWT and JWT is stateless
+                    .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                    .and()
+                    //since we are in something that extends WebSecurityConfigurerAdapter.
+                    //there is a parent function that gets the authenticationManager
+                    .addFilter(new JwtUsernameAndPasswordAuthenticationFilter(authenticationManager()))
                     .authorizeRequests()
                     .antMatchers("/organization/create").permitAll()
-                    .antMatchers("/login").permitAll()
+                    .antMatchers("/user/login").permitAll()
 //                    .antMatchers("/user/login").permitAll()
                     .anyRequest()
-                    .authenticated()
-                    .and()
-                    .formLogin();
+                    .authenticated();
+//                    .and()
+//                    .formLogin();
 //                    .loginPage("/login").permitAll()
 //                    .defaultSuccessUrl("/swagger-ui/#")
 
