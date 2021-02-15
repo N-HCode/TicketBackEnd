@@ -1,10 +1,12 @@
 package com.github.mhzhou95.javaSpringBootTemplate.jwt;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.jsonwebtoken.Jwts;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.crypto.SecretKey;
 import javax.servlet.FilterChain;
@@ -12,6 +14,13 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.util.Date;
+
+//To get the Token in an API request, you need to request POST to [URL]/Login first
+//The body need to be a JSON with the username, and password properties.
+//Then you will get the authorization header.
+//Then for other request, you will use the token in the Authorization header.
 
 public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
@@ -32,11 +41,41 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePassword
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
-        return super.attemptAuthentication(request, response);
+        try {
+            UsernameAndPasswordAuthenticationRequest authenticationRequest = new ObjectMapper().readValue(request.getInputStream(),
+                    UsernameAndPasswordAuthenticationRequest.class);
+
+            Authentication authentication = new UsernamePasswordAuthenticationToken(
+                    authenticationRequest.getUsername(), //principal or username
+                    authenticationRequest.getPassword() //the credential
+
+            );
+
+            Authentication authenticate = authenticationManager.authenticate(authentication);
+            return authenticate;
+
+        }catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
     @Override
-    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
-        super.successfulAuthentication(request, response, chain, authResult);
+    protected void successfulAuthentication(HttpServletRequest request,
+                                            HttpServletResponse response,
+                                            FilterChain chain,
+                                            Authentication authResult) throws IOException, ServletException {
+        //Create the token
+        String token = Jwts.builder()
+                .setSubject(authResult.getName())//Header //will be the username
+                .claim("authorities", authResult.getAuthorities()) //Body
+                .setIssuedAt(new Date())
+                .setExpiration(java.sql.Date.valueOf(LocalDate.now().plusDays(jwtConfig.getTokenExpirationAfterDays()))) //Date from SQL
+                .signWith(secretKey)
+                .compact();
+
+        //add header to the response.
+        response.addHeader(jwtConfig.getAuthorizationHeader(), jwtConfig.getTokenPrefix() + token);
+
     }
 }

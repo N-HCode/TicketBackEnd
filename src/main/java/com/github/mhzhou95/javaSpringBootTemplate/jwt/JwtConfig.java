@@ -1,5 +1,6 @@
 package com.github.mhzhou95.javaSpringBootTemplate.jwt;
 
+import com.google.common.net.HttpHeaders;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 //We will add so that it will relate to the resource folder application.properties
@@ -23,5 +24,9 @@ public class JwtConfig {
 
     public Integer getTokenExpirationAfterDays() {
         return tokenExpirationAfterDays;
+    }
+
+    public String getAuthorizationHeader() {
+        return HttpHeaders.AUTHORIZATION;
     }
 }
