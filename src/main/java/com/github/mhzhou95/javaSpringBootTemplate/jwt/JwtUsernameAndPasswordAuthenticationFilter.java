@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 
 //To get the Token in an API request, you need to request POST to [URL]/Login first
@@ -51,6 +52,7 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePassword
 
             );
 
+            //this is where we verify if the login is good or not. The authenticationManager will handle that.
             Authentication authenticate = authenticationManager.authenticate(authentication);
             return authenticate;
 
@@ -65,17 +67,27 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePassword
                                             HttpServletResponse response,
                                             FilterChain chain,
                                             Authentication authResult) throws IOException, ServletException {
-        //Create the token
-        String token = Jwts.builder()
-                .setSubject(authResult.getName())//Header //will be the username
-                .claim("authorities", authResult.getAuthorities()) //Body
-                .setIssuedAt(new Date())
-                .setExpiration(java.sql.Date.valueOf(LocalDate.now().plusDays(jwtConfig.getTokenExpirationAfterDays()))) //Date from SQL
-                .signWith(secretKey)
-                .compact();
 
-        //add header to the response.
-        response.addHeader(jwtConfig.getAuthorizationHeader(), jwtConfig.getTokenPrefix() + token);
+        try{
+
+            //Create the token
+            String token = Jwts.builder()
+                    .setSubject(authResult.getName())//Header //will be the username
+                    .claim("authorities", authResult.getAuthorities()) //Body
+                    .setIssuedAt(new Date())
+                .setExpiration(java.sql.Date.valueOf(LocalDate.now().plusDays(jwtConfig.getTokenExpirationAfterDays()))) //Date from SQL
+                    .signWith(secretKey)
+                    .compact();
+
+            //add token header to the response.
+            response.addHeader(jwtConfig.getAuthorizationHeader(), jwtConfig.getTokenPrefix() + token);
+
+        }catch (Exception e){
+            System.out.println(e);
+        }
+
+
+
 
     }
 }

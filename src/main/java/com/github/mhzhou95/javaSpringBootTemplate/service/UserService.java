@@ -15,13 +15,12 @@ import java.util.Optional;
 public class UserService {
     private UserRepository userRepository;
     private OrganizationRepository organizationRepository;
-    private PasswordEncoder passwordEncoder;
+
 
     @Autowired
-    public UserService(UserRepository userRepository, OrganizationRepository organizationRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, OrganizationRepository organizationRepository) {
         this.userRepository = userRepository;
         this.organizationRepository = organizationRepository;
-        this.passwordEncoder = passwordEncoder;
         // create default user for testing
 //        User defaultUser = new User("admin", "password", "firstname", "lastname", "admin@gmail.com", "admin", "666-666-6666");
 //        createUser(defaultUser);
@@ -93,19 +92,6 @@ public class UserService {
         }
     }
 
-    public User loginUser(String username, String password) {
-
-        String encodedPW = passwordEncoder.encode(password);
-
-        // Use Spring's Crud Repository method to find a user that equals the params
-        User user = userRepository.findByUsernameEqualsAndPasswordEquals(username, encodedPW);
-        // temp build will use Spring's Bcrypt in future builds
-        user.setLastLogin(ZonedDateTime.now());
-        userRepository.save(user);
-
-        user.setPassword("********");
-        return user;
-    }
 
     public Organization addOrganizationToUser(Long idOfUser, Long idOfOrganization) {
         // find the user first

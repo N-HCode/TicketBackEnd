@@ -107,27 +107,6 @@ public class UserController {
         }
     }
 
-    @CrossOrigin
-    @GetMapping("/login")
-    public ResponseEntity<?> LoginUser(@RequestParam String username, @RequestParam String password){
-        // call the service to get a User back using the username and password
-        User responseLoginUser = service.loginUser(username, password);
-        // call the organization Service to get the organization back user the id from username and password
-        Organization responseOrganization = organizationService.findByUserId(responseLoginUser.getUserId());
-
-        // combine both objects into a HashMap
-        HashMap<String, Object> map = new HashMap<>();
-            map.put("user", responseLoginUser);
-            map.put("organization", responseOrganization);
-        // check if the user was sent back from service to see if it passed
-        if(responseLoginUser != null ) {
-            // response to send back if success
-            return new ResponseEntity<>(map, HttpStatus.OK);
-        }else{
-            // response to send back if failure
-            return new ResponseEntity<>("Login failed",HttpStatus.NOT_FOUND);
-        }
-    }
 
     @CrossOrigin
     @PostMapping("/organization")
@@ -169,8 +148,5 @@ public class UserController {
             return new ResponseEntity<>("Username already exists", HttpStatus.BAD_REQUEST);
         }
     }
-
-
-
 
 }

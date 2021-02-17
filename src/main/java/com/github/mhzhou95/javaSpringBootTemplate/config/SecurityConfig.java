@@ -1,6 +1,8 @@
 package com.github.mhzhou95.javaSpringBootTemplate.config;
 
 import com.github.mhzhou95.javaSpringBootTemplate.auth.CustomUserDetailService;
+import com.github.mhzhou95.javaSpringBootTemplate.jwt.JwtConfig;
+import com.github.mhzhou95.javaSpringBootTemplate.jwt.JwtTokenVerifierFilter;
 import com.github.mhzhou95.javaSpringBootTemplate.jwt.JwtUsernameAndPasswordAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -16,8 +18,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
+import javax.crypto.SecretKey;
 import java.util.Arrays;
-import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -26,11 +28,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private PasswordEncoder passwordEncoder;
     private CustomUserDetailService customUserDetailService;
+    private final JwtConfig jwtConfig;
+    private final SecretKey secretKey;
 
     @Autowired
-    public SecurityConfig(PasswordEncoder passwordEncoder, CustomUserDetailService customUserDetailService) {
+    public SecurityConfig(PasswordEncoder passwordEncoder, CustomUserDetailService customUserDetailService, JwtConfig jwtConfig, SecretKey secretKey) {
         this.passwordEncoder = passwordEncoder;
         this.customUserDetailService = customUserDetailService;
+        this.jwtConfig = jwtConfig;
+        this.secretKey = secretKey;
     }
 
     //This may be needed in case we do form authentication
@@ -43,10 +49,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .and()
                     //since we are in something that extends WebSecurityConfigurerAdapter.
                     //there is a parent function that gets the authenticationManager
-                    .addFilter(new JwtUsernameAndPasswordAuthenticationFilter(authenticationManager()))
+                    .addFilter(new JwtUsernameAndPasswordAuthenticationFilter(authenticationManager(), jwtConfig, secretKey))
+                    .addFilterAfter(new JwtTokenVerifierFilter(secretKey,jwtConfig), JwtUsernameAndPasswordAuthenticationFilter.class)
                     .authorizeRequests()
                     .antMatchers("/organization/create").permitAll()
-                    .antMatchers("/user/login").permitAll()
 //                    .antMatchers("/user/login").permitAll()
                     .anyRequest()
                     .authenticated();
