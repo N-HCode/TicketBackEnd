@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 
@@ -69,13 +70,19 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePassword
                                             Authentication authResult) throws IOException, ServletException {
 
         try{
+            //current time in milli seconds (1/1000 of a second).
+            //We will use this to construct the date and expiration date.
+            Long currentTime = System.currentTimeMillis();
 
             //Create the token
             String token = Jwts.builder()
                     .setSubject(authResult.getName())//Header //will be the username
                     .claim("authorities", authResult.getAuthorities()) //Body
-                    .setIssuedAt(new Date())
-                .setExpiration(java.sql.Date.valueOf(LocalDate.now().plusDays(jwtConfig.getTokenExpirationAfterDays()))) //Date from SQL
+                    .setIssuedAt(new Date(currentTime))
+//                    .setExpiration(java.sql.Date.valueOf(LocalDate.now().plusDays(jwtConfig.getTokenExpirationAfterDays()))) //Date from SQL
+                    //it is the 1000 for (1/1000 a sec) * 60 to make it a minute then times how many minutes
+                    //Standard appears to be 15 minutes for JWT expiration date.
+                    .setExpiration(new Date(currentTime + (1000 * 60 * jwtConfig.getTokenExpirationAfterMinutes()))) //this takes a Java.Util.Date
                     .signWith(secretKey)
                     .compact();
 

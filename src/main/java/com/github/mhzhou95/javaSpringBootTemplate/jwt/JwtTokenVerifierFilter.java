@@ -58,6 +58,7 @@ public class JwtTokenVerifierFilter extends OncePerRequestFilter {
 
         try{
 
+            //If the token is expired it will fail here when it is parsering the key.
             Jws<Claims> claimsJwt = Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token);
             Claims body = claimsJwt.getBody();
 
