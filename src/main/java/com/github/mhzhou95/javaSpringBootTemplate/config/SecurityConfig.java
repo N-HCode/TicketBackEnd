@@ -80,6 +80,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                             cc.setAllowCredentials(true);
                             //You will also need to set the allowed methods
                             cc.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "OPTIONS", "DELETE"));
+                            //if you do not put in the Exposed Header then usually the response gotten by the
+                            //POST on the frontend, will have a hard time obtaining the header.
+                            cc.addExposedHeader("authorization");
 
                             return cc;
                         };
