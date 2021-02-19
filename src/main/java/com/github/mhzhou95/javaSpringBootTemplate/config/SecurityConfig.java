@@ -82,7 +82,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                             cc.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "OPTIONS", "DELETE"));
                             //if you do not put in the Exposed Header then usually the response gotten by the
                             //POST on the frontend, will have a hard time obtaining the header.
-                            cc.addExposedHeader("authorization");
+                            //Since we are using a HTTPOnly Cookie now. There won't be an authorization header.
+//                            cc.addExposedHeader("authorization");
 
                             return cc;
                         };

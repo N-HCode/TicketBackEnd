@@ -12,7 +12,9 @@ public class JwtConfig {
 
     private String secretKey;
     private String tokenPrefix;
+    private String authorizationCookieName;
     private Integer tokenExpirationAfterMinutes;
+
 
     public JwtConfig() {
     }
@@ -33,7 +35,11 @@ public class JwtConfig {
         return HttpHeaders.AUTHORIZATION;
     }
 
-    //We need these setters because @ConfigurationProperties(prefix = "application.jwt")
+    public String getAuthorizationCookieName() {
+        return authorizationCookieName;
+    }
+
+//We need these setters because @ConfigurationProperties(prefix = "application.jwt")
     //will use these setter to get the items from the resource and then set the fields.
 
     public void setSecretKey(String secretKey) {
@@ -46,5 +52,9 @@ public class JwtConfig {
 
     public void setTokenExpirationAfterMinutes(Integer tokenExpirationAfterMinutes) {
         this.tokenExpirationAfterMinutes = tokenExpirationAfterMinutes;
+    }
+
+    public void setAuthorizationCookieName(String authorizationCookieName) {
+        this.authorizationCookieName = authorizationCookieName;
     }
 }

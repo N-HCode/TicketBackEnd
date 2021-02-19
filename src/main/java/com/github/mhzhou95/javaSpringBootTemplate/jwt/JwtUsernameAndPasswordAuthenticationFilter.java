@@ -11,6 +11,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import javax.crypto.SecretKey;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -87,7 +88,16 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePassword
                     .compact();
 
             //add token header to the response.
-            response.addHeader(jwtConfig.getAuthorizationHeader(), jwtConfig.getTokenPrefix() + token);
+//            response.addHeader(jwtConfig.getAuthorizationHeader(), jwtConfig.getTokenPrefix() + token);
+
+            //After some Research, it appears that storing the Token in a HTTPOnly token
+            //is more secure as it protect against XSS to some extent. This is how we would
+            //add the cookie to the response.
+            Cookie tokenCookie = new Cookie(jwtConfig.getAuthorizationCookieName(), jwtConfig.getTokenPrefix() + token);
+            tokenCookie.setHttpOnly(true);
+
+            response.addCookie(tokenCookie);
+
 
         }catch (Exception e){
             System.out.println(e);
