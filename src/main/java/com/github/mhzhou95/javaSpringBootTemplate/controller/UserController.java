@@ -149,4 +149,14 @@ public class UserController {
         }
     }
 
+    @CrossOrigin
+    @GetMapping("/verify")
+    public ResponseEntity verify(){
+        //This is just used to see if a client has a cookie with a valid token.
+        //if it does it will reach this API and get an 200
+        //Otherwise the it will not pass the filters and fail getting a 403 status
+        return new ResponseEntity<>( HttpStatus.OK);
+    }
+
+
 }

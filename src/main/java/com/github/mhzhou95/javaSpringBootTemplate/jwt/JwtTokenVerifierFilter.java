@@ -73,11 +73,16 @@ public class JwtTokenVerifierFilter extends OncePerRequestFilter {
 
         //Here we remove the "Bearer " by replacing it with an empty string. This will leave us
         //with just the token part, so we can get the data from.
-        String token = cookieAuthorization.replace( jwtConfig.getTokenPrefix(),"" );
+//        String token = cookieAuthorization.replace( jwtConfig.getTokenPrefix(),"" )
+
+        //Tried to add Bearer with a space to the token. However, the cookie could not process
+        //the space. Therefore, just added Bearer without the space and just use substring to get
+        // the token out.
+        String token = cookieAuthorization.substring(jwtConfig.getTokenPrefix().length());
 
         try{
 
-            //If the token is expired it will fail here when it is parsering the key.
+            //If the token is expired it will fail here when it is parsing the key.
             Jws<Claims> claimsJwt = Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token);
             Claims body = claimsJwt.getBody();
 

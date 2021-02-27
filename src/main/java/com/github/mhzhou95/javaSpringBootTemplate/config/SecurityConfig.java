@@ -11,6 +11,7 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -73,7 +74,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                             //then we can set the allowed origins
                             cc.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
                             //Need to add the allowed headers as well.
-                            cc.setAllowedHeaders(Arrays.asList("x-requested-with", "authorization", "content-type"));
+                            cc.setAllowedHeaders(Arrays.asList("x-requested-with", "authorization", "content-type", "Set-Cookie"));
 //                            cc.setAllowedHeaders(Arrays.asList("*"));
 //                            cc.addExposedHeader("Access-Control-Allow-Credentials");
                             //This will allow the front end to use the withCredentials in the axios configuration
@@ -90,6 +91,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         c.configurationSource(cs);
                     }
                 );
+    }
+
+    //https://stackoverflow.com/questions/56388865/spring-security-configuration-httpsecurity-vs-websecurity
+    //web security impact global security (ignore resources, set debug mode, reject requests by implementing a custom firewall definition)
+    //http configuration of web-based security at a resource level, based on a selection match
+
+
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        //this is used to ignore the security filer when doing a certain endpoint.
+        //The reason we want to ignore is because we have the JwtRokenVerifier
+        //Edge case if they have an expired token still saved and then the JwtTokenVeriferFilter
+        //Will reject with a 403 when creating account.
+        web.ignoring().antMatchers("/organization/create");
     }
 
     @Bean
