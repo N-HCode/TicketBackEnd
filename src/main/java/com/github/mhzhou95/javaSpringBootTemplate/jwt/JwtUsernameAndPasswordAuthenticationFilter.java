@@ -96,6 +96,7 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePassword
             Cookie tokenCookie = new Cookie(jwtConfig.getAuthorizationCookieName(), jwtConfig.getTokenPrefix() + token);
             tokenCookie.setHttpOnly(true);
 
+
             response.addCookie(tokenCookie);
 
 

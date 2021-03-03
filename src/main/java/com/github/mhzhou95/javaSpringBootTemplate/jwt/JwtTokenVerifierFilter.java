@@ -102,6 +102,7 @@ public class JwtTokenVerifierFilter extends OncePerRequestFilter {
 
         }catch (JwtException e){
             throw new IllegalStateException(String.format("Token %s cannot be trusted", token));
+
         }
 
         filterChain.doFilter(httpServletRequest, httpServletResponse);
