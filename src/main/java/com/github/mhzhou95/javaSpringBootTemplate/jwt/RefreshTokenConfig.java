@@ -17,6 +17,27 @@ public class RefreshTokenConfig {
     private String cookieName;
     private Integer refreshTokenExpirationAfterMinutes;
 
+    public String getRefreshSecretKey() {
+        return refreshSecretKey;
+    }
 
+    public void setRefreshSecretKey(String refreshSecretKey) {
+        this.refreshSecretKey = refreshSecretKey;
+    }
 
+    public String getCookieName() {
+        return cookieName;
+    }
+
+    public void setCookieName(String cookieName) {
+        this.cookieName = cookieName;
+    }
+
+    public Integer getRefreshTokenExpirationAfterMinutes() {
+        return refreshTokenExpirationAfterMinutes;
+    }
+
+    public void setRefreshTokenExpirationAfterMinutes(Integer refreshTokenExpirationAfterMinutes) {
+        this.refreshTokenExpirationAfterMinutes = refreshTokenExpirationAfterMinutes;
+    }
 }
