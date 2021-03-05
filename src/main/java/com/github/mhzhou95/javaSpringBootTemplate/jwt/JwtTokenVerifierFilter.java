@@ -2,15 +2,12 @@ package com.github.mhzhou95.javaSpringBootTemplate.jwt;
 
 import com.google.common.base.Strings;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.*;
+import io.jsonwebtoken.security.SignatureException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.crypto.SecretKey;
@@ -80,7 +77,7 @@ public class JwtTokenVerifierFilter extends OncePerRequestFilter {
         // the token out.
         String token = cookieAuthorization.substring(jwtConfig.getTokenPrefix().length());
 
-        try{
+        try {
 
             //If the token is expired it will fail here when it is parsing the key.
             Jws<Claims> claimsJwt = Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token);
@@ -88,7 +85,7 @@ public class JwtTokenVerifierFilter extends OncePerRequestFilter {
 
             String username = body.getSubject();
 
-            List<Map<String, String>> authorities = (List<Map<String, String>>)  body.get("authorities");
+            List<Map<String, String>> authorities = (List<Map<String, String>>) body.get("authorities");
 
             Set<SimpleGrantedAuthority> simpleGrantedAuthorities = authorities.stream()
                     .map(m -> new SimpleGrantedAuthority(m.get("authority")))
@@ -100,12 +97,24 @@ public class JwtTokenVerifierFilter extends OncePerRequestFilter {
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        }catch (JwtException e){
-            throw new IllegalStateException(String.format("Token %s cannot be trusted", token));
+        }
+        //(JwtException e) is a catch all. you can alt enter to get the detailed ones.
+        catch (ExpiredJwtException e) {
+
+
+        } catch (MalformedJwtException e) {
+
+
+        } catch (UnsupportedJwtException e) {
+
+
+        } catch (SignatureException e) {
+
 
         }
-
+        //if we did not set an Authentication. It will be forbidden if the user's token is expired.
         filterChain.doFilter(httpServletRequest, httpServletResponse);
+
 
     }
 }

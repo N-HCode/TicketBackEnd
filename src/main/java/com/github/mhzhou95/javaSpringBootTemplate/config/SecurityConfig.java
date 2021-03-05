@@ -3,6 +3,7 @@ package com.github.mhzhou95.javaSpringBootTemplate.config;
 import com.github.mhzhou95.javaSpringBootTemplate.auth.CustomUserDetailService;
 import com.github.mhzhou95.javaSpringBootTemplate.jwt.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -25,15 +26,20 @@ import java.util.Arrays;
 @EnableGlobalMethodSecurity(prePostEnabled = true) //This allows us to use annotations for authorization on the Controllers
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private PasswordEncoder passwordEncoder;
-    private CustomUserDetailService customUserDetailService;
+    private final PasswordEncoder passwordEncoder;
+    private final CustomUserDetailService customUserDetailService;
     private final JwtConfig jwtConfig;
     private final SecretKey secretKey;
     private final RefreshTokenConfig refreshTokenConfig;
-    private final RefreshTokenSecretKey refreshTokenSecretKey;
+    private final SecretKey refreshTokenSecretKey;
 
     @Autowired
-    public SecurityConfig(PasswordEncoder passwordEncoder, CustomUserDetailService customUserDetailService, JwtConfig jwtConfig, SecretKey secretKey, RefreshTokenConfig refreshTokenConfig, RefreshTokenSecretKey refreshTokenSecretKey) {
+    public SecurityConfig(PasswordEncoder passwordEncoder,
+                          CustomUserDetailService customUserDetailService,
+                          JwtConfig jwtConfig,
+                          @Qualifier("JWTToken") SecretKey secretKey,
+                          RefreshTokenConfig refreshTokenConfig,
+                          @Qualifier("refreshToken")SecretKey refreshTokenSecretKey) {
         this.passwordEncoder = passwordEncoder;
         this.customUserDetailService = customUserDetailService;
         this.jwtConfig = jwtConfig;
@@ -56,7 +62,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .addFilterAfter(new JwtTokenVerifierFilter(secretKey,jwtConfig), JwtUsernameAndPasswordAuthenticationFilter.class)
                     .authorizeRequests()
                     .antMatchers("/organization/create").permitAll()
+                    .antMatchers("/user/verify").permitAll()
 //                    .antMatchers("/user/login").permitAll()
+
                     .anyRequest()
                     .authenticated();
 //                    .and()
@@ -106,7 +114,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         //The reason we want to ignore is because we have the JwtRokenVerifier
         //Edge case if they have an expired token still saved and then the JwtTokenVeriferFilter
         //Will reject with a 403 when creating account.
-        web.ignoring().antMatchers("/organization/create");
+        //THIS will Remove all SPRING SECURITY Feature to these pages. May want to find another way.
+//        web.ignoring()
+//                .antMatchers("/organization/create")
+//                .antMatchers("/refresh");
     }
 
     @Bean

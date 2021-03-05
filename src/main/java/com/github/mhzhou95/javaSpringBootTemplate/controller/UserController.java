@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -151,11 +152,11 @@ public class UserController {
 
     @CrossOrigin
     @GetMapping("/verify")
-    public ResponseEntity verify(){
+    public ResponseEntity verify(HttpServletRequest request){
         //This is just used to see if a client has a cookie with a valid token.
         //if it does it will reach this API and get an 200
         //Otherwise the it will not pass the filters and fail getting a 403 status
-        return new ResponseEntity<>( HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 

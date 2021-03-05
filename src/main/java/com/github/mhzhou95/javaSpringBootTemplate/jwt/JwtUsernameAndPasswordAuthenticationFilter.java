@@ -29,11 +29,11 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePassword
     private final JwtConfig jwtConfig;
     private final SecretKey secretKey;
     private final RefreshTokenConfig refreshTokenConfig;
-    private final RefreshTokenSecretKey refreshTokenSecretKey;
+    private final SecretKey refreshTokenSecretKey;
 
 
     public JwtUsernameAndPasswordAuthenticationFilter(AuthenticationManager authenticationManager
-            , JwtConfig jwtConfig, SecretKey secretKey, RefreshTokenConfig refreshTokenConfig, RefreshTokenSecretKey refreshTokenSecretKey) {
+            , JwtConfig jwtConfig, SecretKey secretKey, RefreshTokenConfig refreshTokenConfig, SecretKey refreshTokenSecretKey) {
         this.authenticationManager = authenticationManager;
         this.jwtConfig = jwtConfig;
         this.secretKey = secretKey;
@@ -84,8 +84,20 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePassword
 //                    .setExpiration(java.sql.Date.valueOf(LocalDate.now().plusDays(jwtConfig.getTokenExpirationAfterDays()))) //Date from SQL
                     //it is the 1000 for (1/1000 a sec) * 60 to make it a minute then times how many minutes
                     //Standard appears to be 15 minutes for JWT expiration date.
-                    .setExpiration(new Date(currentTime + (1000 * 60 * jwtConfig.getTokenExpirationAfterMinutes()))) //this takes a Java.Util.Date
+//                    .setExpiration(new Date(currentTime + (1000 * 60 * jwtConfig.getTokenExpirationAfterMinutes()))) //this takes a Java.Util.Date
+                    .setExpiration(new Date(currentTime + (1)))
                     .signWith(secretKey)
+                    .compact();
+
+            //create refresh token
+            String refreshToken = Jwts.builder()
+                    .setSubject(authResult.getName())//Header //will be the username
+                    .setIssuedAt(new Date(currentTime))
+//                    .setExpiration(java.sql.Date.valueOf(LocalDate.now().plusDays(jwtConfig.getTokenExpirationAfterDays()))) //Date from SQL
+                    //it is the 1000 for (1/1000 a sec) * 60 to make it a minute then times how many minutes
+                    //Standard appears to be 15 minutes for JWT expiration date.
+                    .setExpiration(new Date(currentTime + (1000 * 60 * refreshTokenConfig.getRefreshTokenExpirationAfterMinutes()))) //this takes a Java.Util.Date
+                    .signWith(refreshTokenSecretKey)
                     .compact();
 
             //add token header to the response.
@@ -97,9 +109,16 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePassword
             Cookie tokenCookie = new Cookie(jwtConfig.getAuthorizationCookieName(), jwtConfig.getTokenPrefix() + token);
             tokenCookie.setHttpOnly(true);
 
+            //refresh token Cookie
+            Cookie refreshTokenCookie = new Cookie(refreshTokenConfig.getCookieName(),  token);
+            refreshTokenCookie.setHttpOnly(true);
+            //setting the path makes it so the cookie will only be send at this specific endpoint.
+            //we only want the refreshToken to touch the Auth Server, so we make sure the endpoint is correct.
+            refreshTokenCookie.setPath("/refresh");
+
 
             response.addCookie(tokenCookie);
-
+            response.addCookie(refreshTokenCookie);
 
         }catch (Exception e){
             System.out.println(e);
