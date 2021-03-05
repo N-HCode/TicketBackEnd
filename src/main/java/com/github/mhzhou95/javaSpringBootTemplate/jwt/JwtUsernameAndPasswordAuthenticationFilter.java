@@ -15,9 +15,6 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.Date;
 
 //To get the Token in an API request, you need to request POST to [URL]/Login first
@@ -31,13 +28,17 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePassword
     private final AuthenticationManager authenticationManager;
     private final JwtConfig jwtConfig;
     private final SecretKey secretKey;
+    private final RefreshTokenConfig refreshTokenConfig;
+    private final RefreshTokenSecretKey refreshTokenSecretKey;
 
 
     public JwtUsernameAndPasswordAuthenticationFilter(AuthenticationManager authenticationManager
-            , JwtConfig jwtConfig, SecretKey secretKey) {
+            , JwtConfig jwtConfig, SecretKey secretKey, RefreshTokenConfig refreshTokenConfig, RefreshTokenSecretKey refreshTokenSecretKey) {
         this.authenticationManager = authenticationManager;
         this.jwtConfig = jwtConfig;
         this.secretKey = secretKey;
+        this.refreshTokenConfig = refreshTokenConfig;
+        this.refreshTokenSecretKey = refreshTokenSecretKey;
     }
 
 
