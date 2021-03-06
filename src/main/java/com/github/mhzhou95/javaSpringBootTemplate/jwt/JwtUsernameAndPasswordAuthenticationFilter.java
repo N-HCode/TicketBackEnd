@@ -85,7 +85,7 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePassword
                     //it is the 1000 for (1/1000 a sec) * 60 to make it a minute then times how many minutes
                     //Standard appears to be 15 minutes for JWT expiration date.
 //                    .setExpiration(new Date(currentTime + (1000 * 60 * jwtConfig.getTokenExpirationAfterMinutes()))) //this takes a Java.Util.Date
-                    .setExpiration(new Date(currentTime + (1)))
+                    .setExpiration(new Date(currentTime + (1000 * 60 * jwtConfig.getTokenExpirationAfterMinutes())))
                     .signWith(secretKey)
                     .compact();
 
