@@ -3,6 +3,7 @@ package com.github.mhzhou95.javaSpringBootTemplate.jwt;
 import com.google.common.base.Strings;
 
 import io.jsonwebtoken.*;
+import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -96,24 +97,46 @@ public class JwtTokenVerifierFilter extends OncePerRequestFilter {
             );
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
+            filterChain.doFilter(httpServletRequest, httpServletResponse);
 
         }
         //(JwtException e) is a catch all. you can alt enter to get the detailed ones.
         catch (ExpiredJwtException e) {
 
+            //We created a refresh token that only sends to the /refresh endpoint.
+            //So we if if the cookie is not empty from the request then we are going
+            //to the refresh endpoint and we should just continue the filter chain.
+            //otherwise we can just throw the expired token
+
+            //we can also check to see if the endpoint we are working with does not matter
+            //if the token is expired or not.
+            //we put the organization/create as an edge case. If they have an expired token
+            //while they are trying to create they will get a 403 forbidden.
+            //But we want anyone to be able to create an organization.
+            //We don't want to completely disable filters as they would reduce security
+
+            if(httpServletRequest.getRequestURI().equals("/refresh") || httpServletRequest.getRequestURI().equals("/organization/create")){
+                filterChain.doFilter(httpServletRequest, httpServletResponse);
+
+            }else{
+                throw new IllegalStateException("Expired Token");
+            }
+
+
 
         } catch (MalformedJwtException e) {
 
+            throw new MalformedJwtException(e.getMessage());
 
         } catch (UnsupportedJwtException e) {
-
+            throw new UnsupportedJwtException(e.getMessage());
 
         } catch (SignatureException e) {
-
+            throw new SignatureException(e.getMessage());
 
         }
         //if we did not set an Authentication. It will be forbidden if the user's token is expired.
-        filterChain.doFilter(httpServletRequest, httpServletResponse);
+
 
 
     }

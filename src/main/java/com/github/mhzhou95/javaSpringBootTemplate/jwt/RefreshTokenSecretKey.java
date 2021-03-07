@@ -19,7 +19,9 @@ public class RefreshTokenSecretKey {
 
     @Bean(name="refreshToken")
     public SecretKey secretKey() {
+
         return Keys.hmacShaKeyFor(refreshTokenConfig.getRefreshSecretKey().getBytes());
+
     }
 
 }

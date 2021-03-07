@@ -39,7 +39,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                           JwtConfig jwtConfig,
                           @Qualifier("JWTToken") SecretKey secretKey,
                           RefreshTokenConfig refreshTokenConfig,
-                          @Qualifier("refreshToken")SecretKey refreshTokenSecretKey) {
+                          @Qualifier("refreshToken") SecretKey refreshTokenSecretKey) {
         this.passwordEncoder = passwordEncoder;
         this.customUserDetailService = customUserDetailService;
         this.jwtConfig = jwtConfig;
@@ -62,7 +62,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .addFilterAfter(new JwtTokenVerifierFilter(secretKey,jwtConfig), JwtUsernameAndPasswordAuthenticationFilter.class)
                     .authorizeRequests()
                     .antMatchers("/organization/create").permitAll()
-                    .antMatchers("/user/verify").permitAll()
+                    .antMatchers("/refresh").permitAll()
 //                    .antMatchers("/user/login").permitAll()
 
                     .anyRequest()
