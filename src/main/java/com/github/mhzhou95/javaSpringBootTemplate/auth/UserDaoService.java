@@ -15,7 +15,7 @@ public class UserDaoService implements UserDao{
     private UserRepository userRepository;
 
     @Autowired
-    public UserDaoService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserDaoService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 

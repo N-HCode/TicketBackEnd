@@ -8,19 +8,19 @@ import org.springframework.context.annotation.Configuration;
 import javax.crypto.SecretKey;
 
 @Configuration
-public class JwtSecretKey {
+public class RefreshTokenSecretKey {
 
-    private final JwtConfig jwtConfig;
-
+    private final RefreshTokenConfig refreshTokenConfig;
+    
     @Autowired
-    public JwtSecretKey(JwtConfig jwtConfig) {
-        this.jwtConfig = jwtConfig;
+    public RefreshTokenSecretKey(RefreshTokenConfig refreshTokenConfig) {
+        this.refreshTokenConfig = refreshTokenConfig;
     }
 
-    @Bean(name="JWTToken")
+    @Bean(name="refreshToken")
     public SecretKey secretKey() {
 
-        return Keys.hmacShaKeyFor(jwtConfig.getSecretKey().getBytes());
+        return Keys.hmacShaKeyFor(refreshTokenConfig.getRefreshSecretKey().getBytes());
 
     }
 
