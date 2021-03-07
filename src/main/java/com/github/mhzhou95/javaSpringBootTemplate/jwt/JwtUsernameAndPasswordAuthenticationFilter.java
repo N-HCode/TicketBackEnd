@@ -2,7 +2,6 @@ package com.github.mhzhou95.javaSpringBootTemplate.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -76,7 +75,7 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePassword
         try{
             //current time in milli seconds (1/1000 of a second).
             //We will use this to construct the date and expiration date.
-            Long currentTime = System.currentTimeMillis();
+            long currentTime = System.currentTimeMillis();
 
             //Create the token
             String token = Jwts.builder()
@@ -86,8 +85,8 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePassword
 //                    .setExpiration(java.sql.Date.valueOf(LocalDate.now().plusDays(jwtConfig.getTokenExpirationAfterDays()))) //Date from SQL
                     //it is the 1000 for (1/1000 a sec) * 60 to make it a minute then times how many minutes
                     //Standard appears to be 15 minutes for JWT expiration date.
-//                    .setExpiration(new Date(currentTime + (1000 * 60 * jwtConfig.getTokenExpirationAfterMinutes()))) //this takes a Java.Util.Date
-                    .setExpiration(new Date(currentTime + (1)))
+                    .setExpiration(new Date(currentTime + (1000 * 60 * jwtConfig.getTokenExpirationAfterMinutes()))) //this takes a Java.Util.Date
+//                    .setExpiration(new Date(currentTime + (1)))
                     .signWith(secretKey)
                     .compact();
 

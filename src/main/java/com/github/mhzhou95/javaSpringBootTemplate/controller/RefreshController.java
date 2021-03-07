@@ -26,9 +26,11 @@ public class RefreshController {
     //Use the HttpServletRequest to get the response
     public ResponseEntity<?> refresh(HttpServletRequest request, HttpServletResponse response){
 
-        refreshTokenService.attemptRefresh(request,response);
-
-        return new ResponseEntity<>(request.getCookies(), HttpStatus.OK);
+        if(refreshTokenService.attemptRefresh(request,response)){
+            return new ResponseEntity<>(HttpStatus.OK);
+        }else{
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
 
     }
 }

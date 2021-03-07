@@ -11,9 +11,11 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
+import java.util.Date;
 
 @Service
 public class RefreshTokenService {
@@ -41,11 +43,18 @@ public class RefreshTokenService {
 
             //There is not a way to just get one cookie from the request. The getCookies return an array of all the cookies
             //in the response. So we need to filter it to get the one cookie that we want.
-            refreshToken = Arrays.stream(request.getCookies())
-                    .filter(cookie -> refreshTokenConfig.getCookieName().equals(cookie.getName())).findFirst().get().getValue();
+           Cookie refreshTokenCookie = Arrays.stream(request.getCookies())
+                    .filter(cookie -> refreshTokenConfig.getCookieName().equals(cookie.getName())).findFirst().orElse(null);
 
-            expiredToken = Arrays.stream(request.getCookies())
-                    .filter(cookie -> jwtConfig.getAuthorizationCookieName().equals(cookie.getName())).findFirst().get().getValue();
+           Cookie expiredTokenCookie = Arrays.stream(request.getCookies())
+                    .filter(cookie -> jwtConfig.getAuthorizationCookieName().equals(cookie.getName())).findFirst().orElse(null);
+
+           if(refreshTokenCookie == null || expiredTokenCookie == null){
+               return false;
+           }else{
+               refreshToken = refreshTokenCookie.getValue();
+               expiredToken = expiredTokenCookie.getValue();
+           }
 
         }else {
 
@@ -79,7 +88,24 @@ public class RefreshTokenService {
                 //being sent
                 if (refreshUsername.equals(e.getClaims().get("sub"))){
 
-                    System.out.println("We did it");
+                    long currentTime = System.currentTimeMillis();
+
+                    String token = Jwts.builder()
+                            .setSubject((String) e.getClaims().get("sub"))//Header //will be the username
+                            .claim("authorities", e.getClaims().get("authorities")) //Body
+                            .setIssuedAt(new Date(currentTime))
+//                    .setExpiration(java.sql.Date.valueOf(LocalDate.now().plusDays(jwtConfig.getTokenExpirationAfterDays()))) //Date from SQL
+                            //it is the 1000 for (1/1000 a sec) * 60 to make it a minute then times how many minutes
+                            //Standard appears to be 15 minutes for JWT expiration date.
+                            .setExpiration(new Date(currentTime + (1000 * 60 * jwtConfig.getTokenExpirationAfterMinutes()))) //this takes a Java.Util.Date
+                            .signWith(secretKey)
+                            .compact();
+
+                    Cookie tokenCookie = new Cookie(jwtConfig.getAuthorizationCookieName(), jwtConfig.getTokenPrefix() + token);
+                    tokenCookie.setHttpOnly(true);
+                    response.addCookie(tokenCookie);
+
+                    return true;
                 }
 
             } catch (ExpiredJwtException error) {

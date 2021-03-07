@@ -15,6 +15,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
@@ -52,7 +53,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
             http
-                    .csrf().disable()
+                    //csrf is enabled by default. You should never really disable it as it is for cross site protection
+                    //Oauth2 will use it's own structure
+//                    .csrf().disable()
+                    //Need the Repository so that it creates the CSRF token.
+                    //https://security.stackexchange.com/questions/175536/does-a-csrf-cookie-need-to-be-httponly
+//                    .csrf().csrfTokenRepository(new CookieCsrfTokenRepository())
+                    .csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                    .and()
                     //This is implemented because we are using JWT and JWT is stateless
                     .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                     .and()
@@ -84,7 +92,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                             //then we can set the allowed origins
                             cc.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
                             //Need to add the allowed headers as well.
-                            cc.setAllowedHeaders(Arrays.asList("x-requested-with", "authorization", "content-type", "Set-Cookie"));
+                            //X-XSRF-TOKEN is the CSRF token header
+                            cc.setAllowedHeaders(Arrays.asList("x-requested-with", "authorization", "content-type", "Set-Cookie", "X-XSRF-TOKEN"));
 //                            cc.setAllowedHeaders(Arrays.asList("*"));
 //                            cc.addExposedHeader("Access-Control-Allow-Credentials");
                             //This will allow the front end to use the withCredentials in the axios configuration

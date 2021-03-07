@@ -14,6 +14,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import javax.crypto.SecretKey;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -49,10 +50,18 @@ public class JwtTokenVerifierFilter extends OncePerRequestFilter {
 
         if (httpServletRequest.getCookies() != null){
 
+
             //There is not a way to just get one cookie from the request. The getCookies return an array of all the cookies
             //in the response. So we need to filter it to get the one cookie that we want.
-            cookieAuthorization = Arrays.stream(httpServletRequest.getCookies())
-                    .filter(cookie -> jwtConfig.getAuthorizationCookieName().equals(cookie.getName())).findFirst().get().getValue();
+            Cookie tokenCookie = Arrays.stream(httpServletRequest.getCookies())
+                    .filter(cookie -> jwtConfig.getAuthorizationCookieName().equals(cookie.getName())).findFirst().orElse(null);
+            if(tokenCookie != null){
+                cookieAuthorization = tokenCookie.getValue();
+            }else{
+                filterChain.doFilter(httpServletRequest, httpServletResponse);
+                return;
+            }
+
         }else{
             filterChain.doFilter(httpServletRequest, httpServletResponse);
             return;
