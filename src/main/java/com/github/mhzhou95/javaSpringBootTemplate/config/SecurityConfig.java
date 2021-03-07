@@ -1,6 +1,7 @@
 package com.github.mhzhou95.javaSpringBootTemplate.config;
 
 import com.github.mhzhou95.javaSpringBootTemplate.auth.CustomUserDetailService;
+import com.github.mhzhou95.javaSpringBootTemplate.csrf.CSRFTokenLoggerFilter;
 import com.github.mhzhou95.javaSpringBootTemplate.jwt.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -16,6 +17,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.CsrfFilter;
+import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
@@ -59,6 +62,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     //Need the Repository so that it creates the CSRF token.
                     //https://security.stackexchange.com/questions/175536/does-a-csrf-cookie-need-to-be-httponly
 //                    .csrf().csrfTokenRepository(new CookieCsrfTokenRepository())
+//                    .csrf().csrfTokenRepository(new HttpSessionCsrfTokenRepository())
+//                    .csrf()
+//                     .ignoringAntMatchers()
+//                        .ignoringAntMatchers("/organization/create")
                     .csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                     .and()
                     //This is implemented because we are using JWT and JWT is stateless
@@ -68,8 +75,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     //there is a parent function that gets the authenticationManager
                     .addFilter(new JwtUsernameAndPasswordAuthenticationFilter(authenticationManager(), jwtConfig, secretKey, refreshTokenConfig, refreshTokenSecretKey))
                     .addFilterAfter(new JwtTokenVerifierFilter(secretKey,jwtConfig), JwtUsernameAndPasswordAuthenticationFilter.class)
+//                    .addFilterAfter(new CSRFTokenLoggerFilter(), CsrfFilter.class)
                     .authorizeRequests()
                     .antMatchers("/organization/create").permitAll()
+                    .antMatchers("/user/checkusername").permitAll()
                     .antMatchers("/refresh").permitAll()
 //                    .antMatchers("/user/login").permitAll()
 
