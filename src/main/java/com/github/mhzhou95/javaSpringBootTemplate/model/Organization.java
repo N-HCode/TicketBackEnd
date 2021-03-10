@@ -10,8 +10,11 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
-@Entity
-@Table(name = "organizations" )
+import static javax.persistence.GenerationType.*;
+
+
+@Table
+@Entity(name = "organizations" ) //this creates a table in the database
 public class Organization {
 
     // testing account number builder
@@ -19,7 +22,18 @@ public class Organization {
 
     //Id is auto generated. Do not add to constructor or create a getter/setter or it will create error.
     //Most likely the error missing default constructor for the Id
-    @Id @GeneratedValue(strategy = GenerationType.AUTO) private Long id;
+//    @Id @GeneratedValue(strategy = GenerationType.AUTO) private Long id;
+    @Id
+    @SequenceGenerator(name="org_id_sequence" //We create a Sequence up here
+            , sequenceName = "org_id_sequence"
+            , allocationSize = 1 //How much the amount get increased by
+            , initialValue = 100 //this is the intial Value. By default it is one
+    )
+    @GeneratedValue(
+            strategy = SEQUENCE,
+            generator = "org_id_sequence" //We use the Sequence to generate the value
+    )
+    private Long id;
 
     @NotNull
     @Column(unique = true)
