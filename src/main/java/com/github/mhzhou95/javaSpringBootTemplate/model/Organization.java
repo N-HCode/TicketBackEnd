@@ -13,7 +13,12 @@ import java.util.Set;
 import static javax.persistence.GenerationType.*;
 
 
-@Table
+@Table(name="organization",
+        uniqueConstraints = {
+            @UniqueConstraint(name="account_number_unique", columnNames = "account_number")
+        }
+
+)
 @Entity(name = "organizations" ) //this creates a table in the database
 public class Organization {
 
@@ -29,17 +34,22 @@ public class Organization {
             , allocationSize = 1 //How much the amount get increased by
             , initialValue = 100 //this is the intial Value. By default it is one
     )
-    @GeneratedValue(
+    @GeneratedValue( //BIG SERIAL DataType
             strategy = SEQUENCE,
             generator = "org_id_sequence" //We use the Sequence to generate the value
     )
+    @Column(name="id", updatable = false) // Make it so noone can update it
     private Long id;
 
     @NotNull
-    @Column(unique = true)
+    @Column(name="organization_name", nullable = false,
+            columnDefinition = "TEXT")
     private String organizationName;
+
     @NotNull
-    @Column(unique = true)
+//    @Column(unique = true) //adding a unique here will add a constraint with a random
+    //name we could define the constraint using the table at the top level.
+    @Column(name = "account_number")
     private long accountNumber;
     //Need this tag for collections for some reason. Don't know why it fixed the issue:
     //"Could not determine type for: java.util.Set."
