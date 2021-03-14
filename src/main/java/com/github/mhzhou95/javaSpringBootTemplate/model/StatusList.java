@@ -7,14 +7,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "statuslists")
+@Table(name = "status_list")
 public class StatusList {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY) private Long statusListId;
+
+    @OneToOne
+    @JsonManagedReference
+    Organization organization;
 
     //@ElementCollection annotation is used to store a list of values as an entity attribute without needing to model an additional entity
     //@OneToMany as OneToMany is for one-Entity-many-Entity relationship
     @ElementCollection
-    @JsonManagedReference
     private List<String> statusList = new ArrayList<>();
 
     public StatusList() {

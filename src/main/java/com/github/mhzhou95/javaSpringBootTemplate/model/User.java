@@ -11,7 +11,7 @@ import java.time.ZonedDateTime;
 import java.util.*;
 
 @Entity
-@Table(name = "users")
+@Table(name = "user")
 public class User implements UserDetails {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY) private Long userId;
     @NotNull @Column(unique = true) String username;
@@ -33,14 +33,14 @@ public class User implements UserDetails {
     private boolean isEnabled = true;
 
     // @JsonManagedReference and @JsonBackReference to solve infinite recursion problem
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    @JsonManagedReference
+    @OneToMany(mappedBy = "user")
+    @JsonBackReference //this is to mark the child elements/entities
     private Set<Ticket> tickets= new HashSet<>();
 
     // @JsonManagedReference and @JsonBackReference to solve infinite recursion problem
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn( name = "organization_foreign_key" )
-    @JsonBackReference
+    @JsonManagedReference // this is to mark the parent element/entity
     private Organization organization;
 
     public User() {

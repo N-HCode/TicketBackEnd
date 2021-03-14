@@ -2,6 +2,7 @@ package com.github.mhzhou95.javaSpringBootTemplate.model;
 
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
@@ -54,11 +55,30 @@ public class Organization {
     //Need this tag for collections for some reason. Don't know why it fixed the issue:
     //"Could not determine type for: java.util.Set."
     @OneToMany(mappedBy = "organization", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JsonManagedReference
+    @JsonBackReference
     private Set<User> users = new HashSet<>();
 
-    private long statusListId;
-    private long priorityListId;
+    @OneToMany(mappedBy = "organization", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonBackReference
+    private Set<ClientsOrganization> clientsOrganizations = new HashSet<>();
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonBackReference
+    private StatusList statusList;
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonBackReference
+    private PriorityList priorityList;
+
+    @OneToMany(mappedBy = "organization", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonBackReference
+    private Set<Ticket> tickets= new HashSet<>();
+    // @JsonManagedReference and @JsonBackReference to solve infinite recursion problem
+
+
+
+
+
     private boolean isForeignAddress;
     private String city;
     private String state;
@@ -112,21 +132,6 @@ public class Organization {
         return accSeq += 100;
     }
 
-    public long getStatusListId() {
-        return statusListId;
-    }
-
-    public void setStatusListId(long statusListId) {
-        this.statusListId = statusListId;
-    }
-
-    public long getPriorityListId() {
-        return priorityListId;
-    }
-
-    public void setPriorityListId(long priorityListId) {
-        this.priorityListId = priorityListId;
-    }
 
     public void setOrganizationName(String organizationName) {
         this.organizationName = organizationName;

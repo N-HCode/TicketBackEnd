@@ -1,6 +1,7 @@
 package com.github.mhzhou95.javaSpringBootTemplate.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -8,7 +9,7 @@ import java.time.ZonedDateTime;
 
 // it has red underline here but the table is still made to be called tickets. Runs with no problems because using h2 db
 @Entity
-@Table(name = "tickets")
+@Table(name = "ticket")
 public class Ticket {
     @Id @GeneratedValue (strategy = GenerationType.IDENTITY) private long ticketNumber;
     @NotNull private String subject;
@@ -21,7 +22,6 @@ public class Ticket {
     private String ticketNotes;
     private String responses;
     private String status;
-    private String assignedTo;
 //    Blob example
 //    @Lob
 //    private byte[] blobData;
@@ -29,8 +29,23 @@ public class Ticket {
     // @JsonManagedReference and @JsonBackReference to solve infinite recursion problem
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn( name = "user_foreign_key")
-    @JsonBackReference
+    @JsonManagedReference
     private User user;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn( name = "organization_foreign_key")
+    @JsonManagedReference
+    private Organization organization;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn( name = "contact_foreign_key")
+    @JsonManagedReference
+    private Contact contact;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn( name = "clients_organization_foreign_key")
+    @JsonManagedReference
+    private ClientsOrganization clientsOrganization;
 
     public Ticket() {
     }
@@ -134,11 +149,4 @@ public class Ticket {
         this.status = status;
     }
 
-    public String getAssignedTo() {
-        return assignedTo;
-    }
-
-    public void setAssignedTo(String assignedTo) {
-        this.assignedTo = assignedTo;
-    }
 }
