@@ -64,23 +64,23 @@ public class StatusListService {
         }
     }
 
-    public Long createNewStatusList(){
-
-        try{
-            StatusList newStatusList = new StatusList();
-            newStatusList.getStatusList().add("New");
-            newStatusList.getStatusList().add("In Progress");
-            newStatusList.getStatusList().add("Closed");
-            StatusList savedStatusList = statusListRepository.save(newStatusList);
-            Long savedStatusListId = savedStatusList.getStatusListId();
-            return savedStatusListId;
-
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return (long) -1;
-        }
-    }
+//    public StatusList createNewStatusList(){
+//
+//        try{
+//            StatusList newStatusList = new StatusList();
+//            newStatusList.getStatusList().add("New");
+//            newStatusList.getStatusList().add("In Progress");
+//            newStatusList.getStatusList().add("Closed");
+//            StatusList savedStatusList = statusListRepository.save(newStatusList);
+//            Long savedStatusListId = savedStatusList.getStatusListId();
+//            return newStatusList;
+//
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return null;
+//        }
+//    }
 
 
 

@@ -21,7 +21,12 @@ public class StatusList {
     private List<String> statusList = new ArrayList<>();
 
     public StatusList() {
+        statusList.add("New");
+        statusList.add("In Progress");
+        statusList.add("Closed");
     }
+
+
 
     public List<String> getStatusList() {
         return statusList;

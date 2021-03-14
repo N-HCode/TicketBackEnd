@@ -64,20 +64,16 @@ public class Organization {
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonBackReference
-    private StatusList statusList;
+    private final StatusList statusList = new StatusList();
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonBackReference
-    private PriorityList priorityList;
+    private final PriorityList priorityList = new PriorityList();
 
     @OneToMany(mappedBy = "organization", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonBackReference
-    private Set<Ticket> tickets= new HashSet<>();
+    private final Set<Ticket> tickets = new HashSet<>();
     // @JsonManagedReference and @JsonBackReference to solve infinite recursion problem
-
-
-
-
 
     private boolean isForeignAddress;
     private String city;
@@ -211,6 +207,28 @@ public class Organization {
 
     public void setDateModified(LocalDateTime dateModified) {
         this.dateModified = dateModified;
+    }
+
+    public Set<ClientsOrganization> getClientsOrganizations() {
+        return clientsOrganizations;
+    }
+
+    public void setClientsOrganizations(Set<ClientsOrganization> clientsOrganizations) {
+        this.clientsOrganizations = clientsOrganizations;
+    }
+
+    public StatusList getStatusList() {
+        return statusList;
+    }
+
+
+    public PriorityList getPriorityList() {
+        return priorityList;
+    }
+
+
+    public Set<Ticket> getTickets() {
+        return tickets;
     }
 
 }
