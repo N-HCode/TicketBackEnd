@@ -28,22 +28,22 @@ public class Ticket {
 
     // @JsonManagedReference and @JsonBackReference to solve infinite recursion problem
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn( name = "user_foreign_key")
+    @JoinColumn( name = "user_id")
     @JsonManagedReference
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn( name = "organization_foreign_key")
+    @JoinColumn( name = "organization_id")
     @JsonManagedReference
     private Organization organization;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn( name = "contact_foreign_key")
+    @JoinColumn( name = "contact_id")
     @JsonManagedReference
     private Contact contact;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn( name = "clients_organization_foreign_key")
+    @JoinColumn( name = "client_organization_id")
     @JsonManagedReference
     private ClientsOrganization clientsOrganization;
 

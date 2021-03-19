@@ -60,22 +60,22 @@ public class PriorityListService {
         }
     }
 
-    public Long createNewPriorityList(){
-
-        try{
-            PriorityList newPriorityList = new PriorityList();
-            newPriorityList.getPriorities().add("Low");
-            newPriorityList.getPriorities().add("Medium");
-            newPriorityList.getPriorities().add("High");
-            newPriorityList.getPriorities().add("Critical");
-            PriorityList savedPriorityList= priorityListRepository.save(newPriorityList);
-            Long savedListId = savedPriorityList.getPriorityListId();
-            return savedListId;
-
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return (long) -1;
-        }
-    }
+//    public Long createNewPriorityList(){
+//
+//        try{
+//            PriorityList newPriorityList = new PriorityList();
+//            newPriorityList.getPriorities().add("Low");
+//            newPriorityList.getPriorities().add("Medium");
+//            newPriorityList.getPriorities().add("High");
+//            newPriorityList.getPriorities().add("Critical");
+//            PriorityList savedPriorityList= priorityListRepository.save(newPriorityList);
+//            Long savedListId = savedPriorityList.getPriorityListId();
+//            return savedListId;
+//
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return (long) -1;
+//        }
+//    }
 }

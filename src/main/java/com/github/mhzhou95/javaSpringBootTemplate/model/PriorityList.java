@@ -19,9 +19,14 @@ public class PriorityList {
 
     @OneToOne
     @JsonManagedReference
-    Organization organization;
+    private Organization organization;
 
     public PriorityList() {
+        Priorities.add("Low");
+        Priorities.add("Medium");
+        Priorities.add("High");
+        Priorities.add("Critical");
+
     }
 
     public Long getPriorityListId() {
@@ -34,5 +39,13 @@ public class PriorityList {
 
     public void setPriorities(ArrayList<String> priorities) {
         Priorities = priorities;
+    }
+
+    public Organization getOrganization() {
+        return organization;
+    }
+
+    public void setOrganization(Organization organization) {
+        this.organization = organization;
     }
 }

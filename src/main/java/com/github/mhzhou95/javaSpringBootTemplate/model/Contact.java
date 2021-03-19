@@ -14,6 +14,7 @@ public class Contact {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="contact_id")
     private Long Id;
 
     private String firstName;
@@ -26,7 +27,7 @@ public class Contact {
     private ZonedDateTime lastModified;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn( name = "organization_foreign_key" )
+    @JoinColumn( name = "client_organization_id" )
     @JsonManagedReference
     private ClientsOrganization clientsOrganization;
 

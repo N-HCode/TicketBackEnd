@@ -13,7 +13,7 @@ public class StatusList {
 
     @OneToOne
     @JsonManagedReference
-    Organization organization;
+    private Organization organization;
 
     //@ElementCollection annotation is used to store a list of values as an entity attribute without needing to model an additional entity
     //@OneToMany as OneToMany is for one-Entity-many-Entity relationship
@@ -38,5 +38,13 @@ public class StatusList {
 
     public Long getStatusListId() {
         return statusListId;
+    }
+
+    public Organization getOrganization() {
+        return organization;
+    }
+
+    public void setOrganization(Organization organization) {
+        this.organization = organization;
     }
 }

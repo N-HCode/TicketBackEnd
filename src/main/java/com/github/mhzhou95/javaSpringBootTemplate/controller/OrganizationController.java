@@ -95,12 +95,7 @@ public class OrganizationController {
         Organization responseOrg = service.createOrganization(username, password, organization);
 
         if(responseOrg != null){
-            long statusListId = statusListService.createNewStatusList();
-            service.addStatusListIdToOrg(responseOrg, statusListId);
-
-            long priorityListId = priorityListService.createNewPriorityList();
-            service.addPriorityListIdToOrg(responseOrg,priorityListId);
-            responseCreateOrg = new ResponseEntity<>(responseOrg,HttpStatus.CREATED);
+            responseCreateOrg = new ResponseEntity<>(HttpStatus.CREATED);
         }else{
             responseCreateOrg = new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }

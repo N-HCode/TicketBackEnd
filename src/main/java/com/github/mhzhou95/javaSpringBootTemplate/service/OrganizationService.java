@@ -15,10 +15,10 @@ import java.util.*;
 @Service
 public class OrganizationService {
 
-    private OrganizationRepository organizationRepository;
-    private UserRepository userRepository;
-    private UserService userService;
-    private PasswordEncoder passwordEncoder;
+    private final OrganizationRepository organizationRepository;
+    private final UserRepository userRepository;
+    private final UserService userService;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
     public OrganizationService(OrganizationRepository organizationRepository, UserRepository userRepository, UserService userService, PasswordEncoder passwordEncoder) {

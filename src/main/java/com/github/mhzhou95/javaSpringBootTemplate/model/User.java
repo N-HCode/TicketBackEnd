@@ -13,7 +13,10 @@ import java.util.*;
 @Entity
 @Table(name = "user")
 public class User implements UserDetails {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY) private Long userId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="user_id")
+    private Long userId;
     @NotNull @Column(unique = true) String username;
     @NotNull String password;
     private String firstName;
@@ -39,7 +42,7 @@ public class User implements UserDetails {
 
     // @JsonManagedReference and @JsonBackReference to solve infinite recursion problem
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn( name = "organization_foreign_key" )
+    @JoinColumn( name = "organization_id" )
     @JsonManagedReference // this is to mark the parent element/entity
     private Organization organization;
 

@@ -20,7 +20,7 @@ import static javax.persistence.GenerationType.*;
         }
 
 )
-@Entity(name = "organizations" ) //this creates a table in the database
+@Entity(name = "organization" ) //this creates a table in the database
 public class Organization {
 
     // testing account number builder
@@ -39,7 +39,7 @@ public class Organization {
             strategy = SEQUENCE,
             generator = "org_id_sequence" //We use the Sequence to generate the value
     )
-    @Column(name="id", updatable = false) // Make it so noone can update it
+    @Column(name="organization_id", updatable = false) // Make it so noone can update it
     private Long id;
 
     @NotNull
@@ -91,9 +91,16 @@ public class Organization {
 
 
     public Organization() {
+
     }
 
     public Organization(@NotNull String organizationName, boolean isForeignAddress, String city, String state, String streetAddress, String zipcode, String country, String organizationPhoneNumber, LocalDateTime dateModified) {
+//        //constructor overloading
+//        this();
+
+        statusList.setOrganization(this);
+        priorityList.setOrganization(this);
+
         this.organizationName = organizationName;
         this.isForeignAddress = isForeignAddress;
         this.city = city;

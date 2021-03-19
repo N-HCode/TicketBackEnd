@@ -41,7 +41,6 @@ public class TicketService {
             ZonedDateTime timeAsOfNow = ZonedDateTime.now();
             ticket.setDateCreated(timeAsOfNow);
             ticket.setLastModified(timeAsOfNow);
-            ticket.setAssignedTo(foundUser.getFullName());
 
             return ticketRepository.save(ticket);
         }
@@ -67,8 +66,7 @@ public class TicketService {
             foundTicket.setResolution(ticket.getResolution());
             foundTicket.setPriority(ticket.getPriority());
             foundTicket.setStatus(ticket.getStatus());
-            foundTicket.setAssignedTo(ticket.getAssignedTo());
-            User newAssignedTo = userRepository.findByFullNameEquals(ticket.getAssignedTo());
+            User newAssignedTo = userRepository.findById(ticket.getUser().getUserId()).orElse(ticket.getUser());
             foundTicket.setUser(newAssignedTo);
             return ticketRepository.save(foundTicket);
         } else {
