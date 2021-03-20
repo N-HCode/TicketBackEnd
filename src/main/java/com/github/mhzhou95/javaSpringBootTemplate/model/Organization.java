@@ -144,6 +144,10 @@ public class Organization {
         return users;
     }
 
+    public void addUser(User user) {
+        users.add(user);
+    }
+
     public void setUsers(Set<User> users) {
         this.users = users;
     }

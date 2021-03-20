@@ -48,13 +48,14 @@ public class OrganizationService {
         rootUser.setFirstName("root");
         rootUser.setLastName("user");
         User createUser = userService.createUser(rootUser);
-
+        
 //        Boolean isAdmin = user.map( user1 -> user1.getUserRole().equals("admin")).orElse(false);
 
         //make sure the body is not null
         if (organization != null){
             organization.setAccountNumber(Organization.getAccSeq());
             createUser.setOrganization(organization);
+            organization.addUser(rootUser);
             return organizationRepository.save(organization);
         } else {
             return null;
