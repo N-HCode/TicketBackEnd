@@ -148,6 +148,10 @@ public class Organization {
         users.add(user);
     }
 
+    public void addTicket(Ticket ticket){ tickets.add(ticket);}
+
+    private void addClientOrganization(ClientsOrganization clientsOrganization){ clientsOrganizations.add(clientsOrganization);}
+
     public void setUsers(Set<User> users) {
         this.users = users;
     }
