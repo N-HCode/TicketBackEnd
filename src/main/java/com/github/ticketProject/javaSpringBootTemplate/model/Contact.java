@@ -28,14 +28,16 @@ public class Contact {
     private ZonedDateTime lastModified = ZonedDateTime.now();
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn( name = "client_organization_id" )
-    @JsonBackReference(value = "client_organization-contacts")
-    private ClientsOrganization clientsOrganization;
+    @JoinColumn( name = "contact_list_id" )
+    @JsonBackReference(value = "contact_list-contact")
+    private ContactList contactList;
 
     // @JsonManagedReference and @JsonBackReference to solve infinite recursion problem
     @OneToMany(mappedBy = "contact")
     @JsonManagedReference( value = "contact-tickets")
     private final Set<Ticket> tickets= new HashSet<>();
+
+
 
     public Contact() {
     }
@@ -118,11 +120,4 @@ public class Contact {
         this.lastModified = lastModified;
     }
 
-    public ClientsOrganization getClientsOrganization() {
-        return clientsOrganization;
-    }
-
-    public void setClientsOrganization(ClientsOrganization clientsOrganization) {
-        this.clientsOrganization = clientsOrganization;
-    }
 }

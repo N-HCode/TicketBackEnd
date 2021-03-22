@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -41,9 +40,9 @@ public class ClientsOrganization {
     //For this example there is a column named organization_id in the Organization model/class
     //We use that to be the foreign key and Join the Columns
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="organization_id")
-    @JsonBackReference(value="organization-client_organization")
-    private Organization organization;
+    @JoinColumn(name="client_organization_list_id")
+    @JsonBackReference(value = "client_organization_list-client_organization")
+    private ClientsOrganizationList clientsOrganizationList;
 
     //When using One to Many we need the mapped by.
     //The Mapped by use the property name of the model related to the field
@@ -52,11 +51,15 @@ public class ClientsOrganization {
     //Usually this will be the Many to One in the Contact class
     //So we open the Contact model and then look for the field and then we make sure
     //We sure the exact same name. In this example that is "clientsOrganization"
-    @OneToMany(mappedBy = "clientsOrganization", cascade = CascadeType.ALL)
-    //https://www.baeldung.com/jackson-bidirectional-relationships-and-infinite-recursion
-    //https://stackoverflow.com/questions/33475222/spring-boot-jpa-json-without-nested-object-with-onetomany-relation
-    @JsonManagedReference(value = "client_organization-contacts")
-    private final Set<Contact> contacts = new HashSet<>();
+//    @OneToMany(mappedBy = "clientsOrganization", cascade = CascadeType.ALL)
+//    //https://www.baeldung.com/jackson-bidirectional-relationships-and-infinite-recursion
+//    //https://stackoverflow.com/questions/33475222/spring-boot-jpa-json-without-nested-object-with-onetomany-relation
+//    @JsonManagedReference(value = "client_organization-contacts")
+//    private final Set<Contact> contacts = new HashSet<>();
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonManagedReference(value = "client_organization-contact_list")
+    private final ContactList contactList = new ContactList();
 
     // @JsonManagedReference and @JsonBackReference to solve infinite recursion problem
     @OneToMany(mappedBy = "clientsOrganization", cascade = CascadeType.ALL)
@@ -67,7 +70,7 @@ public class ClientsOrganization {
     public ClientsOrganization() {
     }
 
-    public ClientsOrganization(boolean isForeignAddress, String city, String state, String streetAddress, String zipcode, String country, String organizationPhoneNumber, String organizationName, Organization organization) {
+    public ClientsOrganization(boolean isForeignAddress, String city, String state, String streetAddress, String zipcode, String country, String organizationPhoneNumber, String organizationName, Organization organization, ClientsOrganizationList clientsOrganizationList) {
         this.isForeignAddress = isForeignAddress;
         this.city = city;
         this.state = state;
@@ -76,12 +79,15 @@ public class ClientsOrganization {
         this.country = country;
         this.organizationPhoneNumber = organizationPhoneNumber;
         this.organizationName = organizationName;
-        this.organization = organization;
+        this.clientsOrganizationList = clientsOrganizationList;
     }
 
-    public void addContact(Contact contact){contacts.add(contact);}
 
     public void addTicket(Ticket ticket){ tickets.add(ticket);}
+
+    public Long getId() {
+        return Id;
+    }
 
 
 }

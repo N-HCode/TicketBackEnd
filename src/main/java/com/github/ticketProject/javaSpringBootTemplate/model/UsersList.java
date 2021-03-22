@@ -1,9 +1,6 @@
 package com.github.ticketProject.javaSpringBootTemplate.model;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIdentityReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.*;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -16,13 +13,17 @@ public class UsersList {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="user_list_id")
-    private Long Id;
+    private Long userListId;
 
     @OneToMany(mappedBy = "usersList", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonManagedReference(value="users-list-user")
 //    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "userId")
 //    @JsonIdentityReference(alwaysAsId = true)
     private final Set<User> users = new HashSet<>();
+
+    @OneToOne
+    @JsonBackReference(value = "organization-user_list")
+    private Organization organization;
 
     public UsersList() {
     }
@@ -33,5 +34,9 @@ public class UsersList {
 
     public Set<User> getUsers() {
         return users;
+    }
+
+    public Long getUserListId() {
+        return userListId;
     }
 }

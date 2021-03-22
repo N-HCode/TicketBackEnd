@@ -50,4 +50,6 @@ public class StatusList {
     public void setOrganization(Organization organization) {
         this.organization = organization;
     }
+
+
 }

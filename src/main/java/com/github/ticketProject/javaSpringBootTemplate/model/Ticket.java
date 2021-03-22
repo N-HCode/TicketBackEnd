@@ -47,6 +47,13 @@ public class Ticket {
     @JsonBackReference(value = "client_organization-tickets")
     private ClientsOrganization clientsOrganization;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn( name = "ticket_list_id")
+    @JsonBackReference(value = "ticket_list-ticket")
+    private TicketList ticketList;
+
+
+
     public Ticket() {
     }
 

@@ -56,6 +56,11 @@ public class OrganizationService {
                 return null;
             }
 
+            Organization newlyCreatedOrganization = new Organization(organization.getOrganizationName(), organization.isForeignAddress()
+                    ,organization.getCity(),organization.getState(),organization.getStreetAddress(),organization.getZipcode()
+                    ,organization.getCountry(),organization.getOrganizationPhoneNumber());
+            newlyCreatedOrganization.setAccountNumber(Organization.getAccSeq());
+
             User rootUser = new User();
             rootUser.setUsername(username);
             rootUser.setPassword(passwordEncoder.encode(password));
@@ -63,18 +68,17 @@ public class OrganizationService {
             rootUser.setFirstName("root");
             rootUser.setLastName("user");
             ZonedDateTime timeAsOfNow = ZonedDateTime.now();
-            rootUser.setUsersList(organization.getUsersList());
+
             rootUser.setDateCreated(timeAsOfNow);
             rootUser.setLastModified(timeAsOfNow);
             rootUser.setFullName(rootUser.getFirstName() + " " + rootUser.getLastName());
-            userRepository.save(rootUser);
 
-            Organization newlyCreatedOrganization = new Organization(organization.getOrganizationName(), organization.isForeignAddress()
-            ,organization.getCity(),organization.getState(),organization.getStreetAddress(),organization.getZipcode()
-            ,organization.getCountry(),organization.getOrganizationPhoneNumber());
-            newlyCreatedOrganization.setAccountNumber(Organization.getAccSeq());
+
+
             newlyCreatedOrganization.getUsersList().addUser(rootUser);
             organizationRepository.save(newlyCreatedOrganization);
+            rootUser.setUsersList(newlyCreatedOrganization.getUsersList());
+            userRepository.save(rootUser);
 //            User createUser = userService.createUser(newlyCreatedOrganization,rootUser);
 
             return newlyCreatedOrganization;

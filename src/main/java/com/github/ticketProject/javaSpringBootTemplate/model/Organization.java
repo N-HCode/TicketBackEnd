@@ -6,9 +6,7 @@ import com.fasterxml.jackson.annotation.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
-import java.util.HashSet;
 import java.util.Set;
 
 import static javax.persistence.GenerationType.*;
@@ -55,31 +53,42 @@ public class Organization {
     //Need this tag for collections for some reason. Don't know why it fixed the issue:
     //"Could not determine type for: java.util.Set."
     @OneToOne( fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonManagedReference(value = "organization-user_list")
 //    @JsonBackReference can't be used for collections
 //    @JsonBackReference(value="organization-user")
 //    https://stackoverflow.com/questions/33475222/spring-boot-jpa-json-without-nested-object-with-onetomany-relation
     //@JsonIdentityInfo is used to indicate that object identity will be used during serialization/de-serialization.
     //https://fasterxml.github.io/jackson-annotations/javadoc/2.5/com/fasterxml/jackson/annotation/JsonIdentityInfo.html
     //https://www.javadoc.io/doc/com.fasterxml.jackson.core/jackson-annotations/2.0.4/com/fasterxml/jackson/annotation/ObjectIdGenerators.PropertyGenerator.html
-//    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "userId")
-//    @JsonIdentityReference(alwaysAsId = true)
+    //The JsonIdentityInfo and the JsonIdentityReference will make it show that you will only get the ID
+    //And not everything else in the JSON
+    //The Id property in the other entity will ned a getter. otherwise, JsonIdentityInfo will not be able to get/find the property
+    //You will get an error that it cannot be found.
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "userListId")
+    @JsonIdentityReference(alwaysAsId = true)
     private final UsersList usersList = new UsersList();
 
-    @OneToMany(mappedBy = "organization", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JsonManagedReference(value="organization-client_organization")
-    private Set<ClientsOrganization> clientsOrganizations = new HashSet<>();
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonManagedReference(value = "organization-client_organization_list")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "Id")
+    @JsonIdentityReference(alwaysAsId = true)
+    private final ClientsOrganizationList clientsOrganizationList = new ClientsOrganizationList();
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonManagedReference(value="organization-status_list")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "statusListId")
+    @JsonIdentityReference(alwaysAsId = true)
     private final StatusList statusList = new StatusList();
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonManagedReference(value="organization-priority_list")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "priorityListId")
+    @JsonIdentityReference(alwaysAsId = true)
     private final PriorityList priorityList = new PriorityList();
 
-    @OneToMany(mappedBy = "organization", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JsonManagedReference(value = "organization-tickets")
-    private final Set<Ticket> tickets = new HashSet<>();
+    @OneToOne( fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonManagedReference(value = "organization-ticket_list")
+    private final TicketList ticketList = new TicketList();
     // @JsonManagedReference and @JsonBackReference to solve infinite recursion problem
 
     private boolean isForeignAddress;
@@ -146,10 +155,6 @@ public class Organization {
         this.organizationName = organizationName;
     }
 
-
-    public void addTicket(Ticket ticket){ tickets.add(ticket);}
-
-    private void addClientOrganization(ClientsOrganization clientsOrganization){ clientsOrganizations.add(clientsOrganization);}
 
 
     public boolean isForeignAddress() {
@@ -220,13 +225,6 @@ public class Organization {
         this.dateModified = dateModified;
     }
 
-    public Set<ClientsOrganization> getClientsOrganizations() {
-        return clientsOrganizations;
-    }
-
-    public void setClientsOrganizations(Set<ClientsOrganization> clientsOrganizations) {
-        this.clientsOrganizations = clientsOrganizations;
-    }
 
     public StatusList getStatusList() {
         return statusList;
@@ -237,10 +235,6 @@ public class Organization {
         return priorityList;
     }
 
-
-    public Set<Ticket> getTickets() {
-        return tickets;
-    }
 
     public UsersList getUsersList() {
         return usersList;
