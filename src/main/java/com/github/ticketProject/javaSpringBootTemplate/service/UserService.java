@@ -36,16 +36,17 @@ public class UserService {
     }
 
     public Iterable<User> findByOrg(Organization organization) {
-        return userRepository.findAllByOrganizationEquals(organization);
+        return userRepository.findAllByUsersListEquals(organization.getUsersList());
     }
 
-    public User createUser(User user) {
+    public User createUser(Organization organization ,User user) {
         // check if the username is already taken
         User userToCheck = userRepository.findByUsernameEquals(user.getUsername());
 
         // if we got back no User from the check save this new User
         if(userToCheck == null) {
             ZonedDateTime timeAsOfNow = ZonedDateTime.now();
+            user.setUsersList(organization.getUsersList());
             user.setDateCreated(timeAsOfNow);
             user.setLastModified(timeAsOfNow);
             user.setFullName(user.getFirstName() + " " + user.getLastName());
@@ -100,7 +101,7 @@ public class UserService {
         if(user.isPresent() && organization.isPresent()) {
             Organization organizationExist = organization.get();
             User userExist = user.get();
-            userExist.setOrganization(organizationExist);
+//            userExist.setOrganization(organizationExist);
             userRepository.save(userExist);
             // set the organization as the user
             return organization.get();

@@ -1,4 +1,5 @@
 package com.github.ticketProject.javaSpringBootTemplate.TestUserService;
+import com.github.ticketProject.javaSpringBootTemplate.model.Organization;
 import com.github.ticketProject.javaSpringBootTemplate.model.User;
 import com.github.ticketProject.javaSpringBootTemplate.service.UserService;
 import org.junit.Assert;
@@ -18,8 +19,9 @@ public class TestCreateUser {
 
         // Create a new User Object using predefined roles
         User newUser = new User(username, password, firstName, lastName, email, userRole, phoneNumber);
+        Organization organization = new Organization();
         // Ask the service to create the user to the database
-        User createdUser = service.createUser(newUser);
+        User createdUser = service.createUser(organization, newUser);
 
         // Check all fields in the created user
         Assert.assertEquals(createdUser.getUsername(), username);

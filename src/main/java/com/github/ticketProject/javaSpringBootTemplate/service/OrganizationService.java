@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.*;
 
 @Service
@@ -41,22 +42,42 @@ public class OrganizationService {
     }
 
     public Organization createOrganization(String username, String password, Organization organization)
-    {   User rootUser = new User();
-        rootUser.setUsername(username);
-        rootUser.setPassword(passwordEncoder.encode(password));
-        rootUser.setUserRole("root");
-        rootUser.setFirstName("root");
-        rootUser.setLastName("user");
-        User createUser = userService.createUser(rootUser);
+    {
+
         
 //        Boolean isAdmin = user.map( user1 -> user1.getUserRole().equals("admin")).orElse(false);
 
         //make sure the body is not null
         if (organization != null){
-            organization.setAccountNumber(Organization.getAccSeq());
-            createUser.setOrganization(organization);
-            organization.addUser(rootUser);
-            return organizationRepository.save(organization);
+
+            User userToCheck = userRepository.findByUsernameEquals(username);
+
+            if (userToCheck != null) {
+                return null;
+            }
+
+            User rootUser = new User();
+            rootUser.setUsername(username);
+            rootUser.setPassword(passwordEncoder.encode(password));
+            rootUser.setUserRole("root");
+            rootUser.setFirstName("root");
+            rootUser.setLastName("user");
+            ZonedDateTime timeAsOfNow = ZonedDateTime.now();
+            rootUser.setUsersList(organization.getUsersList());
+            rootUser.setDateCreated(timeAsOfNow);
+            rootUser.setLastModified(timeAsOfNow);
+            rootUser.setFullName(rootUser.getFirstName() + " " + rootUser.getLastName());
+            userRepository.save(rootUser);
+
+            Organization newlyCreatedOrganization = new Organization(organization.getOrganizationName(), organization.isForeignAddress()
+            ,organization.getCity(),organization.getState(),organization.getStreetAddress(),organization.getZipcode()
+            ,organization.getCountry(),organization.getOrganizationPhoneNumber());
+            newlyCreatedOrganization.setAccountNumber(Organization.getAccSeq());
+            newlyCreatedOrganization.getUsersList().addUser(rootUser);
+            organizationRepository.save(newlyCreatedOrganization);
+//            User createUser = userService.createUser(newlyCreatedOrganization,rootUser);
+
+            return newlyCreatedOrganization;
         } else {
             return null;
         }
@@ -80,7 +101,7 @@ public class OrganizationService {
 
         editableOrg.setForeignAddress(newOrgInfo.isForeignAddress());
         editableOrg.setOrganizationName(newOrgInfo.getOrganizationName());
-        editableOrg.setDateModified(LocalDateTime.now());
+        editableOrg.setDateModified(ZonedDateTime.now());
         if(newOrgInfo.isForeignAddress()){
             editableOrg.setCity(newOrgInfo.getCity());
             editableOrg.setState("");
@@ -100,7 +121,7 @@ public class OrganizationService {
     }
 
     public Set<User> addUserToOrgContacts(Organization org, User user){
-        Set<User> orgContacts = org.getUsers();
+        Set<User> orgContacts = org.getUsersList().getUsers();
         orgContacts.add(user);
         return orgContacts;
     }
@@ -109,7 +130,7 @@ public class OrganizationService {
     public Organization findByUserId(Long id) {
         User user = userRepository.findById(id).orElse(null);
 
-        return organizationRepository.findByUsersContains(user).orElse(null);
+        return organizationRepository.findByUsersListContains(user.getUsersList()).orElse(null);
     }
 
 //    public void addStatusListIdToOrg(Organization organization,Long statusListId){

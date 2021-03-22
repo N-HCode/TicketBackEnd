@@ -76,7 +76,7 @@ public class OrganizationController {
 
         //See if there is a value other than null. If not, send back a 404 error.
         if (organization != null){
-            responseFindId = new ResponseEntity<>(organization.getUsers(), HttpStatus.OK);
+            responseFindId = new ResponseEntity<>(organization.getUsersList().getUsers(), HttpStatus.OK);
         }else{
             responseFindId = new ResponseEntity<>("Organization not found",HttpStatus.NOT_FOUND);
         }
@@ -94,7 +94,7 @@ public class OrganizationController {
         Organization responseOrg = service.createOrganization(username, password, organization);
 
         if(responseOrg != null){
-            responseCreateOrg = new ResponseEntity<>(HttpStatus.CREATED);
+            responseCreateOrg = new ResponseEntity<>(responseOrg, HttpStatus.CREATED);
         }else{
             responseCreateOrg = new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }

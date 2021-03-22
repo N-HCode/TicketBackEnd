@@ -1,7 +1,6 @@
 package com.github.ticketProject.javaSpringBootTemplate.config;
 
 import com.github.ticketProject.javaSpringBootTemplate.auth.CustomUserDetailService;
-import com.github.mhzhou95.javaSpringBootTemplate.jwt.*;
 import com.github.ticketProject.javaSpringBootTemplate.jwt.JwtConfig;
 import com.github.ticketProject.javaSpringBootTemplate.jwt.JwtTokenVerifierFilter;
 import com.github.ticketProject.javaSpringBootTemplate.jwt.JwtUsernameAndPasswordAuthenticationFilter;

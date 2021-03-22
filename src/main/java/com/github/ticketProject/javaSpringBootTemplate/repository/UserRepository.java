@@ -2,6 +2,7 @@ package com.github.ticketProject.javaSpringBootTemplate.repository;
 
 import com.github.ticketProject.javaSpringBootTemplate.model.Organization;
 import com.github.ticketProject.javaSpringBootTemplate.model.User;
+import com.github.ticketProject.javaSpringBootTemplate.model.UsersList;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
@@ -13,5 +14,5 @@ public interface UserRepository extends CrudRepository<User, Long> {
 
 //    User findByUserIdIn(Ticket ticket);
 
-    Iterable<User> findAllByOrganizationEquals(Organization organization);
+    Iterable<User> findAllByUsersListEquals(UsersList usersList);
 }

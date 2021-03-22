@@ -1,5 +1,6 @@
 package com.github.ticketProject.javaSpringBootTemplate.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
@@ -28,22 +29,22 @@ public class Ticket {
     // @JsonManagedReference and @JsonBackReference to solve infinite recursion problem
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn( name = "user_id")
-    @JsonManagedReference
+    @JsonBackReference(value = "user-tickets")
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn( name = "organization_id")
-    @JsonManagedReference
+    @JsonBackReference(value = "organization-tickets")
     private Organization organization;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn( name = "contact_id")
-    @JsonManagedReference
+    @JsonBackReference( value = "contact-tickets")
     private Contact contact;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn( name = "client_organization_id")
-    @JsonManagedReference
+    @JsonBackReference(value = "client_organization-tickets")
     private ClientsOrganization clientsOrganization;
 
     public Ticket() {

@@ -37,14 +37,20 @@ public class User implements UserDetails {
 
     // @JsonManagedReference and @JsonBackReference to solve infinite recursion problem
     @OneToMany(mappedBy = "user")
-    @JsonBackReference //this is to mark the child elements/entities
+    @JsonManagedReference(value = "user-tickets") //this is to mark the child elements/entities
     private Set<Ticket> tickets= new HashSet<>();
 
-    // @JsonManagedReference and @JsonBackReference to solve infinite recursion problem
+//    // @JsonManagedReference and @JsonBackReference to solve infinite recursion problem
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn( name = "organization_id" )
+//    @JsonBackReference(value="organization-user") // this is to mark the parent element/entity
+//    private Organization organization;
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn( name = "organization_id" )
-    @JsonManagedReference // this is to mark the parent element/entity
-    private Organization organization;
+    @JoinColumn( name = "user_list_id" )
+    @JsonBackReference(value="users-list-user") // this is to mark the parent element/entity
+    private UsersList usersList;
+
 
     public User() {
     }
@@ -188,11 +194,11 @@ public class User implements UserDetails {
         this.tickets = tickets;
     }
 
-    public Organization getOrganization() {
-        return organization;
+    public UsersList getUsersList() {
+        return usersList;
     }
 
-    public void setOrganization(Organization organization) {
-        this.organization = organization;
+    public void setUsersList(UsersList usersList) {
+        this.usersList = usersList;
     }
 }

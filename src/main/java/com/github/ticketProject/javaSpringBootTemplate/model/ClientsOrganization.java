@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -25,10 +26,10 @@ public class ClientsOrganization {
     private String country;
     private String organizationPhoneNumber;
     //the java.time is the newest java date API
-    private final LocalDateTime dateCreated = LocalDateTime.now();
-    private LocalDateTime dateModified = LocalDateTime.now();;
+    private final ZonedDateTime dateCreated = ZonedDateTime.now();
+    private final ZonedDateTime dateModified = ZonedDateTime.now();;
 
-    @Column(name="clientsorganization", nullable = false,
+    @Column(name="client_organization_name", nullable = false,
             columnDefinition = "TEXT")
     private String organizationName;
 
@@ -41,7 +42,7 @@ public class ClientsOrganization {
     //We use that to be the foreign key and Join the Columns
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="organization_id")
-    @JsonManagedReference
+    @JsonBackReference(value="organization-client_organization")
     private Organization organization;
 
     //When using One to Many we need the mapped by.
@@ -52,17 +53,35 @@ public class ClientsOrganization {
     //So we open the Contact model and then look for the field and then we make sure
     //We sure the exact same name. In this example that is "clientsOrganization"
     @OneToMany(mappedBy = "clientsOrganization", cascade = CascadeType.ALL)
-    @JsonBackReference
-    private Set<Contact> contacts = new HashSet<>();
+    //https://www.baeldung.com/jackson-bidirectional-relationships-and-infinite-recursion
+    //https://stackoverflow.com/questions/33475222/spring-boot-jpa-json-without-nested-object-with-onetomany-relation
+    @JsonManagedReference(value = "client_organization-contacts")
+    private final Set<Contact> contacts = new HashSet<>();
 
     // @JsonManagedReference and @JsonBackReference to solve infinite recursion problem
     @OneToMany(mappedBy = "clientsOrganization", cascade = CascadeType.ALL)
-    @JsonBackReference
-    private Set<Ticket> tickets= new HashSet<>();
+    @JsonManagedReference(value = "client_organization-tickets")
+    private final Set<Ticket> tickets= new HashSet<>();
 
 
     public ClientsOrganization() {
     }
+
+    public ClientsOrganization(boolean isForeignAddress, String city, String state, String streetAddress, String zipcode, String country, String organizationPhoneNumber, String organizationName, Organization organization) {
+        this.isForeignAddress = isForeignAddress;
+        this.city = city;
+        this.state = state;
+        this.streetAddress = streetAddress;
+        this.zipcode = zipcode;
+        this.country = country;
+        this.organizationPhoneNumber = organizationPhoneNumber;
+        this.organizationName = organizationName;
+        this.organization = organization;
+    }
+
+    public void addContact(Contact contact){contacts.add(contact);}
+
+    public void addTicket(Ticket ticket){ tickets.add(ticket);}
 
 
 }

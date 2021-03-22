@@ -2,11 +2,12 @@ package com.github.ticketProject.javaSpringBootTemplate.model;
 
 
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -53,24 +54,31 @@ public class Organization {
     private long accountNumber;
     //Need this tag for collections for some reason. Don't know why it fixed the issue:
     //"Could not determine type for: java.util.Set."
-    @OneToMany(mappedBy = "organization", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JsonBackReference
-    private Set<User> users = new HashSet<>();
+    @OneToOne( fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+//    @JsonBackReference can't be used for collections
+//    @JsonBackReference(value="organization-user")
+//    https://stackoverflow.com/questions/33475222/spring-boot-jpa-json-without-nested-object-with-onetomany-relation
+    //@JsonIdentityInfo is used to indicate that object identity will be used during serialization/de-serialization.
+    //https://fasterxml.github.io/jackson-annotations/javadoc/2.5/com/fasterxml/jackson/annotation/JsonIdentityInfo.html
+    //https://www.javadoc.io/doc/com.fasterxml.jackson.core/jackson-annotations/2.0.4/com/fasterxml/jackson/annotation/ObjectIdGenerators.PropertyGenerator.html
+//    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "userId")
+//    @JsonIdentityReference(alwaysAsId = true)
+    private final UsersList usersList = new UsersList();
 
     @OneToMany(mappedBy = "organization", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JsonBackReference
+    @JsonManagedReference(value="organization-client_organization")
     private Set<ClientsOrganization> clientsOrganizations = new HashSet<>();
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JsonBackReference
+    @JsonManagedReference(value="organization-status_list")
     private final StatusList statusList = new StatusList();
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JsonBackReference
+    @JsonManagedReference(value="organization-priority_list")
     private final PriorityList priorityList = new PriorityList();
 
     @OneToMany(mappedBy = "organization", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JsonBackReference
+    @JsonManagedReference(value = "organization-tickets")
     private final Set<Ticket> tickets = new HashSet<>();
     // @JsonManagedReference and @JsonBackReference to solve infinite recursion problem
 
@@ -82,8 +90,8 @@ public class Organization {
     private String country;
     private String organizationPhoneNumber;
     //the java.time is the newest java date API
-    private final LocalDateTime dateCreated = LocalDateTime.now();
-    private LocalDateTime dateModified = LocalDateTime.now();;
+    private final ZonedDateTime dateCreated = ZonedDateTime.now();
+    private ZonedDateTime dateModified = ZonedDateTime.now();;
 
     //Kept getting the error "error missing default constructor"
     //For some reason adding in an empty constructor seems to solve the issue. Not sure why
@@ -93,7 +101,7 @@ public class Organization {
 
     }
 
-    public Organization(@NotNull String organizationName, boolean isForeignAddress, String city, String state, String streetAddress, String zipcode, String country, String organizationPhoneNumber, LocalDateTime dateModified) {
+    public Organization(@NotNull String organizationName, boolean isForeignAddress, String city, String state, String streetAddress, String zipcode, String country, String organizationPhoneNumber) {
 //        //constructor overloading
 //        this();
 
@@ -108,7 +116,6 @@ public class Organization {
         this.zipcode = zipcode;
         this.country = country;
         this.organizationPhoneNumber = organizationPhoneNumber;
-        this.dateModified = dateModified;
     }
 
     //Id is auto-generated so we do not have a setter.
@@ -139,21 +146,11 @@ public class Organization {
         this.organizationName = organizationName;
     }
 
-    public Set<User> getUsers() {
-        return users;
-    }
-
-    public void addUser(User user) {
-        users.add(user);
-    }
 
     public void addTicket(Ticket ticket){ tickets.add(ticket);}
 
     private void addClientOrganization(ClientsOrganization clientsOrganization){ clientsOrganizations.add(clientsOrganization);}
 
-    public void setUsers(Set<User> users) {
-        this.users = users;
-    }
 
     public boolean isForeignAddress() {
         return isForeignAddress;
@@ -211,15 +208,15 @@ public class Organization {
         this.organizationPhoneNumber = organizationPhoneNumber;
     }
 
-    public LocalDateTime getDateCreated() {
+    public ZonedDateTime getDateCreated() {
         return dateCreated;
     }
 
-    public LocalDateTime getDateModified() {
+    public ZonedDateTime getDateModified() {
         return dateModified;
     }
 
-    public void setDateModified(LocalDateTime dateModified) {
+    public void setDateModified(ZonedDateTime dateModified) {
         this.dateModified = dateModified;
     }
 
@@ -245,4 +242,7 @@ public class Organization {
         return tickets;
     }
 
+    public UsersList getUsersList() {
+        return usersList;
+    }
 }

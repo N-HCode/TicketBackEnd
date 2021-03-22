@@ -61,9 +61,9 @@ public class UserController {
 
     @CrossOrigin
     @PostMapping("/create")
-    public ResponseEntity<?> createUser(@RequestBody User userToCreate){
+    public ResponseEntity<?> createUser(@RequestBody Organization organization, @RequestBody User userToCreate ){
         // Call the service to create the User
-        User responseCreateUser = service.createUser(userToCreate);
+        User responseCreateUser = service.createUser(organization, userToCreate);
 
         // check if the User was sent back from service to see if it passed
         if (responseCreateUser != null){

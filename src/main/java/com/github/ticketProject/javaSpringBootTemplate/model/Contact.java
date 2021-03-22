@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -22,20 +23,106 @@ public class Contact {
     private String fullName;
     private String email;
     private String phoneNumber;
-    private ZonedDateTime dateCreated;
+    private final ZonedDateTime dateCreated = ZonedDateTime.now();
     private ZonedDateTime lastLogin;
-    private ZonedDateTime lastModified;
+    private ZonedDateTime lastModified = ZonedDateTime.now();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn( name = "client_organization_id" )
-    @JsonManagedReference
+    @JsonBackReference(value = "client_organization-contacts")
     private ClientsOrganization clientsOrganization;
 
     // @JsonManagedReference and @JsonBackReference to solve infinite recursion problem
     @OneToMany(mappedBy = "contact")
-    @JsonBackReference
-    private Set<Ticket> tickets= new HashSet<>();
+    @JsonManagedReference( value = "contact-tickets")
+    private final Set<Ticket> tickets= new HashSet<>();
 
     public Contact() {
+    }
+
+    public Contact(String firstName, String lastName, String fullName, String email, String phoneNumber) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.fullName = fullName;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+    }
+
+    public void addTicket(Ticket ticket){tickets.add(ticket);}
+
+    public Long getId() {
+        return Id;
+    }
+
+    public ZonedDateTime getDateCreated() {
+        return dateCreated;
+    }
+
+    public Set<Ticket> getTickets() {
+        return tickets;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public ZonedDateTime getLastLogin() {
+        return lastLogin;
+    }
+
+    public void setLastLogin(ZonedDateTime lastLogin) {
+        this.lastLogin = lastLogin;
+    }
+
+    public ZonedDateTime getLastModified() {
+        return lastModified;
+    }
+
+    public void setLastModified(ZonedDateTime lastModified) {
+        this.lastModified = lastModified;
+    }
+
+    public ClientsOrganization getClientsOrganization() {
+        return clientsOrganization;
+    }
+
+    public void setClientsOrganization(ClientsOrganization clientsOrganization) {
+        this.clientsOrganization = clientsOrganization;
     }
 }

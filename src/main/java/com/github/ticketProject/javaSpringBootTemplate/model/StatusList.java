@@ -1,5 +1,6 @@
 package com.github.ticketProject.javaSpringBootTemplate.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
@@ -12,7 +13,7 @@ public class StatusList {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY) private Long statusListId;
 
     @OneToOne
-    @JsonManagedReference
+    @JsonBackReference(value="organization-status_list")
     private Organization organization;
 
     //@ElementCollection annotation is used to store a list of values as an entity attribute without needing to model an additional entity
@@ -32,13 +33,15 @@ public class StatusList {
         return statusList;
     }
 
-    public void setStatusList(ArrayList<String> statusList) {
-        this.statusList = statusList;
+    public void setStatusList(ArrayList<String> NewStatusList) {
+        this.statusList = NewStatusList;
     }
 
     public Long getStatusListId() {
         return statusListId;
     }
+
+    public void addStatus(String status){statusList.add(status);}
 
     public Organization getOrganization() {
         return organization;
