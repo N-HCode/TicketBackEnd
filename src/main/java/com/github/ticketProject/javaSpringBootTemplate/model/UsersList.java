@@ -27,7 +27,7 @@ public class UsersList {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JsonBackReference(value = "user_list-ticket_list")
-    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "Id")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
     private TicketList ticketList;
 

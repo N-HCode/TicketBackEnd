@@ -38,7 +38,7 @@ public class Organization {
             generator = "org_id_sequence" //We use the Sequence to generate the value
     )
     @Column(name="organization_id", updatable = false) // Make it so noone can update it
-    private Long id;
+    private Long Id;
 
     @NotNull
     @Column(name="organization_name", nullable = false,
@@ -64,13 +64,14 @@ public class Organization {
     //And not everything else in the JSON
     //The Id property in the other entity will ned a getter. otherwise, JsonIdentityInfo will not be able to get/find the property
     //You will get an error that it cannot be found.
+    //The property NAME is ASSUME to start with a lowercase if you start with an UPPERCASE you will get errors
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "userListId")
     @JsonIdentityReference(alwaysAsId = true)
     private final UsersList usersList = new UsersList(this);
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonManagedReference(value = "organization-client_organization_list")
-    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "Id")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
     private final ClientsOrganizationList clientsOrganizationList = new ClientsOrganizationList(this);
 
@@ -88,6 +89,8 @@ public class Organization {
 
     @OneToOne( fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonManagedReference(value = "organization-ticket_list")
+//    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "Id")
+//    @JsonIdentityReference(alwaysAsId = true)
     private final TicketList ticketList = new TicketList(this, clientsOrganizationList, usersList);
     // @JsonManagedReference and @JsonBackReference to solve infinite recursion problem
 
@@ -130,9 +133,11 @@ public class Organization {
     //Id is auto-generated so we do not have a setter.
     //However, we need this getter so that the Json response will give the Id
     //in its http response.
+
+
     public Long getId() {
-           return id;
-       }
+        return Id;
+    }
 
     public String getOrganizationName() {
         return organizationName;

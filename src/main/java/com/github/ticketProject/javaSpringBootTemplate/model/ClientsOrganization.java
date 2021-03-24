@@ -14,7 +14,7 @@ public class ClientsOrganization {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="client_organization_id")
-    private Long Id;
+    private Long id;
 
     private boolean isForeignAddress;
     private String city;
@@ -85,7 +85,7 @@ public class ClientsOrganization {
 
 
     public Long getId() {
-        return Id;
+        return id;
     }
 
 

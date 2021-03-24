@@ -29,7 +29,7 @@ public class Contact {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn( name = "contact_list_id" )
     @JsonBackReference(value = "contact_list-contact")
-    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "Id")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
     private ContactList contactList;
 

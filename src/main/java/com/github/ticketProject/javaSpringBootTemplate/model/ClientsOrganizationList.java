@@ -13,7 +13,7 @@ public class ClientsOrganizationList {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="client_organization_list_id")
-    private Long Id;
+    private Long id;
 
     @OneToMany(mappedBy = "clientsOrganizationList", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonManagedReference(value = "client_organization_list-client_organization")
@@ -24,8 +24,8 @@ public class ClientsOrganizationList {
     private Organization organization;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JsonBackReference(value = "client_organization_list-ticket_list")
-    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "Id")
+    @JsonManagedReference(value = "client_organization_list-ticket_list")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
     private TicketList ticketList;
 
@@ -37,7 +37,7 @@ public class ClientsOrganizationList {
     }
 
     public Long getId() {
-        return Id;
+        return id;
     }
 
     public Set<ClientsOrganization> getClientsOrganizations() {

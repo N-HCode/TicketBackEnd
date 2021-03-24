@@ -13,7 +13,7 @@ public class ContactList {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="contact_list_id")
-    private Long Id;
+    private Long id;
 
     @OneToMany(mappedBy = "contactList", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonManagedReference(value = "contact_list-contact")
@@ -25,7 +25,7 @@ public class ContactList {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonBackReference(value = "contact_list-ticket_list")
-    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "Id")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
     private TicketList ticketList;
 
@@ -38,7 +38,7 @@ public class ContactList {
     }
 
     public Long getId() {
-        return Id;
+        return id;
     }
 
     public Set<Contact> getContacts() {

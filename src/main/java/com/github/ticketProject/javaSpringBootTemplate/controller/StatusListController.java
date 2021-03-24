@@ -24,8 +24,17 @@ public class StatusListController {
 
     @CrossOrigin
     @GetMapping("/{id}")
-    public ResponseEntity<?> getAllStatus(@PathVariable Long id){
+    public ResponseEntity<?> getAllStatus(
+            //Authentication authResult,
+            //Authentication authResult we can put this in the parameter and we will get information from the Authentication
+            //Like the username or whatever we entered in a JSON token
+            @PathVariable Long id){
+
+
+
         List<String> listOfStatus = statusListService.findStatusListById(id);
+
+
 
         if (listOfStatus != null){
             return new ResponseEntity<>(listOfStatus, HttpStatus.OK);
