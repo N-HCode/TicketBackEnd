@@ -53,4 +53,12 @@ public class UsersList {
     public Organization getOrganization() {
         return organization;
     }
+
+    public TicketList getTicketList() {
+        return ticketList;
+    }
+
+    public void setTicketList(TicketList ticketList) {
+        this.ticketList = ticketList;
+    }
 }

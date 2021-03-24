@@ -49,6 +49,9 @@ public class TicketList {
         this.organization = organization;
         this.clientsOrganizationLists = clientsOrganizationLists;
         this.usersList = usersList;
+
+        clientsOrganizationLists.setTicketList(this);
+        usersList.setTicketList(this);
     }
 
     public long getId() {

@@ -26,7 +26,11 @@ public class PriorityList {
         priorities.add("Medium");
         priorities.add("High");
         priorities.add("Critical");
+    }
 
+    public PriorityList(Organization organization) {
+        this();
+        this.organization = organization;
     }
 
     public Long getPriorityListId() {

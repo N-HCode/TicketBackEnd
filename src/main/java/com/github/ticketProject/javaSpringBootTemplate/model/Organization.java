@@ -66,29 +66,29 @@ public class Organization {
     //You will get an error that it cannot be found.
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "userListId")
     @JsonIdentityReference(alwaysAsId = true)
-    private final UsersList usersList = new UsersList();
+    private final UsersList usersList = new UsersList(this);
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonManagedReference(value = "organization-client_organization_list")
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "Id")
     @JsonIdentityReference(alwaysAsId = true)
-    private final ClientsOrganizationList clientsOrganizationList = new ClientsOrganizationList();
+    private final ClientsOrganizationList clientsOrganizationList = new ClientsOrganizationList(this);
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonManagedReference(value="organization-status_list")
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "statusListId")
     @JsonIdentityReference(alwaysAsId = true)
-    private final StatusList statusList = new StatusList();
+    private final StatusList statusList = new StatusList(this);
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonManagedReference(value="organization-priority_list")
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "priorityListId")
     @JsonIdentityReference(alwaysAsId = true)
-    private final PriorityList priorityList = new PriorityList();
+    private final PriorityList priorityList = new PriorityList(this);
 
     @OneToOne( fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonManagedReference(value = "organization-ticket_list")
-    private final TicketList ticketList = new TicketList();
+    private final TicketList ticketList = new TicketList(this, clientsOrganizationList, usersList);
     // @JsonManagedReference and @JsonBackReference to solve infinite recursion problem
 
     private boolean isForeignAddress;

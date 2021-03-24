@@ -27,7 +27,10 @@ public class StatusList {
         statusList.add("Closed");
     }
 
-
+    public StatusList(Organization organization) {
+        this();
+        this.organization = organization;
+    }
 
     public List<String> getStatusList() {
         return statusList;

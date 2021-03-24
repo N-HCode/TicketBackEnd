@@ -32,6 +32,10 @@ public class ClientsOrganizationList {
     public ClientsOrganizationList() {
     }
 
+    public ClientsOrganizationList(Organization organization) {
+        this.organization = organization;
+    }
+
     public Long getId() {
         return Id;
     }
@@ -42,5 +46,17 @@ public class ClientsOrganizationList {
 
     public void addClientsOrganization(ClientsOrganization clientsOrganization){
         clientsOrganizations.add(clientsOrganization);
+    }
+
+    public TicketList getTicketList() {
+        return ticketList;
+    }
+
+    public void setTicketList(TicketList ticketList) {
+        this.ticketList = ticketList;
+    }
+
+    public Organization getOrganization() {
+        return organization;
     }
 }

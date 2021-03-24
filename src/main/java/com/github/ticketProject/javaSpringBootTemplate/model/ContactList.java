@@ -33,6 +33,10 @@ public class ContactList {
     public ContactList() {
     }
 
+    public ContactList(ClientsOrganization clientsOrganization) {
+        this.clientsOrganization = clientsOrganization;
+    }
+
     public Long getId() {
         return Id;
     }
