@@ -1,7 +1,6 @@
 package com.github.ticketProject.javaSpringBootTemplate.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.*;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -21,5 +20,52 @@ public class TicketList {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JsonBackReference(value = "organization-ticket_list")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "Id")
+    @JsonIdentityReference(alwaysAsId = true)
     private Organization organization;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JsonManagedReference(value = "client_organization_list-ticket_list")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "Id")
+    @JsonIdentityReference(alwaysAsId = true)
+    private ClientsOrganizationList clientsOrganizationLists;
+
+    @OneToMany
+    @JsonManagedReference(value = "contact_list-ticket_list")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "Id")
+    @JsonIdentityReference(alwaysAsId = true)
+    private final Set<ContactList> contactLists = new HashSet<>();
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JsonManagedReference(value = "user_list-ticket_list")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "userListId")
+    @JsonIdentityReference(alwaysAsId = true)
+    private UsersList usersList;
+
+    public TicketList() {
+    }
+
+    public TicketList(Organization organization, ClientsOrganizationList clientsOrganizationLists, UsersList usersList) {
+        this.organization = organization;
+        this.clientsOrganizationLists = clientsOrganizationLists;
+        this.usersList = usersList;
+    }
+
+    public long getId() {
+        return Id;
+    }
+
+    public Set<Ticket> getTickets() {
+        return tickets;
+    }
+
+    public Organization getOrganization() {
+        return organization;
+    }
+
+    public void setOrganization(Organization organization) {
+        this.organization = organization;
+    }
+
+
 }

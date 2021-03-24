@@ -25,7 +25,17 @@ public class UsersList {
     @JsonBackReference(value = "organization-user_list")
     private Organization organization;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JsonBackReference(value = "user_list-ticket_list")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "Id")
+    @JsonIdentityReference(alwaysAsId = true)
+    private TicketList ticketList;
+
     public UsersList() {
+    }
+
+    public UsersList(Organization organization) {
+        this.organization = organization;
     }
 
     public void addUser(User user){
@@ -38,5 +48,9 @@ public class UsersList {
 
     public Long getUserListId() {
         return userListId;
+    }
+
+    public Organization getOrganization() {
+        return organization;
     }
 }

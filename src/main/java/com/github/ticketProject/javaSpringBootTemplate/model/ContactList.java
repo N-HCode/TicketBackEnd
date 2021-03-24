@@ -1,7 +1,6 @@
 package com.github.ticketProject.javaSpringBootTemplate.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.*;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -23,6 +22,13 @@ public class ContactList {
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonBackReference(value = "client_organization-contact_list")
     private ClientsOrganization clientsOrganization;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonBackReference(value = "contact_list-ticket_list")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "Id")
+    @JsonIdentityReference(alwaysAsId = true)
+    private TicketList ticketList;
+
 
     public ContactList() {
     }

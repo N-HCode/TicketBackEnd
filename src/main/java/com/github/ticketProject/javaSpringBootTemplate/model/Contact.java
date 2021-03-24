@@ -1,7 +1,6 @@
 package com.github.ticketProject.javaSpringBootTemplate.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -30,12 +29,15 @@ public class Contact {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn( name = "contact_list_id" )
     @JsonBackReference(value = "contact_list-contact")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "Id")
+    @JsonIdentityReference(alwaysAsId = true)
     private ContactList contactList;
 
     // @JsonManagedReference and @JsonBackReference to solve infinite recursion problem
     @OneToMany(mappedBy = "contact")
     @JsonManagedReference( value = "contact-tickets")
     private final Set<Ticket> tickets= new HashSet<>();
+
 
 
 

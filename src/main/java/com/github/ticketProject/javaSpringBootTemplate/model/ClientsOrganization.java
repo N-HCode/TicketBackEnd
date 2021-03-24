@@ -1,7 +1,6 @@
 package com.github.ticketProject.javaSpringBootTemplate.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.*;
 
 import javax.persistence.*;
 import java.time.ZonedDateTime;
@@ -62,9 +61,11 @@ public class ClientsOrganization {
     private final ContactList contactList = new ContactList();
 
     // @JsonManagedReference and @JsonBackReference to solve infinite recursion problem
-    @OneToMany(mappedBy = "clientsOrganization", cascade = CascadeType.ALL)
-    @JsonManagedReference(value = "client_organization-tickets")
-    private final Set<Ticket> tickets= new HashSet<>();
+//    @OneToMany(mappedBy = "clientsOrganization", cascade = CascadeType.ALL)
+//    @JsonManagedReference(value = "client_organization-tickets")
+//    private final Set<Ticket> tickets= new HashSet<>();
+
+
 
 
     public ClientsOrganization() {
@@ -82,8 +83,6 @@ public class ClientsOrganization {
         this.clientsOrganizationList = clientsOrganizationList;
     }
 
-
-    public void addTicket(Ticket ticket){ tickets.add(ticket);}
 
     public Long getId() {
         return Id;
