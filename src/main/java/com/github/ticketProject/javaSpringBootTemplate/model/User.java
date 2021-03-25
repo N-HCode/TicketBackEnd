@@ -2,6 +2,7 @@ package com.github.ticketProject.javaSpringBootTemplate.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -18,7 +19,8 @@ public class User implements UserDetails {
     @Column(name="user_id")
     private Long userId;
     @NotNull @Column(unique = true) String username;
-    @NotNull String password;
+    @NotNull @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    String password;
     private String firstName;
     private String lastName;
     private String fullName;
