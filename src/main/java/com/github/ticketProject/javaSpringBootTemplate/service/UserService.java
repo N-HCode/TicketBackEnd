@@ -121,6 +121,15 @@ public class UserService {
         return true;
     }
 
+    public User getUserByUsername(String username){
 
+        try{
+            return userRepository.findByUsernameEquals(username);
+        }
+        catch (Exception e){
+            return null;
+        }
+
+    }
 
 }

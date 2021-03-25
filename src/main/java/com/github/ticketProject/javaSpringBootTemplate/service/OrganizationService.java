@@ -2,9 +2,13 @@ package com.github.ticketProject.javaSpringBootTemplate.service;
 
 import com.github.ticketProject.javaSpringBootTemplate.model.Organization;
 import com.github.ticketProject.javaSpringBootTemplate.model.User;
+import com.github.ticketProject.javaSpringBootTemplate.model.UsersList;
 import com.github.ticketProject.javaSpringBootTemplate.repository.OrganizationRepository;
 import com.github.ticketProject.javaSpringBootTemplate.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -146,4 +150,10 @@ public class OrganizationService {
 //        organization.setPriorityListId(priorityListId);
 //        organizationRepository.save(organization);
 //    }
+
+    public List<User> getUsersFromOrganization(UsersList usersList, Pageable pageable){
+        Page<User> pagedResult = userRepository.findAllByUsersListEquals(usersList, pageable);
+        return  pagedResult.toList();
+    }
+
 }

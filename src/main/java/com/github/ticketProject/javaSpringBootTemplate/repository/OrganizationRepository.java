@@ -10,6 +10,12 @@ import java.util.Optional;
 
 @Repository
 public interface OrganizationRepository extends CrudRepository<Organization, Long>{
+    //Types of Repository
+    //CrudRepository
+    //PagingAndSortingRepository extends crud
+    //JpaRepository extends Paging
+
+    //https://docs.spring.io/spring-data/jpa/docs/current/reference/html/#jpa.query-methods
 
     //for Repository the name is very specific.
     //Breakdown

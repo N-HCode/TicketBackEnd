@@ -39,6 +39,7 @@ public class UsersList {
     }
 
     public void addUser(User user){
+        user.setUsersList(this);
         users.add(user);
     }
 
