@@ -2,7 +2,9 @@ package com.github.ticketProject.javaSpringBootTemplate.service;
 
 import com.github.ticketProject.javaSpringBootTemplate.model.PriorityList;
 import com.github.ticketProject.javaSpringBootTemplate.repository.PriorityListRepository;
+import com.github.ticketProject.javaSpringBootTemplate.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 
@@ -19,41 +21,23 @@ public class PriorityListService {
         this.priorityListRepository = priorityListRepository;
     }
 
-    public List<String> findPriorityListById(Long id){
+    public boolean addToPriorityList(PriorityList priorityList, String priority) {
 
-        Optional<PriorityList> priorityListOfOrg = priorityListRepository.findById(id);
-
-        if (priorityListOfOrg.isPresent()){
-
-            return priorityListOfOrg.get().getPriorities();
-        }else{
-            return null;
-        }
-
-
-
-    }
-
-    public boolean addToPriorityList(Long id, String priority) {
-        Optional<PriorityList> priorityList = priorityListRepository.findById(id);
-
-        if (priorityList.isPresent()){
-            PriorityList foundPrioritylist = priorityList.get();
-            foundPrioritylist.getPriorities().add(priority);
-            priorityListRepository.save(foundPrioritylist);
+        if (priorityList != null){
+            priorityList.addPriorityToList(priority);
+            priorityListRepository.save(priorityList);
             return true;
         }else{
             return false;
         }
     }
 
-    public boolean removeFromPriorityList(Long id, String priority) {
-        Optional<PriorityList> priorityList = priorityListRepository.findById(id);
+    public boolean removeFromPriorityList(PriorityList priorityList, String priority) {
 
-        if (priorityList.isPresent()){
-            PriorityList foundPrioritylist = priorityList.get();
-            foundPrioritylist.getPriorities().remove(priority);
-            priorityListRepository.save(foundPrioritylist);
+
+        if (priorityList != null){
+            priorityList.removePriorityFromList(priority);
+            priorityListRepository.save(priorityList);
             return true;
         }else{
             return false;

@@ -47,6 +47,8 @@ public class PriorityList {
 
     public void addPriorityToList(String priority){priorities.add(priority);}
 
+    public void removePriorityFromList(String priority){priorities.remove(priority);}
+
     public Organization getOrganization() {
         return organization;
     }

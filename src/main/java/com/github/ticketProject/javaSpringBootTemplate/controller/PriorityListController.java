@@ -1,42 +1,53 @@
 package com.github.ticketProject.javaSpringBootTemplate.controller;
 
+import com.github.ticketProject.javaSpringBootTemplate.model.User;
 import com.github.ticketProject.javaSpringBootTemplate.service.PriorityListService;
+import com.github.ticketProject.javaSpringBootTemplate.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Controller
 @RequestMapping(value = "/prioritylist")
 public class PriorityListController {
 
-    private PriorityListService priorityListService;
+    private final PriorityListService priorityListService;
+    private final UserService userService;
 
     @Autowired
-    public PriorityListController(PriorityListService priorityListService) {
+    public PriorityListController(PriorityListService priorityListService, UserService userService) {
         this.priorityListService = priorityListService;
+        this.userService = userService;
     }
 
     @CrossOrigin
     @GetMapping("/{id}")
-    public ResponseEntity<?> getAllPriorities(@PathVariable Long id){
-        List<String> priorityList = priorityListService.findPriorityListById(id);
+    public ResponseEntity<?> getAllPriorities(Authentication authResult, @PathVariable Long id){
 
-        if (priorityList != null){
-            return new ResponseEntity<>(priorityList, HttpStatus.OK);
-        }else{
-            return new ResponseEntity<>("Status List Not Found", HttpStatus.NOT_FOUND);
+        User user = userService.getUserByUsername(authResult.getName());
+        if (user == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+
+        return new ResponseEntity<>(user.getUsersList().getOrganization().getPriorityList(), HttpStatus.OK);
+
     }
 
     @CrossOrigin
-    @PutMapping("/add/{id}")
-    public ResponseEntity<?> addAPriority(@PathVariable Long id, @RequestBody String priority){
-        if (priorityListService.addToPriorityList(id,priority)){
-            return new ResponseEntity<>( HttpStatus.OK);
+    @PutMapping("/add")
+    public ResponseEntity<?> addAPriority(Authentication authResult, @RequestBody String priority){
+
+        User user = userService.getUserByUsername(authResult.getName());
+        if (user == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+
+        if (priorityListService.addToPriorityList(user.getUsersList().getOrganization().getPriorityList(),priority)){
+            return new ResponseEntity<>(HttpStatus.OK);
         }else{
 
             return new ResponseEntity<>("Add Status failed", HttpStatus.BAD_REQUEST);
@@ -45,9 +56,15 @@ public class PriorityListController {
     }
 
     @CrossOrigin
-    @PutMapping("/remove/{id}")
-    public ResponseEntity<?> removeAPriority(@PathVariable Long id, @RequestBody String priority){
-        if (priorityListService.removeFromPriorityList(id,priority)){
+    @PutMapping("/remove")
+    public ResponseEntity<?> removeAPriority(Authentication authResult, @RequestBody String priority){
+
+        User user = userService.getUserByUsername(authResult.getName());
+        if (user == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        if (priorityListService.removeFromPriorityList(user.getUsersList().getOrganization().getPriorityList(),priority)){
             return new ResponseEntity<>( HttpStatus.OK);
         }else{
             return new ResponseEntity<>("Failed to Remove Status", HttpStatus.BAD_REQUEST);
