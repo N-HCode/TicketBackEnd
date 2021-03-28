@@ -7,6 +7,7 @@ import com.github.ticketProject.javaSpringBootTemplate.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,12 +18,10 @@ import java.util.Optional;
 @RequestMapping(value = "/user")
 public class UserController {
     private UserService service;
-    private OrganizationService organizationService;
 
     @Autowired
-    public UserController(UserService service, OrganizationService organizationService) {
+    public UserController(UserService service) {
         this.service = service;
-        this.organizationService = organizationService;
     }
 
     @CrossOrigin
@@ -61,14 +60,18 @@ public class UserController {
 
     @CrossOrigin
     @PostMapping("/create")
-    public ResponseEntity<?> createUser(@RequestBody Organization organization, @RequestBody User userToCreate ){
-        // Call the service to create the User
-        User responseCreateUser = service.createUser(organization, userToCreate);
+    public ResponseEntity<?> createUser(Authentication authResult, @RequestBody User userToCreate ){
+
+
+        User user = service.getUserByUsername(authResult.getName());
+        if (user == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
 
         // check if the User was sent back from service to see if it passed
-        if (responseCreateUser != null){
+        if (service.createUser(user.getUsersList(), userToCreate)){
             // response to send back if success
-            return new ResponseEntity<>(responseCreateUser, HttpStatus.CREATED);
+            return new ResponseEntity<>(HttpStatus.CREATED);
         }else{
             // response to send back if failure
             return new ResponseEntity<>("Username already exists", HttpStatus.BAD_REQUEST);
@@ -77,10 +80,15 @@ public class UserController {
 
     @CrossOrigin
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteUser(@PathVariable Long id){
+    public ResponseEntity<?> deleteUser(Authentication authResult, @PathVariable Long id){
+
+        User user = service.getUserByUsername(authResult.getName());
+        if (user == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
 
         // check if the User was sent back from service to see if it passed
-        if (service.delete(id)){
+        if (service.delete(user.getUsersList(),id)){
             // response to send back if success
             return new ResponseEntity<>(HttpStatus.OK);
         }else{
@@ -91,9 +99,14 @@ public class UserController {
 
     @CrossOrigin
     @PutMapping("/{id}")
-    public ResponseEntity<?> editUser(@PathVariable Long id, @RequestBody User userToEdit){
+    public ResponseEntity<?> editUser(Authentication authResult, @PathVariable Long id, @RequestBody User userToEdit){
+        User user = service.getUserByUsername(authResult.getName());
+        if (user == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
         // call the service to try to edit the User using id and body
-        User responseEditUser = service.editUser(id, userToEdit);
+        User responseEditUser = service.editUser(user.getUsersList(),id, userToEdit);
 
         // check if the user was sent back from service to see if it passed
         if (responseEditUser != null){
@@ -106,36 +119,42 @@ public class UserController {
     }
 
 
-    @CrossOrigin
-    @PostMapping("/organization")
-    public ResponseEntity<?> addOrganizationToUser(@RequestParam Long id, @RequestParam Long organizationId){
-        // call the service to add the organization to the user
-        Organization responseAddOrganization = service.addOrganizationToUser(id, organizationId);
+//    @CrossOrigin
+//    @PostMapping("/organization")
+//    public ResponseEntity<?> addOrganizationToUser(@RequestParam Long id, @RequestParam Long organizationId){
+//        // call the service to add the organization to the user
+//        Organization responseAddOrganization = service.addOrganizationToUser(id, organizationId);
+//
+//        // check if the organization was sent back from service to see if it passed
+//        if(responseAddOrganization != null){
+//            // response to send back if success
+//            return new ResponseEntity<>(responseAddOrganization, HttpStatus.OK);
+//        }else{
+//            // response to send back if failure
+//            return new ResponseEntity<>("Failed to add organization to User",HttpStatus.BAD_REQUEST);
+//        }
+//    }
 
-        // check if the organization was sent back from service to see if it passed
-        if(responseAddOrganization != null){
-            // response to send back if success
-            return new ResponseEntity<>(responseAddOrganization, HttpStatus.OK);
-        }else{
-            // response to send back if failure
-            return new ResponseEntity<>("Failed to add organization to User",HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    @CrossOrigin
-    @GetMapping("/check/{id}")
-    public ResponseEntity check(@PathVariable Long id, @RequestParam String password){
-        // Call the service to invoke findById method
-        Optional<User> userById = service.findById(id);
-        // check if the user was sent back from service to see if it passed
-        if (userById.get().getPassword().equals(password)){
-            // response to send back if success
-            return new ResponseEntity<>(HttpStatus.OK);
-        }else{
-            // response to send back if failure
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-    }
+//    @CrossOrigin
+//    @GetMapping("/check/{id}")
+//    public ResponseEntity check(Authentication authResult, @RequestParam String password){
+//
+//        User user = service.getUserByUsername(authResult.getName());
+//        if (user == null) {
+//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//        }
+//
+//        // Call the service to invoke findById method
+//        Optional<User> userById = service.findById(id);
+//        // check if the user was sent back from service to see if it passed
+//        if (userById.get().getPassword().equals(password)){
+//            // response to send back if success
+//            return new ResponseEntity<>(HttpStatus.OK);
+//        }else{
+//            // response to send back if failure
+//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//        }
+//    }
 
     @CrossOrigin
     @GetMapping("/checkusername")

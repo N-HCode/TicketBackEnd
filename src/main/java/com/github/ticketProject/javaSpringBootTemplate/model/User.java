@@ -21,11 +21,18 @@ public class User implements UserDetails {
     @NotNull @Column(unique = true) String username;
     @NotNull @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     String password;
+
+    @NotNull
     private String firstName;
+
+    @NotNull
     private String lastName;
     private String fullName;
+
+    @NotNull
     private String email;
     private String phoneNumber;
+    @NotNull
     private String userRole;
     private ZonedDateTime dateCreated;
     private ZonedDateTime lastLogin;
@@ -57,7 +64,7 @@ public class User implements UserDetails {
     public User() {
     }
 
-    public User(@NotNull String username, @NotNull String password, String firstName, String lastName, String email, String userRole, String phoneNumber) {
+    public User(@NotNull String username, @NotNull String password, @NotNull String firstName,@NotNull String lastName, @NotNull String email, @NotNull String userRole, String phoneNumber) {
         this.username = username;
         this.password = password;
         this.firstName = firstName;
@@ -65,6 +72,7 @@ public class User implements UserDetails {
         this.email = email;
         this.userRole = userRole;
         this.phoneNumber = phoneNumber;
+        this.fullName = firstName + " " + lastName;
     }
 
     public Long getUserId() {

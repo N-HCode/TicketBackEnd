@@ -21,41 +21,34 @@ public class StatusListService {
 
     }
 
-    public List<String> findStatusListById(Long id){
+//    public List<String> findStatusListById(Long id){
+//
+//        Optional<StatusList> statusListOfOrg = statusListRepository.findById(id);
+//
+//        if (statusListOfOrg.isPresent()){
+//
+//            return statusListOfOrg.get().getStatusList();
+//        }else{
+//            return null;
+//        }
+//
+//    }
 
-        Optional<StatusList> statusListOfOrg = statusListRepository.findById(id);
-
-        if (statusListOfOrg.isPresent()){
-
-            return statusListOfOrg.get().getStatusList();
-        }else{
-            return null;
-        }
-
-
-
-    }
-
-    public boolean addToStatusList(Long id, String status) {
-        Optional<StatusList> statusList = statusListRepository.findById(id);
-
-        if (statusList.isPresent()){
-            StatusList foundStatuslist = statusList.get();
-            foundStatuslist.getStatusList().add(status);
-            statusListRepository.save(foundStatuslist);
+    public boolean addToStatusList(StatusList statusList, String status) {
+        if (statusList != null){
+            statusList.addStatus(status);
+            statusListRepository.save(statusList);
             return true;
         }else{
             return false;
         }
     }
 
-    public boolean removeFromStatusList(Long id, String status) {
-        Optional<StatusList> statusList = statusListRepository.findById(id);
+    public boolean removeFromStatusList(StatusList statusList, String status) {
 
-        if (statusList.isPresent()){
-            StatusList foundStatusList = statusList.get();
-            foundStatusList.getStatusList().remove(status);
-            statusListRepository.save(foundStatusList);
+        if (statusList != null){
+            statusList.removeStatus(status);
+            statusListRepository.save(statusList);
             return true;
         }else{
             return false;

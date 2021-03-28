@@ -36,15 +36,13 @@ public class StatusList {
         return statusList;
     }
 
-    public void setStatusList(ArrayList<String> NewStatusList) {
-        this.statusList = NewStatusList;
-    }
-
     public Long getStatusListId() {
         return statusListId;
     }
 
     public void addStatus(String status){statusList.add(status);}
+
+    public void removeStatus(String status){statusList.remove(status);}
 
     public Organization getOrganization() {
         return organization;
