@@ -24,8 +24,8 @@ public class PriorityListController {
     }
 
     @CrossOrigin
-    @GetMapping("/{id}")
-    public ResponseEntity<?> getAllPriorities(Authentication authResult, @PathVariable Long id){
+    @GetMapping()
+    public ResponseEntity<?> getAllPriorities(Authentication authResult){
 
         User user = userService.getUserByUsername(authResult.getName());
         if (user == null) {

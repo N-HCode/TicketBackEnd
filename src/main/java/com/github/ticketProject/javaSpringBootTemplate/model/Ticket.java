@@ -32,10 +32,10 @@ public class Ticket {
     @JsonBackReference(value = "user-tickets")
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn( name = "organization_id")
-    @JsonBackReference(value = "organization-tickets")
-    private Organization organization;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn( name = "organization_id")
+//    @JsonBackReference(value = "organization-tickets")
+//    private Organization organization;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn( name = "contact_id")
@@ -51,7 +51,6 @@ public class Ticket {
     @JoinColumn( name = "ticket_list_id")
     @JsonBackReference(value = "ticket_list-ticket")
     private TicketList ticketList;
-
 
 
     public Ticket() {
@@ -156,4 +155,27 @@ public class Ticket {
         this.status = status;
     }
 
+    public TicketList getTicketList() {
+        return ticketList;
+    }
+
+    public void setTicketList(TicketList ticketList) {
+        this.ticketList = ticketList;
+    }
+
+    public Contact getContact() {
+        return contact;
+    }
+
+    public void setContact(Contact contact) {
+        this.contact = contact;
+    }
+
+    public ClientsOrganization getClientsOrganization() {
+        return clientsOrganization;
+    }
+
+    public void setClientsOrganization(ClientsOrganization clientsOrganization) {
+        this.clientsOrganization = clientsOrganization;
+    }
 }

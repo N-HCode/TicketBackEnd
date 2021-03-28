@@ -113,7 +113,7 @@ public class OrganizationController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-         Pageable pagingpage = PageRequest.of(0, 10);
+        Pageable pagingpage = PageRequest.of(0, 10);
 
         List<User> pagedUsers = service.getUsersFromOrganization(user.getUsersList(), pagingpage);
 

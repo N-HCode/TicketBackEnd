@@ -21,7 +21,9 @@ public class TestCreateUser {
         User newUser = new User(username, password, firstName, lastName, email, userRole, phoneNumber);
         Organization organization = new Organization();
         // Ask the service to create the user to the database
-        User createdUser = service.createUser(organization, newUser);
+        service.createUser(organization.getUsersList(), newUser);
+
+        User createdUser = service.getUserByUsername(newUser.getUsername());
 
         // Check all fields in the created user
         Assert.assertEquals(createdUser.getUsername(), username);

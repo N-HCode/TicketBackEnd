@@ -1,6 +1,7 @@
 package com.github.ticketProject.javaSpringBootTemplate.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.security.core.GrantedAuthority;
@@ -45,9 +46,10 @@ public class User implements UserDetails {
     private boolean isEnabled = true;
 
     // @JsonManagedReference and @JsonBackReference to solve infinite recursion problem
-    @OneToMany(mappedBy = "user")
-    @JsonManagedReference(value = "user-tickets") //this is to mark the child elements/entities
-    private Set<Ticket> tickets= new HashSet<>();
+//    @OneToMany(mappedBy = "user")
+//    @JsonManagedReference(value = "user-tickets") //this is to mark the child elements/entities
+//    @JsonIgnore
+//    private Set<Ticket> tickets= new HashSet<>();
 
 //    // @JsonManagedReference and @JsonBackReference to solve infinite recursion problem
 //    @ManyToOne(fetch = FetchType.LAZY)
@@ -196,13 +198,6 @@ public class User implements UserDetails {
         this.lastModified = lastModified;
     }
 
-    public Set<Ticket> getTickets() {
-        return tickets;
-    }
-
-    public void setTickets(Set<Ticket> tickets) {
-        this.tickets = tickets;
-    }
 
     public UsersList getUsersList() {
         return usersList;

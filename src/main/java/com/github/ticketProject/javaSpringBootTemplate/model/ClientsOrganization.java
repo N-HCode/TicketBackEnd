@@ -25,7 +25,7 @@ public class ClientsOrganization {
     private String organizationPhoneNumber;
     //the java.time is the newest java date API
     private final ZonedDateTime dateCreated = ZonedDateTime.now();
-    private final ZonedDateTime dateModified = ZonedDateTime.now();;
+    private ZonedDateTime dateModified = ZonedDateTime.now();;
 
     @Column(name="client_organization_name", nullable = false,
             columnDefinition = "TEXT")
@@ -71,7 +71,7 @@ public class ClientsOrganization {
     public ClientsOrganization() {
     }
 
-    public ClientsOrganization(boolean isForeignAddress, String city, String state, String streetAddress, String zipcode, String country, String organizationPhoneNumber, String organizationName, Organization organization, ClientsOrganizationList clientsOrganizationList) {
+    public ClientsOrganization(boolean isForeignAddress, String city, String state, String streetAddress, String zipcode, String country, String organizationPhoneNumber, String organizationName, ClientsOrganizationList clientsOrganizationList) {
         this.isForeignAddress = isForeignAddress;
         this.city = city;
         this.state = state;
@@ -86,6 +86,90 @@ public class ClientsOrganization {
 
     public Long getId() {
         return id;
+    }
+
+    public boolean isForeignAddress() {
+        return isForeignAddress;
+    }
+
+    public void setForeignAddress(boolean foreignAddress) {
+        isForeignAddress = foreignAddress;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public String getStreetAddress() {
+        return streetAddress;
+    }
+
+    public void setStreetAddress(String streetAddress) {
+        this.streetAddress = streetAddress;
+    }
+
+    public String getZipcode() {
+        return zipcode;
+    }
+
+    public void setZipcode(String zipcode) {
+        this.zipcode = zipcode;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public String getOrganizationPhoneNumber() {
+        return organizationPhoneNumber;
+    }
+
+    public void setOrganizationPhoneNumber(String organizationPhoneNumber) {
+        this.organizationPhoneNumber = organizationPhoneNumber;
+    }
+
+    public ZonedDateTime getDateModified() {
+        return dateModified;
+    }
+
+    public void setDateModified(ZonedDateTime dateModified) {
+        this.dateModified = dateModified;
+    }
+
+    public String getOrganizationName() {
+        return organizationName;
+    }
+
+    public void setOrganizationName(String organizationName) {
+        this.organizationName = organizationName;
+    }
+
+    public ClientsOrganizationList getClientsOrganizationList() {
+        return clientsOrganizationList;
+    }
+
+    public void setClientsOrganizationList(ClientsOrganizationList clientsOrganizationList) {
+        this.clientsOrganizationList = clientsOrganizationList;
+    }
+
+    public ContactList getContactList() {
+        return contactList;
     }
 
 

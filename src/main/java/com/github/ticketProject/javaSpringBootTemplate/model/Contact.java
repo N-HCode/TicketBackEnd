@@ -33,10 +33,10 @@ public class Contact {
     @JsonIdentityReference(alwaysAsId = true)
     private ContactList contactList;
 
-    // @JsonManagedReference and @JsonBackReference to solve infinite recursion problem
-    @OneToMany(mappedBy = "contact")
-    @JsonManagedReference( value = "contact-tickets")
-    private final Set<Ticket> tickets= new HashSet<>();
+//    // @JsonManagedReference and @JsonBackReference to solve infinite recursion problem
+//    @OneToMany(mappedBy = "contact")
+//    @JsonManagedReference( value = "contact-tickets")
+//    private final Set<Ticket> tickets= new HashSet<>();
 
 
 
@@ -52,7 +52,6 @@ public class Contact {
         this.phoneNumber = phoneNumber;
     }
 
-    public void addTicket(Ticket ticket){tickets.add(ticket);}
 
     public Long getId() {
         return Id;
@@ -62,9 +61,7 @@ public class Contact {
         return dateCreated;
     }
 
-    public Set<Ticket> getTickets() {
-        return tickets;
-    }
+
 
     public String getFirstName() {
         return firstName;
@@ -122,4 +119,11 @@ public class Contact {
         this.lastModified = lastModified;
     }
 
+    public ContactList getContactList() {
+        return contactList;
+    }
+
+    public void setContactList(ContactList contactList) {
+        this.contactList = contactList;
+    }
 }
