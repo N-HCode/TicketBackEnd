@@ -72,5 +72,19 @@ public class TicketList {
         this.organization = organization;
     }
 
+    public ClientsOrganizationList getClientsOrganizationLists() {
+        return clientsOrganizationLists;
+    }
 
+    public void setClientsOrganizationLists(ClientsOrganizationList clientsOrganizationLists) {
+        this.clientsOrganizationLists = clientsOrganizationLists;
+    }
+
+    public UsersList getUsersList() {
+        return usersList;
+    }
+
+    public void setUsersList(UsersList usersList) {
+        this.usersList = usersList;
+    }
 }

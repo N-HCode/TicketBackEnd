@@ -45,6 +45,7 @@ public class ClientsOrganizationList {
     }
 
     public void addClientsOrganization(ClientsOrganization clientsOrganization){
+        clientsOrganization.setClientsOrganizationList(this);
         clientsOrganizations.add(clientsOrganization);
     }
 

@@ -56,4 +56,12 @@ public class ContactList {
     public void setClientsOrganization(ClientsOrganization clientsOrganization) {
         this.clientsOrganization = clientsOrganization;
     }
+
+    public TicketList getTicketList() {
+        return ticketList;
+    }
+
+    public void setTicketList(TicketList ticketList) {
+        this.ticketList = ticketList;
+    }
 }

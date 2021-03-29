@@ -69,8 +69,10 @@ public class OrganizationController {
         return responseFindId;
     }
 
+
+//https://stackoverflow.com/questions/778203/are-there-any-naming-convention-guidelines-for-rest-apis
     @CrossOrigin
-    @GetMapping("/getuserorganization")
+    @GetMapping("/get_user_organization")
     public ResponseEntity<?> getUserOrganization(Authentication authResult){
 
         User user = userService.getUserByUsername(authResult.getName());
@@ -83,7 +85,7 @@ public class OrganizationController {
 
 
     @CrossOrigin
-    @GetMapping("/getAllUser/{id}")
+    @GetMapping("/get_all_user/{id}")
     public ResponseEntity<?> getAllUsersInOrg(@PathVariable Long id){
 
         //services.findById will return a null if it does not find a
@@ -102,20 +104,16 @@ public class OrganizationController {
     }
 
     @CrossOrigin
-    @GetMapping("/getusersfromorganization")
+    @GetMapping("/get_users_from_organization")
     //https://stackoverflow.com/questions/32434058/how-to-implement-pagination-in-spring-boot-with-hibernate
-    public ResponseEntity<?> getusersfromOrgization(Authentication authResult
-//                                                    @RequestBody @PageableDefault(value=10, page=0) Pageable pageable
-    ){
+    public ResponseEntity<?> getusersfromOrgization(Authentication authResult, @PathVariable int pageNo, @PathVariable int numberPerPage){
 
         User user = userService.getUserByUsername(authResult.getName());
         if (user == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        Pageable pagingpage = PageRequest.of(0, 10);
-
-        List<User> pagedUsers = service.getUsersFromOrganization(user.getUsersList(), pagingpage);
+        List<User> pagedUsers = service.getUsersFromOrganization(user.getUsersList(), pageNo, numberPerPage);
 
         return new ResponseEntity<>(pagedUsers, HttpStatus.OK);
 

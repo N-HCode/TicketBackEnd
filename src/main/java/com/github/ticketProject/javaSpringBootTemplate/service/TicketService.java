@@ -4,6 +4,8 @@ import com.github.ticketProject.javaSpringBootTemplate.model.*;
 import com.github.ticketProject.javaSpringBootTemplate.repository.TicketRepository;
 import com.github.ticketProject.javaSpringBootTemplate.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.ZonedDateTime;
@@ -23,9 +25,42 @@ public class TicketService {
 //        createTicket((long) 1, defaultTicket);
     }
 
-    public Iterable<Ticket> findAllTicketsByUser()
+    public Iterable<Ticket> findAllTicketsByUser(User user, int pageNo, int numberPerPage)
     {
-        return ticketRepository.findAll();
+        Pageable pageConfig = PageRequest.of(pageNo, numberPerPage);
+
+        return ticketRepository.findAllByUserEquals(user, pageConfig);
+    }
+
+    public Iterable<Ticket> findAllTicketsByOrganization(TicketList ticketList, int pageNo, int numberPerPage)
+    {
+        Pageable pageConfig = PageRequest.of(pageNo, numberPerPage);
+
+        return ticketRepository.findAllByTicketListEquals(ticketList, pageConfig);
+    }
+
+    public Iterable<Ticket> findAllTicketsByClientOrganization(TicketList ticketList, ClientsOrganization clientsOrganization, int pageNo, int numberPerPage)
+    {
+
+        if (!clientsOrganization.getClientsOrganizationList().getTicketList().equals(ticketList)){
+            return null;
+        }
+
+        Pageable pageConfig = PageRequest.of(pageNo, numberPerPage);
+
+        return ticketRepository.findAllByClientsOrganizationEquals(clientsOrganization, pageConfig);
+    }
+
+    public Iterable<Ticket> findAllTicketsByContact(TicketList ticketList ,Contact contact , int pageNo, int numberPerPage)
+    {
+
+        if (!contact.getContactList().getTicketList().equals(ticketList)){
+            return null;
+        }
+
+        Pageable pageConfig = PageRequest.of(pageNo, numberPerPage);
+
+        return ticketRepository.findAllByContactEquals(contact, pageConfig);
     }
 
     public Optional<Ticket> findById(TicketList ticketList,Long id) {

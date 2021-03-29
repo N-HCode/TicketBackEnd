@@ -7,6 +7,7 @@ import com.github.ticketProject.javaSpringBootTemplate.repository.OrganizationRe
 import com.github.ticketProject.javaSpringBootTemplate.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -152,8 +153,11 @@ public class OrganizationService {
 //        organizationRepository.save(organization);
 //    }
 
-    public List<User> getUsersFromOrganization(UsersList usersList, Pageable pageable){
-        Page<User> pagedResult = userRepository.findAllByUsersListEquals(usersList, pageable);
+    public List<User> getUsersFromOrganization(UsersList usersList, int pageNo, int numberPerPage){
+
+        Pageable pageConfig = PageRequest.of(pageNo, numberPerPage);
+
+        Page<User> pagedResult = userRepository.findAllByUsersListEquals(usersList, pageConfig);
         return  pagedResult.toList();
     }
 
