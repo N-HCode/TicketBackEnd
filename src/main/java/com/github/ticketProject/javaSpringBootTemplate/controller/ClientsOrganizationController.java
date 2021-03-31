@@ -31,7 +31,7 @@ public class ClientsOrganizationController {
     }
 
     @CrossOrigin
-    @GetMapping("/all")
+    @GetMapping("/all_clients")
     public ResponseEntity<?> findAll(Authentication authResult, @PathVariable int pageNo, @PathVariable int numberPerPage) {
         //Doing a find all will just return an OK because even if it is empty
         //that is find. As we are not trying to find something specific.
@@ -46,6 +46,27 @@ public class ClientsOrganizationController {
         Iterable<ClientsOrganization> clientOrgList = clientsOrganizationService.findAllClientsOrganizationByClientOrgList(clientsOrganizationList, pageNo, numberPerPage);
 
         return new ResponseEntity<>(clientOrgList, HttpStatus.OK);
+
+    }
+
+    @CrossOrigin
+    @GetMapping("/{id}")
+    public ResponseEntity<?> findClientsOrganizationById(Authentication authResult, @PathVariable long id){
+
+        User user = userService.getUserByUsername(authResult.getName());
+        if (user == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        ClientsOrganizationList clientsOrganizationList = user.getUsersList().getTicketList().getClientsOrganizationLists();
+
+
+        ClientsOrganization clientsOrganization = clientsOrganizationService.findClientsOrganizationById(clientsOrganizationList, id);
+        if (clientsOrganization == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(clientsOrganization, HttpStatus.OK);
 
     }
 
