@@ -11,10 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping(value = "/clients_organization")
@@ -33,8 +30,6 @@ public class ClientsOrganizationController {
     @CrossOrigin
     @GetMapping("/all_clients")
     public ResponseEntity<?> findAll(Authentication authResult, @PathVariable int pageNo, @PathVariable int numberPerPage) {
-        //Doing a find all will just return an OK because even if it is empty
-        //that is find. As we are not trying to find something specific.
 
         User user = userService.getUserByUsername(authResult.getName());
         if (user == null) {
@@ -67,6 +62,44 @@ public class ClientsOrganizationController {
         }
 
         return new ResponseEntity<>(clientsOrganization, HttpStatus.OK);
+
+    }
+
+    @CrossOrigin
+    @PutMapping("/remove/{id}")
+    public ResponseEntity<?> removeById(Authentication authResult, @PathVariable long id){
+
+        User user = userService.getUserByUsername(authResult.getName());
+        if (user == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        ClientsOrganizationList clientsOrganizationList = user.getUsersList().getTicketList().getClientsOrganizationLists();
+
+        if (clientsOrganizationService.removeClientsOrganization(clientsOrganizationList, id)) {
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>( HttpStatus.NOT_FOUND);
+
+    }
+
+    @CrossOrigin
+    @PostMapping("/add")
+    public ResponseEntity<?> addClientOrganization(Authentication authResult, @RequestBody ClientsOrganization clientsOrganization){
+
+        User user = userService.getUserByUsername(authResult.getName());
+        if (user == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        ClientsOrganizationList clientsOrganizationList = user.getUsersList().getTicketList().getClientsOrganizationLists();
+
+        if (clientsOrganizationService.addClientsOrganization(clientsOrganizationList, clientsOrganization)) {
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>( HttpStatus.NOT_FOUND);
 
     }
 

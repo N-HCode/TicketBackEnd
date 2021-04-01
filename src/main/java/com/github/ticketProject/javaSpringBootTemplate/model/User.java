@@ -1,9 +1,6 @@
 package com.github.ticketProject.javaSpringBootTemplate.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -60,7 +57,15 @@ public class User implements UserDetails {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn( name = "user_list_id" )
     @JsonBackReference(value="users-list-user") // this is to mark the parent element/entity
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "priorityListId")
+    @JsonIdentityReference(alwaysAsId = true)
     private UsersList usersList;
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonManagedReference(value="user-ticket_column_template")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "priorityListId")
+    @JsonIdentityReference(alwaysAsId = true)
+    private final TicketColumnTemplateList ticketColumnTemplateList = new TicketColumnTemplateList(this);
 
 
     public User() {

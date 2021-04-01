@@ -28,7 +28,7 @@ public class ContactService {
         return contactRepository.findAllByContactListEquals(contactList, pageConfig).toList();
     }
 
-    public Contact findAllContactById(ContactList contactList, long id)
+    public Contact findContactById(ContactList contactList, long id)
     {
          Optional<Contact> contact =  contactRepository.findById(id);
 
@@ -49,6 +49,18 @@ public class ContactService {
 
     }
 
+    public boolean removeContact(ContactList contactList, long id){
+
+        Contact contact =  findContactById(contactList, id);
+        if (contact == null){
+            return false;
+        }
+
+        contactRepository.delete(contact);
+
+        return true;
+
+    }
 
 
 }
