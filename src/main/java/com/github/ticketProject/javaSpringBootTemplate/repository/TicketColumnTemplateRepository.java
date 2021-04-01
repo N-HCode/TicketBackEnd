@@ -1,4 +1,7 @@
 package com.github.ticketProject.javaSpringBootTemplate.repository;
 
-public class TicketColumnTemplateRepository {
+import com.github.ticketProject.javaSpringBootTemplate.model.TicketColumnTemplate;
+import org.springframework.data.repository.CrudRepository;
+
+public interface TicketColumnTemplateRepository extends CrudRepository<TicketColumnTemplate, Long> {
 }

@@ -2,15 +2,15 @@ package com.github.ticketProject.javaSpringBootTemplate.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "ticket_column_template_list")
 public class TicketColumnTemplateList {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JsonBackReference(value="user-ticket_column_template_list")
