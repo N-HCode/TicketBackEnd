@@ -19,28 +19,30 @@ public class TicketColumnTemplate {
 
     private String templateName;
 
-
-
     public TicketColumnTemplate() {
     }
 
-    public TicketColumnTemplate(TicketColumnTemplateList ticketColumnTemplateList) {
-        this.ticketColumnTemplateList = ticketColumnTemplateList;
-    }
 
     public Long getId() {
         return id;
+    }
+
+
+
+    public String getTemplateName() {
+        return templateName;
+    }
+
+
+    public void setTemplateName(String templateName) {
+        this.templateName = templateName;
     }
 
     public TicketColumnTemplateList getTicketColumnTemplateList() {
         return ticketColumnTemplateList;
     }
 
-    public String getTemplateName() {
-        return templateName;
-    }
-
-    public void setTemplateName(String templateName) {
-        this.templateName = templateName;
+    public void setTicketColumnTemplateList(TicketColumnTemplateList ticketColumnTemplateList) {
+        this.ticketColumnTemplateList = ticketColumnTemplateList;
     }
 }

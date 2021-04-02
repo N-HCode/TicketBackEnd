@@ -213,6 +213,7 @@ public class User implements UserDetails {
     }
 
 
-
-
+    public TicketColumnTemplateList getTicketColumnTemplateList() {
+        return ticketColumnTemplateList;
+    }
 }
