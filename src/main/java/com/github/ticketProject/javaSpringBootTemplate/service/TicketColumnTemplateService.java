@@ -23,7 +23,14 @@ public class TicketColumnTemplateService {
     }
 
 
-    public Iterable<TicketColumnTemplate> findAllByTicketTemplateList(TicketColumnTemplateList ticketColumnTemplateList){
+    public Iterable<TicketColumnTemplate> findAllByTicketTemplateList(Authentication authResult){
+
+        User user = userService.getUserByUsername(authResult.getName());
+        if (user == null){
+            return null;
+        }
+
+        TicketColumnTemplateList ticketColumnTemplateList = user.getTicketColumnTemplateList();
 
         return ticketColumnTemplateRepository.findAllByTicketColumnTemplateListEquals(ticketColumnTemplateList);
     }
