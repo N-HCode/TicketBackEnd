@@ -59,13 +59,13 @@ public class User implements UserDetails {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn( name = "user_list_id" )
     @JsonBackReference(value="users-list-user") // this is to mark the parent element/entity
-    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "priorityListId")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "userListId")
     @JsonIdentityReference(alwaysAsId = true)
     private UsersList usersList;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JsonManagedReference(value="user-ticket_column_template")
-    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "priorityListId")
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonManagedReference(value="user-ticket_column_template_list")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
     private final TicketColumnTemplateList ticketColumnTemplateList = new TicketColumnTemplateList(this);
 

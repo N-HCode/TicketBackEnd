@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -84,30 +85,13 @@ public class OrganizationController {
     }
 
 
-    @CrossOrigin
-    @GetMapping("/get_all_user/{id}")
-    public ResponseEntity<?> getAllUsersInOrg(@PathVariable Long id){
-
-        //services.findById will return a null if it does not find a
-        //org with the Id
-        Organization organization = service.findById(id);
-        //initialize the HTTP response
-        ResponseEntity<?> responseFindId;
-
-        //See if there is a value other than null. If not, send back a 404 error.
-        if (organization != null){
-            responseFindId = new ResponseEntity<>(organization.getUsersList().getUsers(), HttpStatus.OK);
-        }else{
-            responseFindId = new ResponseEntity<>("Organization not found",HttpStatus.NOT_FOUND);
-        }
-        return responseFindId;
-    }
 
     @CrossOrigin
-    @GetMapping("/get_users_from_organization")
+    @GetMapping("/get_users_from_organization/{pageNo}/{numberPerPage}")
+    @PreAuthorize("hasAuthority('everything')")
     //https://stackoverflow.com/questions/32434058/how-to-implement-pagination-in-spring-boot-with-hibernate
     public ResponseEntity<?> getusersfromOrgization(Authentication authResult, @PathVariable int pageNo, @PathVariable int numberPerPage){
-
+        //PageNo 0 is the first page.
         User user = userService.getUserByUsername(authResult.getName());
         if (user == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

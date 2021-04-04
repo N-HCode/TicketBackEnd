@@ -16,14 +16,20 @@ public enum Roles {
     USER("user");
 
     private final Role roleInEnum;
+    private final String roleName;
 
     Roles(String roleName) {
+        this.roleName = roleName;
         this.roleInEnum = new Role(roleName);
 
     }
 
     public Role getRoleInEnum() {
         return roleInEnum;
+    }
+
+    public String getRoleName() {
+        return roleName;
     }
 
     //    private final Set<Permissions> permissions;

@@ -16,12 +16,20 @@ public enum Permissions {
     //this is a field of the ENUM. Which Every ENUM will have
     //ENUM is basically can be used to create objects and define them at the same time.
     private final Permission permission;
+    private final String permissionName;
 
     Permissions(String permissionName) {
+        this.permissionName = permissionName;
         this.permission = new Permission(permissionName);
     }
 
     public Permission getPermission() {
         return permission;
     }
+
+    public String getPermissionName() {
+        return permissionName;
+    }
+
+
 }

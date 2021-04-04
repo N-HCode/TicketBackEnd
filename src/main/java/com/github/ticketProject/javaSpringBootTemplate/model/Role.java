@@ -1,5 +1,6 @@
 package com.github.ticketProject.javaSpringBootTemplate.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import javax.persistence.*;
@@ -21,7 +22,8 @@ public class Role {
     @Column(unique = true)
     private String roleName;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JsonManagedReference
     private final Set<Permission> permissionsInRole = new HashSet<>();
 
     public Role() {

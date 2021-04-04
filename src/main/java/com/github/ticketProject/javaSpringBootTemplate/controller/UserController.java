@@ -7,12 +7,15 @@ import com.github.ticketProject.javaSpringBootTemplate.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
+
+import static com.github.ticketProject.javaSpringBootTemplate.authorization.Permissions.USER_MODIFY;
 
 @Controller
 @RequestMapping(value = "/user")
@@ -33,14 +36,15 @@ public class UserController {
         return new ResponseEntity<>(allUsers, HttpStatus.OK);
     }
 
-    @CrossOrigin
-    @GetMapping("/all")
-    public ResponseEntity<?> findByOrg(@RequestBody Organization organization){
-        // Call the service to invoke the findAll method which returns a Iterable
-        Iterable<User> usersInOrg = service.findByOrg(organization);
-        // Return the HTTP response with the Iterable, it will be an empty array if no users created
-        return new ResponseEntity<>(usersInOrg, HttpStatus.OK);
-    }
+//    @CrossOrigin
+//    @GetMapping("/all")
+//    @PreAuthorize("hasAuthority('user:modify')")
+//    public ResponseEntity<?> findByOrg(@RequestBody Organization organization){
+//        // Call the service to invoke the findAll method which returns a Iterable
+//        Iterable<User> usersInOrg = service.findByOrg(organization);
+//        // Return the HTTP response with the Iterable, it will be an empty array if no users created
+//        return new ResponseEntity<>(usersInOrg, HttpStatus.OK);
+//    }
 
     @CrossOrigin
     @GetMapping("/{id}")

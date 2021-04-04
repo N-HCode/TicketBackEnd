@@ -9,12 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
+import static com.github.ticketProject.javaSpringBootTemplate.authorization.Roles.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 
-import java.time.LocalDateTime;
+
 import java.time.ZonedDateTime;
 import java.util.*;
 
@@ -72,7 +72,7 @@ public class OrganizationService {
             rootUser.setUserRole("root");
             rootUser.setFirstName("root");
             rootUser.setLastName("user");
-//            rootUser.addRole();
+            rootUser.addRole(ROOT.getRoleInEnum());
             rootUser.setEmail("Test");
             ZonedDateTime timeAsOfNow = ZonedDateTime.now();
 
