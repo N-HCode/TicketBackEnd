@@ -1,10 +1,11 @@
 package com.github.ticketProject.javaSpringBootTemplate.service;
 
-import com.github.ticketProject.javaSpringBootTemplate.model.Ticket;
-import com.github.ticketProject.javaSpringBootTemplate.model.User;
+import com.github.ticketProject.javaSpringBootTemplate.model.*;
 import com.github.ticketProject.javaSpringBootTemplate.repository.TicketRepository;
 import com.github.ticketProject.javaSpringBootTemplate.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.ZonedDateTime;
@@ -12,8 +13,8 @@ import java.util.Optional;
 
 @Service
 public class TicketService {
-    private TicketRepository ticketRepository;
-    private UserRepository userRepository;
+    private final TicketRepository ticketRepository;
+    private final UserRepository userRepository;
 
     @Autowired
     public TicketService(TicketRepository ticketRepository, UserRepository userRepository) {
@@ -24,42 +25,100 @@ public class TicketService {
 //        createTicket((long) 1, defaultTicket);
     }
 
-    public Iterable<Ticket> findAll() {
-        return ticketRepository.findAll();
+    public Iterable<Ticket> findAllTicketsByUser(User user, int pageNo, int numberPerPage)
+    {
+        Pageable pageConfig = PageRequest.of(pageNo, numberPerPage);
+
+        return ticketRepository.findAllByUserEquals(user, pageConfig);
     }
 
-    public Optional<Ticket> findById(Long id) {
-        Optional<Ticket> ticket = ticketRepository.findById(id);
-        return ticket;
+    public Iterable<Ticket> findAllTicketsByOrganization(TicketList ticketList, int pageNo, int numberPerPage)
+    {
+        Pageable pageConfig = PageRequest.of(pageNo, numberPerPage);
+
+        return ticketRepository.findAllByTicketListEquals(ticketList, pageConfig);
     }
 
-    public Ticket createTicket(Long userId, Ticket ticket) {
-        Optional<User> user = userRepository.findById(userId);
-        if(user.isPresent()){
-            User foundUser = user.get();
-            ticket.setUser(foundUser);
-            ZonedDateTime timeAsOfNow = ZonedDateTime.now();
-            ticket.setDateCreated(timeAsOfNow);
-            ticket.setLastModified(timeAsOfNow);
+    public Iterable<Ticket> findAllTicketsByClientOrganization(TicketList ticketList, ClientsOrganization clientsOrganization, int pageNo, int numberPerPage)
+    {
 
-            return ticketRepository.save(ticket);
+        if (!clientsOrganization.getClientsOrganizationList().getTicketList().equals(ticketList)){
+            return null;
         }
+
+        Pageable pageConfig = PageRequest.of(pageNo, numberPerPage);
+
+        return ticketRepository.findAllByClientsOrganizationEquals(clientsOrganization, pageConfig);
+    }
+
+    public Iterable<Ticket> findAllTicketsByContact(TicketList ticketList ,Contact contact , int pageNo, int numberPerPage)
+    {
+
+        if (!contact.getContactList().getTicketList().equals(ticketList)){
+            return null;
+        }
+
+        Pageable pageConfig = PageRequest.of(pageNo, numberPerPage);
+
+        return ticketRepository.findAllByContactEquals(contact, pageConfig);
+    }
+
+    public Optional<Ticket> findById(TicketList ticketList,Long id) {
+        Optional<Ticket> ticket = ticketRepository.findById(id);
+
+        if (ticket.isPresent() && ticket.get().getTicketList().equals(ticketList)){
+            return ticket;
+        }
+
         return null;
     }
 
-    public Ticket delete(Long id) {
-        Optional<Ticket> ticket = ticketRepository.findById(id);
-        ticketRepository.deleteById(id);
-        return ticket.get();
+    public Ticket createTicket(User user, ClientsOrganization clientsOrganization, Contact contact, Ticket ticket) {
+
+        TicketList userTicketList = user.getUsersList().getTicketList();
+        TicketList clientOrganizationTicketList = clientsOrganization.getClientsOrganizationList().getTicketList();
+        ContactList clientOrganizationContactList = clientsOrganization.getContactList();
+        ContactList contactsContactList = contact.getContactList();
+
+
+        if (userTicketList.equals(clientOrganizationTicketList) &&
+                clientOrganizationContactList.equals(contactsContactList)){
+
+            ZonedDateTime timeAsOfNow = ZonedDateTime.now();
+
+            ticket.setTicketList(userTicketList);
+            ticket.setUser(user);
+            ticket.setClientsOrganization(clientsOrganization);
+            ticket.setContact(contact);
+            ticket.setDateCreated(timeAsOfNow);
+            ticket.setLastModified(timeAsOfNow);
+
+            ticketRepository.save(ticket);
+
+            return ticket;
+        }
+
+        return null;
     }
 
-    public Ticket editTicket(Long id, Ticket ticket) {
+    public boolean delete(TicketList ticketList,Long id) {
+        Optional<Ticket> ticket = ticketRepository.findById(id);
+
+        if (ticket.isPresent() && ticket.get().getTicketList().equals(ticketList)){
+            ticketRepository.deleteById(id);
+            return true;
+        }
+        return false;
+
+    }
+
+    public Ticket editTicket(TicketList ticketList, Long id, Ticket ticket) {
 
         // Check the optional to see if anything is present then get the user object out else break out of this method
-        Optional<Ticket> findTicket = this.findById(id);
+        Optional<Ticket> findTicket = ticketRepository.findById(id);
 
         // Check the optional to see if anything is present then get the user object out else break out of this method
-        if (findTicket.isPresent()) {
+        if (findTicket.isPresent() && findTicket.get().getTicketList().equals(ticketList)) {
             Ticket foundTicket = findTicket.get();
             foundTicket.setSubject(ticket.getSubject());
             foundTicket.setDescription(ticket.getDescription());
@@ -74,12 +133,12 @@ public class TicketService {
         }
     }
 
-    public ZonedDateTime closeTicket(Long id) {
+    public ZonedDateTime closeTicket(TicketList ticketList,Long id) {
         // Check the optional to see if anything is present then get the user object out else break out of this method
-        Optional<Ticket> findTicket = this.findById(id);
+        Optional<Ticket> findTicket = ticketRepository.findById(id);
 
         // Check the optional to see if anything is present then get the user object out else break out of this method
-        if (findTicket.isPresent()) {
+        if (findTicket.isPresent()&& findTicket.get().getTicketList().equals(ticketList)) {
             Ticket foundTicket = findTicket.get();
             foundTicket.setDateClosed(ZonedDateTime.now());
             ticketRepository.save(foundTicket);

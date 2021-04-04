@@ -1,9 +1,9 @@
 package com.github.ticketProject.javaSpringBootTemplate.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.*;
+import com.github.ticketProject.javaSpringBootTemplate.authorization.Roles;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
@@ -45,9 +45,10 @@ public class User implements UserDetails {
     private boolean isEnabled = true;
 
     // @JsonManagedReference and @JsonBackReference to solve infinite recursion problem
-    @OneToMany(mappedBy = "user")
-    @JsonManagedReference(value = "user-tickets") //this is to mark the child elements/entities
-    private Set<Ticket> tickets= new HashSet<>();
+//    @OneToMany(mappedBy = "user")
+//    @JsonManagedReference(value = "user-tickets") //this is to mark the child elements/entities
+//    @JsonIgnore
+//    private Set<Ticket> tickets= new HashSet<>();
 
 //    // @JsonManagedReference and @JsonBackReference to solve infinite recursion problem
 //    @ManyToOne(fetch = FetchType.LAZY)
@@ -58,7 +59,22 @@ public class User implements UserDetails {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn( name = "user_list_id" )
     @JsonBackReference(value="users-list-user") // this is to mark the parent element/entity
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "userListId")
+    @JsonIdentityReference(alwaysAsId = true)
     private UsersList usersList;
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonManagedReference(value="user-ticket_column_template_list")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+    @JsonIdentityReference(alwaysAsId = true)
+    private final TicketColumnTemplateList ticketColumnTemplateList = new TicketColumnTemplateList(this);
+
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "users_roles"
+            , joinColumns = @JoinColumn (name = "user_id")
+            , inverseJoinColumns = @JoinColumn (name = "role_id"))
+    private final Set<Role> userRoles = new HashSet<>();
 
 
     public User() {
@@ -113,7 +129,21 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        //this is from the user details which is required
+        //we are going to convert the role here to the GrantedAuthority
+        Set<SimpleGrantedAuthority> authorities = new HashSet<>();
+
+        //We just use the string name of the roles to create SimpleGrantedAuthority
+
+        //We combine all sets as sets does not have duplicate. We can do this
+        //using the addAll method. We combine all permission and roles of the user
+        //and then send it, so if they have multiple roles, they will have all the permissions
+        //related to it.
+        for (Role role : userRoles){
+            authorities.addAll(role.getPermissionAndRoleAsGrantedAuthoritySet());
+        }
+
+        return authorities;
     }
 
     public String getPassword() {
@@ -196,13 +226,6 @@ public class User implements UserDetails {
         this.lastModified = lastModified;
     }
 
-    public Set<Ticket> getTickets() {
-        return tickets;
-    }
-
-    public void setTickets(Set<Ticket> tickets) {
-        this.tickets = tickets;
-    }
 
     public UsersList getUsersList() {
         return usersList;
@@ -213,6 +236,11 @@ public class User implements UserDetails {
     }
 
 
+    public TicketColumnTemplateList getTicketColumnTemplateList() {
+        return ticketColumnTemplateList;
+    }
 
-
+    public void addRole(Role role){
+        userRoles.add(role);
+    }
 }

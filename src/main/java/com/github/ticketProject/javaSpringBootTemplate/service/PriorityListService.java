@@ -39,6 +39,7 @@ public class PriorityListService {
             priorityList.removePriorityFromList(priority);
             priorityListRepository.save(priorityList);
             return true;
+
         }else{
             return false;
         }

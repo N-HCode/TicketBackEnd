@@ -1,11 +1,12 @@
 package com.github.ticketProject.javaSpringBootTemplate.service;
 
 import com.github.ticketProject.javaSpringBootTemplate.model.Organization;
+import com.github.ticketProject.javaSpringBootTemplate.model.Role;
 import com.github.ticketProject.javaSpringBootTemplate.model.User;
 import com.github.ticketProject.javaSpringBootTemplate.model.UsersList;
-import com.github.ticketProject.javaSpringBootTemplate.repository.OrganizationRepository;
 import com.github.ticketProject.javaSpringBootTemplate.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.time.ZonedDateTime;
@@ -13,18 +14,20 @@ import java.util.Optional;
 
 @Service
 public class UserService {
-    private UserRepository userRepository;
-    private OrganizationRepository organizationRepository;
+    private final UserRepository userRepository;
+    private final RoleService roleService;
+
 
 
     @Autowired
-    public UserService(UserRepository userRepository, OrganizationRepository organizationRepository) {
+    public UserService(UserRepository userRepository, RoleService roleService) {
         this.userRepository = userRepository;
-        this.organizationRepository = organizationRepository;
+
         // create default user for testing
 //        User defaultUser = new User("admin", "password", "firstname", "lastname", "admin@gmail.com", "admin", "666-666-6666");
 //        createUser(defaultUser);
 
+        this.roleService = roleService;
     }
 
     public Iterable<User> findAll() {
@@ -131,5 +134,27 @@ public class UserService {
         }
 
     }
+
+    public boolean addRoleTouser(Authentication authResult, String roleName){
+
+        User user = getUserByUsername(authResult.getName());
+        if (user == null){
+            return false;
+        }
+
+        Role role = roleService.findRoleByName(roleName);
+        if (role == null){
+            return false;
+        }
+
+
+        user.addRole(role);
+        //You do not need to save as JPA will persist any changes made to a returned entity.
+//        userRepository.save()
+
+        return true;
+    }
+
+
 
 }

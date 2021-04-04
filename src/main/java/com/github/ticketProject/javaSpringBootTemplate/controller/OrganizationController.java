@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -69,8 +70,10 @@ public class OrganizationController {
         return responseFindId;
     }
 
+
+//https://stackoverflow.com/questions/778203/are-there-any-naming-convention-guidelines-for-rest-apis
     @CrossOrigin
-    @GetMapping("/getuserorganization")
+    @GetMapping("/get_user_organization")
     public ResponseEntity<?> getUserOrganization(Authentication authResult){
 
         User user = userService.getUserByUsername(authResult.getName());
@@ -82,40 +85,19 @@ public class OrganizationController {
     }
 
 
-    @CrossOrigin
-    @GetMapping("/getAllUser/{id}")
-    public ResponseEntity<?> getAllUsersInOrg(@PathVariable Long id){
-
-        //services.findById will return a null if it does not find a
-        //org with the Id
-        Organization organization = service.findById(id);
-        //initialize the HTTP response
-        ResponseEntity<?> responseFindId;
-
-        //See if there is a value other than null. If not, send back a 404 error.
-        if (organization != null){
-            responseFindId = new ResponseEntity<>(organization.getUsersList().getUsers(), HttpStatus.OK);
-        }else{
-            responseFindId = new ResponseEntity<>("Organization not found",HttpStatus.NOT_FOUND);
-        }
-        return responseFindId;
-    }
 
     @CrossOrigin
-    @GetMapping("/getusersfromorganization")
+    @GetMapping("/get_users_from_organization/{pageNo}/{numberPerPage}")
+    @PreAuthorize("hasAuthority('everything')")
     //https://stackoverflow.com/questions/32434058/how-to-implement-pagination-in-spring-boot-with-hibernate
-    public ResponseEntity<?> getusersfromOrgization(Authentication authResult
-//                                                    @RequestBody @PageableDefault(value=10, page=0) Pageable pageable
-    ){
-
+    public ResponseEntity<?> getusersfromOrgization(Authentication authResult, @PathVariable int pageNo, @PathVariable int numberPerPage){
+        //PageNo 0 is the first page.
         User user = userService.getUserByUsername(authResult.getName());
         if (user == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-         Pageable pagingpage = PageRequest.of(0, 10);
-
-        List<User> pagedUsers = service.getUsersFromOrganization(user.getUsersList(), pagingpage);
+        List<User> pagedUsers = service.getUsersFromOrganization(user.getUsersList(), pageNo, numberPerPage);
 
         return new ResponseEntity<>(pagedUsers, HttpStatus.OK);
 
