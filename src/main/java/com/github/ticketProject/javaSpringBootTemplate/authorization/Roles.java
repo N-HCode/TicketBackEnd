@@ -11,9 +11,9 @@ public enum Roles {
 //    ADMIN(Sets.newHashSet(USER_READ,USER_MODIFY, USER_CREATE,USER_DELETE )),
 //    USER(Sets.newHashSet(USER_READ));
 
-    ROOT("root"),
-    ADMIN("admin"),
-    USER("user");
+    ROOT("ROOT"),
+    ADMIN("ADMIN"),
+    USER("USER");
 
     private final Role roleInEnum;
     private final String roleName;

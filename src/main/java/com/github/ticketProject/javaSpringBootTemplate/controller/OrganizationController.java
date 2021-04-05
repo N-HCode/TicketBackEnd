@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -21,6 +22,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+
+import static com.github.ticketProject.javaSpringBootTemplate.authorization.Permissions.EVERYTHING;
 
 //Added Swagger documentation. Can be viewed at http://localhost:8080/swagger-ui/#/
 
@@ -88,7 +91,13 @@ public class OrganizationController {
 
     @CrossOrigin
     @GetMapping("/get_users_from_organization/{pageNo}/{numberPerPage}")
-    @PreAuthorize("hasAuthority('everything')")
+    @PreAuthorize("hasAnyAuthority('everything', 'user:modify')")
+//    @PreAuthorize("hasAuthority('everything', 'user:modify')")
+//    @PostAuthorize() //this check the role and permission AFTER the method is done.
+//    PreAuthorize checks before.
+//    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_ROOT')")
+//    HasRole(), hasAnyAuthority()
+
     //https://stackoverflow.com/questions/32434058/how-to-implement-pagination-in-spring-boot-with-hibernate
     public ResponseEntity<?> getusersfromOrgization(Authentication authResult, @PathVariable int pageNo, @PathVariable int numberPerPage){
         //PageNo 0 is the first page.
