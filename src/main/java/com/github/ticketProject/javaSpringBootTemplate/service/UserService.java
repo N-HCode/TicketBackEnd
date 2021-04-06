@@ -30,9 +30,6 @@ public class UserService {
         this.roleService = roleService;
     }
 
-    public Iterable<User> findAll() {
-        return userRepository.findAll();
-    }
 
     public Optional<User> findById(Long idOfUser) {
         // Use Spring's Crud Repository Method to findById to get back an optional

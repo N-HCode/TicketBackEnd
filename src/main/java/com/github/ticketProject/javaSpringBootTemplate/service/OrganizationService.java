@@ -34,10 +34,6 @@ public class OrganizationService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public Iterable<Organization> findAll()
-    {
-        return organizationRepository.findAll();
-    }
 
     public Organization findById(Long id) {
         //Optional are used to avoid null exception.
@@ -154,12 +150,11 @@ public class OrganizationService {
 //        organizationRepository.save(organization);
 //    }
 
-    public List<User> getUsersFromOrganization(UsersList usersList, int pageNo, int numberPerPage){
+    public Page<User> getUsersFromOrganization(UsersList usersList, int pageNo, int numberPerPage){
 
         Pageable pageConfig = PageRequest.of(pageNo, numberPerPage);
 
-        Page<User> pagedResult = userRepository.findAllByUsersListEquals(usersList, pageConfig);
-        return  pagedResult.toList();
+        return userRepository.findAllByUsersListEquals(usersList, pageConfig);
     }
 
 }

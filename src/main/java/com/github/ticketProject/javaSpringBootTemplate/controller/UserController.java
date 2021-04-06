@@ -1,8 +1,7 @@
 package com.github.ticketProject.javaSpringBootTemplate.controller;
 
-import com.github.ticketProject.javaSpringBootTemplate.model.Organization;
 import com.github.ticketProject.javaSpringBootTemplate.model.User;
-import com.github.ticketProject.javaSpringBootTemplate.service.OrganizationService;
+
 import com.github.ticketProject.javaSpringBootTemplate.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,33 +26,21 @@ public class UserController {
         this.service = service;
     }
 
-    @CrossOrigin
-    @GetMapping("/")
-    public ResponseEntity<?> findAll(){
-        // Call the service to invoke the findAll method which returns a Iterable
-        Iterable<User> allUsers = service.findAll();
-        // Return the HTTP response with the Iterable, it will be an empty array if no users created
-        return new ResponseEntity<>(allUsers, HttpStatus.OK);
-    }
-
-//    @CrossOrigin
-//    @GetMapping("/all")
-//    @PreAuthorize("hasAuthority('user:modify')")
-//    public ResponseEntity<?> findByOrg(@RequestBody Organization organization){
-//        // Call the service to invoke the findAll method which returns a Iterable
-//        Iterable<User> usersInOrg = service.findByOrg(organization);
-//        // Return the HTTP response with the Iterable, it will be an empty array if no users created
-//        return new ResponseEntity<>(usersInOrg, HttpStatus.OK);
-//    }
 
     @CrossOrigin
     @GetMapping("/{id}")
-    public ResponseEntity findById(@PathVariable Long id){
+    @PreAuthorize("hasAnyAuthority('everything', 'user:read')")
+    public ResponseEntity findById(Authentication authResult, @PathVariable Long id){
+
+        User user = service.getUserByUsername(authResult.getName());
+        if (user == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
         // Call the service to invoke findById method
         Optional<User> userById = service.findById(id);
         
         // check if the user was sent back from service to see if it passed
-        if (userById.isPresent()){
+        if (userById.isPresent() && userById.get().getUsersList().equals(user.getUsersList())){
             // response to send back if success
             return new ResponseEntity<>(userById, HttpStatus.OK);
         }else{
@@ -64,6 +51,7 @@ public class UserController {
 
     @CrossOrigin
     @PostMapping("/create")
+    @PreAuthorize("hasAnyAuthority('everything', 'user:create')")
     public ResponseEntity<?> createUser(Authentication authResult, @RequestBody User userToCreate ){
 
 
@@ -84,6 +72,7 @@ public class UserController {
 
     @CrossOrigin
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('everything', 'user:delete')")
     public ResponseEntity<?> deleteUser(Authentication authResult, @PathVariable Long id){
 
         User user = service.getUserByUsername(authResult.getName());
@@ -103,6 +92,7 @@ public class UserController {
 
     @CrossOrigin
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('everything', 'user:modify')")
     public ResponseEntity<?> editUser(Authentication authResult, @PathVariable Long id, @RequestBody User userToEdit){
         User user = service.getUserByUsername(authResult.getName());
         if (user == null) {
@@ -123,45 +113,8 @@ public class UserController {
     }
 
 
-//    @CrossOrigin
-//    @PostMapping("/organization")
-//    public ResponseEntity<?> addOrganizationToUser(@RequestParam Long id, @RequestParam Long organizationId){
-//        // call the service to add the organization to the user
-//        Organization responseAddOrganization = service.addOrganizationToUser(id, organizationId);
-//
-//        // check if the organization was sent back from service to see if it passed
-//        if(responseAddOrganization != null){
-//            // response to send back if success
-//            return new ResponseEntity<>(responseAddOrganization, HttpStatus.OK);
-//        }else{
-//            // response to send back if failure
-//            return new ResponseEntity<>("Failed to add organization to User",HttpStatus.BAD_REQUEST);
-//        }
-//    }
-
-//    @CrossOrigin
-//    @GetMapping("/check/{id}")
-//    public ResponseEntity check(Authentication authResult, @RequestParam String password){
-//
-//        User user = service.getUserByUsername(authResult.getName());
-//        if (user == null) {
-//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-//        }
-//
-//        // Call the service to invoke findById method
-//        Optional<User> userById = service.findById(id);
-//        // check if the user was sent back from service to see if it passed
-//        if (userById.get().getPassword().equals(password)){
-//            // response to send back if success
-//            return new ResponseEntity<>(HttpStatus.OK);
-//        }else{
-//            // response to send back if failure
-//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-//        }
-//    }
-
     @CrossOrigin
-    @GetMapping("/checkusername")
+    @GetMapping("/check_username")
     public ResponseEntity checkUsername(@RequestParam String username){
         if (!service.checkUsernameIsTaken(username)){
             return new ResponseEntity<>(HttpStatus.OK);
@@ -172,6 +125,7 @@ public class UserController {
 
     @CrossOrigin
     @GetMapping("/verify")
+    @PreAuthorize("hasAnyAuthority('everything', 'user:read')")
     public ResponseEntity verify(HttpServletRequest request){
         //This is just used to see if a client has a cookie with a valid token.
         //if it does it will reach this API and get an 200
