@@ -78,7 +78,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //                    .addFilterAfter(new CSRFTokenLoggerFilter(), CsrfFilter.class)
                     .authorizeRequests()
                     .antMatchers("/organization/create").permitAll()
-                    .antMatchers("/user/checkusername").permitAll()
+                    .antMatchers("/user/check_username").permitAll()
                     .antMatchers("/refresh").permitAll()
 
 //                    .antMatchers("/user/login").permitAll()

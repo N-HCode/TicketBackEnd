@@ -115,7 +115,8 @@ public class UserController {
 
     @CrossOrigin
     @GetMapping("/check_username")
-    public ResponseEntity checkUsername(@RequestParam String username){
+    //RequestParam means it expects a query string. For example /check_username?username=test
+    public ResponseEntity<?> checkUsername(@RequestParam String username){
         if (!service.checkUsernameIsTaken(username)){
             return new ResponseEntity<>(HttpStatus.OK);
         }else{
