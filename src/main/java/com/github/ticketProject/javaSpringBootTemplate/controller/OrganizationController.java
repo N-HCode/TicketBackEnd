@@ -122,7 +122,7 @@ public class OrganizationController {
     }
 
     @CrossOrigin
-    @PutMapping("/{id}/edit-org-info")
+    @PutMapping("/{id}/edit_org_info")
     @PreAuthorize("hasAnyAuthority('everything', 'user:modify')")
     public ResponseEntity<?> editOrganization(@PathVariable Long id, @RequestBody Organization newOrgInfo){
 
