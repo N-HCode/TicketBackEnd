@@ -11,7 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-@RequestMapping(value = "/prioritylist")
+@RequestMapping(value = "/priority_list")
 public class PriorityListController {
 
     private final PriorityListService priorityListService;

@@ -5,6 +5,9 @@ import com.github.ticketProject.javaSpringBootTemplate.repository.ClientsOrganiz
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.time.ZonedDateTime;
@@ -14,10 +17,12 @@ import java.util.Optional;
 public class ClientsOrganizationService {
 
     private final ClientsOrganizationRepository clientsOrganizationRepository;
+    private final UserService userService;
 
     @Autowired
-    public ClientsOrganizationService(ClientsOrganizationRepository clientsOrganizationRepository) {
+    public ClientsOrganizationService(ClientsOrganizationRepository clientsOrganizationRepository, UserService userService) {
         this.clientsOrganizationRepository = clientsOrganizationRepository;
+        this.userService = userService;
     }
 
     public Iterable<ClientsOrganization> findAllClientsOrganizationByClientOrgList(ClientsOrganizationList clientsOrganizationList, int pageNo, int numberPerPage)
@@ -57,6 +62,34 @@ public class ClientsOrganizationService {
         }
 
         clientsOrganizationRepository.delete(clientsOrganization);
+
+        return true;
+
+    }
+
+    public boolean editClientsOrganization(Authentication authResult, long id, ClientsOrganization clientsOrganization){
+
+        User user = userService.getUserByUsername(authResult.getName());
+
+        if (user == null) {
+            return false;
+        }
+
+        ClientsOrganizationList clientsOrganizationList = user.getUsersList().getTicketList().getClientsOrganizationLists();
+
+        ClientsOrganization foundClientsOrganization=  findClientsOrganizationById(clientsOrganizationList, id);
+        if (foundClientsOrganization == null){
+            return false;
+        }
+
+        foundClientsOrganization.setDateModified(ZonedDateTime.now());
+        foundClientsOrganization.setOrganizationName(clientsOrganization.getOrganizationName());
+        foundClientsOrganization.setStreetAddress(clientsOrganization.getStreetAddress());
+        foundClientsOrganization.setCity(clientsOrganization.getCity());
+        foundClientsOrganization.setState(clientsOrganization.getState());
+        foundClientsOrganization.setCountry(clientsOrganization.getCountry());
+        foundClientsOrganization.setZipcode(clientsOrganization.getZipcode());
+
 
         return true;
 

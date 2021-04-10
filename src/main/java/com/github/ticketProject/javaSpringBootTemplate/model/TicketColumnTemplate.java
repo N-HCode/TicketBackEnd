@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "ticket_column_template")
@@ -18,6 +20,8 @@ public class TicketColumnTemplate {
     private TicketColumnTemplateList ticketColumnTemplateList;
 
     private String templateName;
+
+    private final Set<String> columnNames = new HashSet<>();
 
     public TicketColumnTemplate() {
     }
@@ -44,5 +48,13 @@ public class TicketColumnTemplate {
 
     public void setTicketColumnTemplateList(TicketColumnTemplateList ticketColumnTemplateList) {
         this.ticketColumnTemplateList = ticketColumnTemplateList;
+    }
+
+    public Set<String> getColumnNames() {
+        return columnNames;
+    }
+
+    public void addColumnName(String columnName){
+        columnNames.add(columnName);
     }
 }
