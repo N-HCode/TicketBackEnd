@@ -15,6 +15,8 @@ public class TicketColumnTemplate {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonBackReference
     private TicketColumnTemplateList ticketColumnTemplateList;
