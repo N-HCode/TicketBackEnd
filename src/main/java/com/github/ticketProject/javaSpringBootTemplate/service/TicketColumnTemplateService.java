@@ -54,17 +54,17 @@ public class TicketColumnTemplateService {
 
     }
 
-    public boolean addTicketColumnTemplate(Authentication authResult, TicketColumnTemplate ticketColumnTemplate){
+    public long addTicketColumnTemplate(Authentication authResult, TicketColumnTemplate ticketColumnTemplate){
 
         User user = userService.getUserByUsername(authResult.getName());
         if (user == null){
-            return false;
+            return -1;
         }
 
         ticketColumnTemplate.setTicketColumnTemplateList(user.getTicketColumnTemplateList());
-        ticketColumnTemplateRepository.save(ticketColumnTemplate);
+        TicketColumnTemplate savedTemplate= ticketColumnTemplateRepository.save(ticketColumnTemplate);
 
-        return true;
+        return savedTemplate.getId();
     }
 
     public boolean removeTicketColumnTemplate(Authentication authResult, long id){
@@ -80,15 +80,15 @@ public class TicketColumnTemplateService {
 
     }
 
-    public boolean editTicketColumnTemplate(Authentication authResult, long id, TicketColumnTemplate ticketColumnTemplate){
+    public boolean editTicketColumnTemplate(Authentication authResult, TicketColumnTemplate ticketColumnTemplate){
 
-        TicketColumnTemplate foundTicketColumnTemplate = findById(authResult, id);
+        TicketColumnTemplate foundTicketColumnTemplate = findById(authResult, ticketColumnTemplate.getId());
         if (foundTicketColumnTemplate == null){
             return false;
         }
 
         foundTicketColumnTemplate.setTemplateName(ticketColumnTemplate.getTemplateName());
-        ticketColumnTemplateRepository.save(ticketColumnTemplate);
+        foundTicketColumnTemplate.setColumnNames(ticketColumnTemplate.getColumnNames());
 
         return true;
 

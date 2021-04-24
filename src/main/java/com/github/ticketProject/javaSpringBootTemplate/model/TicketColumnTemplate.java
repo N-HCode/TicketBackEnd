@@ -24,7 +24,7 @@ public class TicketColumnTemplate {
     private String templateName;
 
     @ElementCollection
-    private final Set<String> columnNames = new HashSet<>();
+    private Set<String> columnNames = new HashSet<>();
 
     public TicketColumnTemplate() {
     }
@@ -59,5 +59,9 @@ public class TicketColumnTemplate {
 
     public void addColumnName(String columnName){
         columnNames.add(columnName);
+    }
+
+    public void setColumnNames(Set<String> columnNames) {
+        this.columnNames = columnNames;
     }
 }

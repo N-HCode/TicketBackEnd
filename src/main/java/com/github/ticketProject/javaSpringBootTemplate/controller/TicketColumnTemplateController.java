@@ -50,10 +50,10 @@ public class TicketColumnTemplateController {
     @PostMapping(value = "/create")
     public ResponseEntity<?> createTicketTemplates(Authentication authResult, @RequestBody TicketColumnTemplate ticketColumnTemplate){
 
-         boolean addedStatus = ticketColumnTemplateService.addTicketColumnTemplate(authResult, ticketColumnTemplate);
+         long addedStatusId = ticketColumnTemplateService.addTicketColumnTemplate(authResult, ticketColumnTemplate);
 
-        if(addedStatus){
-            return new ResponseEntity<>(HttpStatus.OK);
+        if(addedStatusId != -1){
+            return new ResponseEntity<>(addedStatusId,HttpStatus.OK);
         }
 
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -62,8 +62,16 @@ public class TicketColumnTemplateController {
 
     @CrossOrigin
     @PutMapping(value = "/edit")
-    public ResponseEntity<?> addColumnToTicketTemplates(Authentication authResult){
-        return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<?> addColumnToTicketTemplates(Authentication authResult,
+//                                                        @PathVariable long id,
+                                                        @RequestBody TicketColumnTemplate ticketColumnTemplate){
+
+        if(ticketColumnTemplateService.editTicketColumnTemplate(authResult, ticketColumnTemplate)){
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
     }
 
 }

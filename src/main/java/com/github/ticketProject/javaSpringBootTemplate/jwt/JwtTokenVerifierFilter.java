@@ -123,7 +123,9 @@ public class JwtTokenVerifierFilter extends OncePerRequestFilter {
             //But we want anyone to be able to create an organization.
             //We don't want to completely disable filters as they would reduce security
 
-            if(httpServletRequest.getRequestURI().equals("/refresh") || httpServletRequest.getRequestURI().equals("/organization/create")){
+            if(httpServletRequest.getRequestURI().equals("/refresh") ||
+                    httpServletRequest.getRequestURI().equals("/organization/create") ||
+                    httpServletRequest.getRequestURI().equals("/user/check_username") ){
                 filterChain.doFilter(httpServletRequest, httpServletResponse);
 
             }else{
