@@ -48,14 +48,22 @@ public class TicketColumnTemplateController {
 
     @CrossOrigin
     @PostMapping(value = "/create")
-    public ResponseEntity<?> createTicketTemplates(Authentication authResult, @PathVariable long id){
-        TicketColumnTemplate ticketColumnTemplate = ticketColumnTemplateService.findById(authResult, id);
-        if (ticketColumnTemplate == null){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    public ResponseEntity<?> createTicketTemplates(Authentication authResult, @RequestBody TicketColumnTemplate ticketColumnTemplate){
+
+         boolean addedStatus = ticketColumnTemplateService.addTicketColumnTemplate(authResult, ticketColumnTemplate);
+
+        if(addedStatus){
+            return new ResponseEntity<>(HttpStatus.OK);
         }
 
-        return new ResponseEntity<>(ticketColumnTemplate, HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
+    }
+
+    @CrossOrigin
+    @PutMapping(value = "/edit")
+    public ResponseEntity<?> addColumnToTicketTemplates(Authentication authResult){
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }

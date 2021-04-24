@@ -68,6 +68,7 @@
 		</dependency>
 
 		<!--	Swagger dependency	-->
+		<!--Added Swagger documentation. Can be viewed at http://localhost:8080/swagger-ui/#/ -->
 		<dependency>
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-boot-starter</artifactId>

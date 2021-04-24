@@ -23,6 +23,7 @@ public class TicketColumnTemplate {
 
     private String templateName;
 
+    @ElementCollection
     private final Set<String> columnNames = new HashSet<>();
 
     public TicketColumnTemplate() {
