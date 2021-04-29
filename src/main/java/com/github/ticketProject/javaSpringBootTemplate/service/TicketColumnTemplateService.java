@@ -89,6 +89,7 @@ public class TicketColumnTemplateService {
 
         foundTicketColumnTemplate.setTemplateName(ticketColumnTemplate.getTemplateName());
         foundTicketColumnTemplate.setColumnNames(ticketColumnTemplate.getColumnNames());
+        ticketColumnTemplateRepository.save(foundTicketColumnTemplate);
 
         return true;
 

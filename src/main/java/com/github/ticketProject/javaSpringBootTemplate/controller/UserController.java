@@ -134,11 +134,5 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    //https://stackoverflow.com/questions/15098392/which-http-method-should-login-and-logout-actions-use-in-a-restful-setup/15098437
-    @CrossOrigin
-    @GetMapping("/logout")
-    public ResponseEntity<?> logout(HttpServletRequest request){
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
 
 }

@@ -102,6 +102,7 @@ public class RefreshTokenService {
 
                     Cookie tokenCookie = new Cookie(jwtConfig.getAuthorizationCookieName(), jwtConfig.getTokenPrefix() + token);
                     tokenCookie.setHttpOnly(true);
+                    tokenCookie.setPath("/");
                     response.addCookie(tokenCookie);
 
                     return true;
@@ -125,6 +126,30 @@ public class RefreshTokenService {
 
 
 
+        }
+
+        return false;
+    }
+
+    //Use to remove the token information from the client browser when they logout
+    public boolean logout(HttpServletRequest request, HttpServletResponse response) {
+
+        if (request.getCookies() != null) {
+
+            Cookie newInvalidCookie = new Cookie(jwtConfig.getAuthorizationCookieName(), null);
+            //the new invalid cookie need to match exactly what the other cookie is, so that it will replace it.
+            newInvalidCookie.setHttpOnly(true);
+            newInvalidCookie.setPath("/");
+            response.addCookie(newInvalidCookie);
+
+            Cookie newInvalidRefreshTokenCookie = new Cookie(refreshTokenConfig.getCookieName(),  null);
+            newInvalidRefreshTokenCookie.setHttpOnly(true);
+            //setting the path makes it so the cookie will only be send at this specific endpoint.
+            //we only want the refreshToken to touch the Auth Server, so we make sure the endpoint is correct.
+            newInvalidRefreshTokenCookie.setPath("/auth/refresh");
+            response.addCookie(newInvalidRefreshTokenCookie);
+
+            return true;
         }
 
         return false;

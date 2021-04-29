@@ -116,7 +116,7 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePassword
             refreshTokenCookie.setHttpOnly(true);
             //setting the path makes it so the cookie will only be send at this specific endpoint.
             //we only want the refreshToken to touch the Auth Server, so we make sure the endpoint is correct.
-            refreshTokenCookie.setPath("/refresh");
+            refreshTokenCookie.setPath("/auth/refresh");
 
 
             response.addCookie(tokenCookie);

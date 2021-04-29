@@ -8,6 +8,7 @@ import com.github.ticketProject.javaSpringBootTemplate.service.ClientsOrganizati
 import com.github.ticketProject.javaSpringBootTemplate.service.TicketService;
 import com.github.ticketProject.javaSpringBootTemplate.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -38,7 +39,7 @@ public class TicketController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        Iterable<Ticket> allTicket = service.findAllTicketsByOrganization(user.getUsersList().getTicketList(), pageNo, numberPerPage);
+        Page<Ticket> allTicket = service.findAllTicketsByOrganization(user.getUsersList().getTicketList(), pageNo, numberPerPage);
         return new ResponseEntity<>(allTicket, HttpStatus.OK);
     }
 
@@ -52,7 +53,7 @@ public class TicketController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        Iterable<Ticket> allTicket = service.findAllTicketsByUser(user, pageNo, numberPerPage);
+        Page<Ticket> allTicket = service.findAllTicketsByUser(user, pageNo, numberPerPage);
         return new ResponseEntity<>(allTicket, HttpStatus.OK);
     }
 
@@ -73,7 +74,7 @@ public class TicketController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        Iterable<Ticket> allTicket = service.findAllTicketsByClientOrganization(userTicketList,clientsOrganization, pageNo, numberPerPage);
+        Page<Ticket> allTicket = service.findAllTicketsByClientOrganization(userTicketList,clientsOrganization, pageNo, numberPerPage);
         return new ResponseEntity<>(allTicket, HttpStatus.OK);
     }
 
