@@ -58,6 +58,8 @@ public class ClientsOrganization {
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonManagedReference(value = "client_organization-contact_list")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+    @JsonIdentityReference(alwaysAsId = true)
     private final ContactList contactList = new ContactList();
 
     // @JsonManagedReference and @JsonBackReference to solve infinite recursion problem

@@ -127,7 +127,7 @@ public class UserController {
     @CrossOrigin
     @GetMapping("/verify")
     @PreAuthorize("hasAnyAuthority('everything', 'user:read')")
-    public ResponseEntity verify(HttpServletRequest request){
+    public ResponseEntity<?> verify(HttpServletRequest request){
         //This is just used to see if a client has a cookie with a valid token.
         //if it does it will reach this API and get an 200
         //Otherwise the it will not pass the filters and fail getting a 403 status

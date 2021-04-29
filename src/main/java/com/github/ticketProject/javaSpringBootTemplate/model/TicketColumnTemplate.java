@@ -1,11 +1,11 @@
 package com.github.ticketProject.javaSpringBootTemplate.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
+
 
 @Entity
 @Table(name = "ticket_column_template")
@@ -24,7 +24,7 @@ public class TicketColumnTemplate {
     private String templateName;
 
     @ElementCollection
-    private final Set<String> columnNames = new HashSet<>();
+    private List<String> columnNames = new ArrayList<>();
 
     public TicketColumnTemplate() {
     }
@@ -53,11 +53,15 @@ public class TicketColumnTemplate {
         this.ticketColumnTemplateList = ticketColumnTemplateList;
     }
 
-    public Set<String> getColumnNames() {
+    public void addColumnName(String columnName){
+        columnNames.add(columnName);
+    }
+
+    public List<String> getColumnNames() {
         return columnNames;
     }
 
-    public void addColumnName(String columnName){
-        columnNames.add(columnName);
+    public void setColumnNames(List<String> columnNames) {
+        this.columnNames = columnNames;
     }
 }

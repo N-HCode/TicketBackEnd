@@ -28,7 +28,7 @@ public class ClientsOrganizationController {
     }
 
     @CrossOrigin
-    @GetMapping("/all_clients")
+    @GetMapping("/all_clients/{pageNo}/{numberPerPage}")
     public ResponseEntity<?> findAll(Authentication authResult, @PathVariable int pageNo, @PathVariable int numberPerPage) {
 
         User user = userService.getUserByUsername(authResult.getName());
