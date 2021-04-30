@@ -2,15 +2,17 @@ package com.github.ticketProject.javaSpringBootTemplate.service;
 
 import com.github.ticketProject.javaSpringBootTemplate.model.*;
 import com.github.ticketProject.javaSpringBootTemplate.repository.ClientsOrganizationRepository;
+import com.github.ticketProject.javaSpringBootTemplate.searchUtil.ClientsOrganizationSpecification;
+import com.github.ticketProject.javaSpringBootTemplate.searchUtil.SearchCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -47,6 +49,7 @@ public class ClientsOrganizationService {
 
             clientsOrganization.setDateModified(ZonedDateTime.now());
             clientsOrganization.setClientsOrganizationList(clientsOrganizationList);
+            clientsOrganization.setClientsOrganizationListId(clientsOrganizationList.getId());
             clientsOrganizationRepository.save(clientsOrganization);
             return true;
 
@@ -93,6 +96,31 @@ public class ClientsOrganizationService {
 
         return true;
 
+    }
+
+    public List<ClientsOrganization> findByCriteria(Authentication authResult,
+//            , String fieldName, String operation, Object value
+        SearchCriteria searchCriteria
+    ){
+
+        User user = userService.getUserByUsername(authResult.getName());
+
+        ClientsOrganizationSpecification specification1 =
+                new ClientsOrganizationSpecification(searchCriteria);
+
+        //This spec is to make so that the user only pull data from the organization they are a part of
+        ClientsOrganizationSpecification specification2 =
+                new ClientsOrganizationSpecification(new SearchCriteria("clientsOrganizationListId", ":",user.getUsersList().getTicketList().getClientsOrganizationLists().getId()));
+
+//        ClientsOrganizationSpecification specification3 =
+//                new ClientsOrganizationSpecification(new SearchCriteria("clientsOrganizationList", ":",user.getUsersList().getTicketList().getClientsOrganizationLists()));
+
+
+        List<ClientsOrganization> results = clientsOrganizationRepository.findAll(Specification.where(specification1).and(specification2));
+
+//        List<ClientsOrganization> test = clientsOrganizationRepository.findAll(specification3);
+
+        return results;
     }
 
 }

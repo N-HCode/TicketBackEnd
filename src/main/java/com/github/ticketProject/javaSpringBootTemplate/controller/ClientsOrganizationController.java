@@ -4,6 +4,7 @@ package com.github.ticketProject.javaSpringBootTemplate.controller;
 import com.github.ticketProject.javaSpringBootTemplate.model.ClientsOrganization;
 import com.github.ticketProject.javaSpringBootTemplate.model.ClientsOrganizationList;
 import com.github.ticketProject.javaSpringBootTemplate.model.User;
+import com.github.ticketProject.javaSpringBootTemplate.searchUtil.SearchCriteria;
 import com.github.ticketProject.javaSpringBootTemplate.service.ClientsOrganizationService;
 import com.github.ticketProject.javaSpringBootTemplate.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+//https://stackoverflow.com/questions/44175085/why-did-spring-framework-deprecate-the-use-of-guava-cache
 
 @Controller
 @RequestMapping(value = "/clients_organization")
@@ -103,5 +108,17 @@ public class ClientsOrganizationController {
 
     }
 
+    @CrossOrigin
+    @GetMapping("/search")
+    public ResponseEntity<?> searchClientOrganizationByCriteria(Authentication authResult,@RequestBody SearchCriteria searchCriteria){
+
+        List<ClientsOrganization> results = clientsOrganizationService.findByCriteria(authResult, searchCriteria);
+        if (results.isEmpty()){
+            return new ResponseEntity<>("No client organization(s) were found based on provided criteria" ,HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(results, HttpStatus.OK);
+
+    }
 
 }

@@ -76,9 +76,6 @@ public class OrganizationService {
             rootUser.setLastModified(timeAsOfNow);
             rootUser.setFullName(rootUser.getFirstName() + " " + rootUser.getLastName());
 
-
-
-            newlyCreatedOrganization.getUsersList().addUser(rootUser);
             organizationRepository.save(newlyCreatedOrganization);
             rootUser.setUsersList(newlyCreatedOrganization.getUsersList());
             userRepository.save(rootUser);

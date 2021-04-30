@@ -244,4 +244,12 @@ public class Organization {
     public UsersList getUsersList() {
         return usersList;
     }
+
+    public ClientsOrganizationList getClientsOrganizationList() {
+        return clientsOrganizationList;
+    }
+
+    public TicketList getTicketList() {
+        return ticketList;
+    }
 }

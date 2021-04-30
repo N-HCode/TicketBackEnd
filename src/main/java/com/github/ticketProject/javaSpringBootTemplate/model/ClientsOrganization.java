@@ -41,7 +41,12 @@ public class ClientsOrganization {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="client_organization_list_id")
     @JsonBackReference(value = "client_organization_list-client_organization")
+
     private ClientsOrganizationList clientsOrganizationList;
+
+    //Unable to find a way to query using specification based on the whole entity List. So will use the Id here for now.
+    //Will look into other ways of querying in spring boot.
+    private Long clientsOrganizationListId;
 
     //When using One to Many we need the mapped by.
     //The Mapped by use the property name of the model related to the field
@@ -73,7 +78,8 @@ public class ClientsOrganization {
     public ClientsOrganization() {
     }
 
-    public ClientsOrganization(boolean isForeignAddress, String city, String state, String streetAddress, String zipcode, String country, String organizationPhoneNumber, String organizationName, ClientsOrganizationList clientsOrganizationList) {
+    public ClientsOrganization(boolean isForeignAddress, String city, String state, String streetAddress, String zipcode, String country, String organizationPhoneNumber, String organizationName, ClientsOrganizationList clientsOrganizationListIn) {
+
         this.isForeignAddress = isForeignAddress;
         this.city = city;
         this.state = state;
@@ -82,7 +88,12 @@ public class ClientsOrganization {
         this.country = country;
         this.organizationPhoneNumber = organizationPhoneNumber;
         this.organizationName = organizationName;
-        this.clientsOrganizationList = clientsOrganizationList;
+        this.clientsOrganizationList = clientsOrganizationListIn;
+        this.clientsOrganizationListId = clientsOrganizationListIn.getId();
+
+
+
+
     }
 
 
@@ -174,5 +185,11 @@ public class ClientsOrganization {
         return contactList;
     }
 
+    public Long getClientsOrganizationListId() {
+        return clientsOrganizationListId;
+    }
 
+    public void setClientsOrganizationListId(Long clientsOrganizationListId) {
+        this.clientsOrganizationListId = clientsOrganizationListId;
+    }
 }
