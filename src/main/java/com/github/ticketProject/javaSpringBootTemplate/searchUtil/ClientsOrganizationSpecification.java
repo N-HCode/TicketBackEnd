@@ -34,7 +34,8 @@ public class ClientsOrganizationSpecification implements Specification<ClientsOr
             case "~":
                 //This will be the LIKE in the SQL language, so you will put %test% if you want anything containing the word test
                 //or other complex expressions like "_est%" and what not.
-                return criteriaBuilder.like(searchKey,searchValue);
+                //we put everything to lower so we can ignore casing
+                return criteriaBuilder.like(criteriaBuilder.lower(searchKey),searchValue.toLowerCase());
             case "<":
                 return criteriaBuilder.lessThanOrEqualTo(searchKey,searchValue);
             default:

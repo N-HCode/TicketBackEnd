@@ -8,6 +8,7 @@ import com.github.ticketProject.javaSpringBootTemplate.searchUtil.SearchCriteria
 import com.github.ticketProject.javaSpringBootTemplate.service.ClientsOrganizationService;
 import com.github.ticketProject.javaSpringBootTemplate.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -109,10 +110,10 @@ public class ClientsOrganizationController {
     }
 
     @CrossOrigin
-    @GetMapping("/search")
-    public ResponseEntity<?> searchClientOrganizationByCriteria(Authentication authResult,@RequestBody SearchCriteria searchCriteria){
+    @GetMapping("/search/{pageNo}")
+    public ResponseEntity<?> searchClientOrganizationByCriteria(Authentication authResult,@RequestParam String searchTerm,@PathVariable int pageNo){
 
-        List<ClientsOrganization> results = clientsOrganizationService.findByCriteria(authResult, searchCriteria);
+        Page<ClientsOrganization> results = clientsOrganizationService.findByCriteria(authResult, searchTerm, pageNo, 10);
         if (results.isEmpty()){
             return new ResponseEntity<>("No client organization(s) were found based on provided criteria" ,HttpStatus.NOT_FOUND);
         }
