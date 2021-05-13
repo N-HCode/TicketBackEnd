@@ -9,6 +9,10 @@ public class ClientsOrganizationSpecification implements Specification<ClientsOr
 
     private SearchCriteria searchCriteria;
 
+    public ClientsOrganizationSpecification(SearchCriteria searchCriteria) {
+        this.searchCriteria = searchCriteria;
+    }
+
     @Override
     public Predicate toPredicate(Root<ClientsOrganization> root,
                                  CriteriaQuery<?> criteriaQuery,
@@ -26,7 +30,12 @@ public class ClientsOrganizationSpecification implements Specification<ClientsOr
             case ">":
                 return criteriaBuilder.greaterThanOrEqualTo(searchKey,searchValue);
             case ":":
-                return criteriaBuilder.like(searchKey,searchValue);
+                return criteriaBuilder.equal(searchKey,searchValue);
+            case "~":
+                //This will be the LIKE in the SQL language, so you will put %test% if you want anything containing the word test
+                //or other complex expressions like "_est%" and what not.
+                //we put everything to lower so we can ignore casing
+                return criteriaBuilder.like(criteriaBuilder.lower(searchKey),searchValue.toLowerCase());
             case "<":
                 return criteriaBuilder.lessThanOrEqualTo(searchKey,searchValue);
             default:
