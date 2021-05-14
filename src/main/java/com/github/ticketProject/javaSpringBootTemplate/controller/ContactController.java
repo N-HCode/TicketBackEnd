@@ -7,6 +7,7 @@ import com.github.ticketProject.javaSpringBootTemplate.model.User;
 import com.github.ticketProject.javaSpringBootTemplate.service.ClientsOrganizationService;
 import com.github.ticketProject.javaSpringBootTemplate.service.ContactService;
 import com.github.ticketProject.javaSpringBootTemplate.service.UserService;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -51,6 +52,32 @@ public class ContactController {
         return new ResponseEntity<>(contacts, HttpStatus.OK);
 
     }
+
+    @CrossOrigin
+    @GetMapping("/search/{id}/{pageNo}")
+    public ResponseEntity<?> searchContactByCriteria(Authentication authResult,@RequestParam String searchTerm,@PathVariable int id,@PathVariable int pageNo){
+
+        User user = userService.getUserByUsername(authResult.getName());
+        if (user == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        ClientsOrganizationList clientsOrganizationList = user.getUsersList().getTicketList().getClientsOrganizationLists();
+
+        ClientsOrganization clientsOrganization = clientsOrganizationService.findClientsOrganizationById(clientsOrganizationList, id);
+        if (clientsOrganization == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        Page<Contact> results = contactService.findByCriteria(clientsOrganization, searchTerm, pageNo, 10);
+        if (results.isEmpty()){
+            return new ResponseEntity<>("No client organization(s) were found based on provided criteria" ,HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(results, HttpStatus.OK);
+
+    }
+
 
     @CrossOrigin
     @GetMapping("/{organizationId}/{contactId}")
@@ -101,6 +128,30 @@ public class ContactController {
         }
 
         return new ResponseEntity<>(contact, HttpStatus.OK);
+
+    }
+
+    @CrossOrigin
+    @PostMapping("create/{organizationId}")
+    public ResponseEntity<?> createContact(Authentication authResult, @PathVariable long organizationId,@RequestBody Contact contact) {
+
+
+        User user = userService.getUserByUsername(authResult.getName());
+        if (user == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        ClientsOrganizationList clientsOrganizationList = user.getUsersList().getTicketList().getClientsOrganizationLists();
+
+        ClientsOrganization clientsOrganization = clientsOrganizationService.findClientsOrganizationById(clientsOrganizationList, organizationId);
+        if (clientsOrganization == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+
+        long id = contactService.createContact(clientsOrganization.getContactList(), contact);
+
+        return new ResponseEntity<>(id, HttpStatus.OK);
 
     }
 

@@ -23,7 +23,6 @@ public class Contact {
     private String email;
     private String phoneNumber;
     private final ZonedDateTime dateCreated = ZonedDateTime.now();
-    private ZonedDateTime lastLogin;
     private ZonedDateTime lastModified = ZonedDateTime.now();
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -103,13 +102,6 @@ public class Contact {
         this.phoneNumber = phoneNumber;
     }
 
-    public ZonedDateTime getLastLogin() {
-        return lastLogin;
-    }
-
-    public void setLastLogin(ZonedDateTime lastLogin) {
-        this.lastLogin = lastLogin;
-    }
 
     public ZonedDateTime getLastModified() {
         return lastModified;
