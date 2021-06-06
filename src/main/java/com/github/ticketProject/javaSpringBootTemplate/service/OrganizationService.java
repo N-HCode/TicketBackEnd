@@ -66,8 +66,8 @@ public class OrganizationService {
             rootUser.setUsername(username);
             rootUser.setPassword(passwordEncoder.encode(password));
             rootUser.setUserRole("root");
-            rootUser.setFirstName("root");
-            rootUser.setLastName("user");
+            rootUser.setFirstName("Root");
+            rootUser.setLastName("User");
             rootUser.addRole(ROOT.getRoleInEnum());
             rootUser.setEmail("Test");
             ZonedDateTime timeAsOfNow = ZonedDateTime.now();

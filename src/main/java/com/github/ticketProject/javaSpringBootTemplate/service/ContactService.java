@@ -79,11 +79,11 @@ public class ContactService {
         //meaning we can just put query string from the URL.
         //Thus we will create the searchCriteria in the backend instead of having the frontend create a model for it.
         ContactSpecification specification1 =
-                new ContactSpecification( new SearchCriteria("organizationName", "~", searchTerm));
+                new ContactSpecification( new SearchCriteria("firstName", "~", searchTerm));
 
         //This spec is to make so that the user only pull data from the organization they are a part of
         ContactSpecification specification2 =
-                new ContactSpecification(new SearchCriteria("contactList", "::",clientsOrganization.getContactList()));
+                new ContactSpecification(new SearchCriteria("contactListId", ":",clientsOrganization.getContactList().getId()));
 
 //        ClientsOrganizationSpecification specification3 =
 //                new ClientsOrganizationSpecification(new SearchCriteria("clientsOrganizationList", ":",user.getUsersList().getTicketList().getClientsOrganizationLists()));

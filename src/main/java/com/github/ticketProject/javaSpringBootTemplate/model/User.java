@@ -243,4 +243,8 @@ public class User implements UserDetails {
     public void addRole(Role role){
         userRoles.add(role);
     }
+
+    public Set<Role> getUserRoles() {
+        return userRoles;
+    }
 }

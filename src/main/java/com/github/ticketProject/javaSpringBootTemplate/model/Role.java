@@ -1,5 +1,6 @@
 package com.github.ticketProject.javaSpringBootTemplate.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
@@ -17,6 +18,7 @@ public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="role_id")
+    @JsonIgnore
     private Integer roleId;
 
     @Column(unique = true)
@@ -24,6 +26,7 @@ public class Role {
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JsonManagedReference
+    @JsonIgnore
     private final Set<Permission> permissionsInRole = new HashSet<>();
 
     public Role() {
@@ -41,10 +44,12 @@ public class Role {
         return roleName;
     }
 
+    @JsonIgnore
     public Set<Permission> getPermissionsInRole() {
         return permissionsInRole;
     }
 
+    @JsonIgnore
     public Set<SimpleGrantedAuthority> getPermissionAndRoleAsGrantedAuthoritySet(){
         //This is to get all the permissions from the role so that we can use it
         //later for when we map the ROLE and Permission to users.

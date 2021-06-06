@@ -15,7 +15,7 @@ public class Contact {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="contact_id")
-    private Long Id;
+    private Long id;
 
     private String firstName;
     private String lastName;
@@ -26,11 +26,13 @@ public class Contact {
     private ZonedDateTime lastModified = ZonedDateTime.now();
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn( name = "contact_list_id" )
+    @JoinColumn( name = "contact_list" )
     @JsonBackReference(value = "contact_list-contact")
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
     private ContactList contactList;
+
+    private Long contactListId;
 
 //    // @JsonManagedReference and @JsonBackReference to solve infinite recursion problem
 //    @OneToMany(mappedBy = "contact")
@@ -53,7 +55,7 @@ public class Contact {
 
 
     public Long getId() {
-        return Id;
+        return id;
     }
 
     public ZonedDateTime getDateCreated() {
@@ -117,5 +119,10 @@ public class Contact {
 
     public void setContactList(ContactList contactList) {
         this.contactList = contactList;
+        this.contactListId = contactList.getId();
+    }
+
+    public Long getContactListId() {
+        return contactListId;
     }
 }

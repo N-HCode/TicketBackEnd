@@ -1,6 +1,7 @@
 package com.github.ticketProject.javaSpringBootTemplate.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.ticketProject.javaSpringBootTemplate.model.User;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -118,9 +119,11 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePassword
             //we only want the refreshToken to touch the Auth Server, so we make sure the endpoint is correct.
             refreshTokenCookie.setPath("/auth/refresh");
 
-
             response.addCookie(tokenCookie);
             response.addCookie(refreshTokenCookie);
+
+
+
 
         }catch (Exception e){
             System.out.println(e);

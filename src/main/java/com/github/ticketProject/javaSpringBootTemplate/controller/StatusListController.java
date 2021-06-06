@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 @Controller
-@RequestMapping(value = "/statuslist")
+@RequestMapping(value = "/status_list")
 public class StatusListController {
 
     private final StatusListService statusListService;
@@ -37,11 +37,11 @@ public class StatusListController {
         if (user == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(user.getUsersList().getOrganization().getStatusList(), HttpStatus.OK);
+        return new ResponseEntity<>(user.getUsersList().getOrganization().getStatusList().getStatusList(), HttpStatus.OK);
     }
 
     @CrossOrigin
-    @PutMapping("/add")
+    @PostMapping ("/add")
     public ResponseEntity<?> addAStatus(Authentication authResult, @RequestBody String Status){
         User user = userService.getUserByUsername(authResult.getName());
         if (user == null) {

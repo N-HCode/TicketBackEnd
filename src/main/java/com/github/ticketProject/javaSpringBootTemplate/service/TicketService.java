@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.time.ZonedDateTime;
@@ -16,14 +17,23 @@ import java.util.Optional;
 public class TicketService {
     private final TicketRepository ticketRepository;
     private final UserRepository userRepository;
+    private final UserService userService;
+    private final ClientsOrganizationService clientsOrganizationService;
+    private final ContactService contactService;
 
     @Autowired
-    public TicketService(TicketRepository ticketRepository, UserRepository userRepository) {
+    public TicketService(TicketRepository ticketRepository,
+                         UserRepository userRepository,
+                         UserService userService,
+                         ClientsOrganizationService clientsOrganizationService, ContactService contactService) {
         this.ticketRepository = ticketRepository;
         this.userRepository = userRepository;
         // create default ticket for testing
 //        Ticket defaultTicket = new Ticket("Subject0001", "Description 001", "low");
 //        createTicket((long) 1, defaultTicket);
+        this.userService = userService;
+        this.clientsOrganizationService = clientsOrganizationService;
+        this.contactService = contactService;
     }
 
     public Page<Ticket> findAllTicketsByUser(User user, int pageNo, int numberPerPage)
@@ -74,32 +84,44 @@ public class TicketService {
         return null;
     }
 
-    public Ticket createTicket(User user, ClientsOrganization clientsOrganization, Contact contact, Ticket ticket) {
+    public boolean createTicket(Authentication authResult, Ticket ticket) {
 
-        TicketList userTicketList = user.getUsersList().getTicketList();
-        TicketList clientOrganizationTicketList = clientsOrganization.getClientsOrganizationList().getTicketList();
-        ContactList clientOrganizationContactList = clientsOrganization.getContactList();
-        ContactList contactsContactList = contact.getContactList();
-
-
-        if (userTicketList.equals(clientOrganizationTicketList) &&
-                clientOrganizationContactList.equals(contactsContactList)){
-
-            ZonedDateTime timeAsOfNow = ZonedDateTime.now();
-
-            ticket.setTicketList(userTicketList);
-            ticket.setUser(user);
-            ticket.setClientsOrganization(clientsOrganization);
-            ticket.setContact(contact);
-            ticket.setDateCreated(timeAsOfNow);
-            ticket.setLastModified(timeAsOfNow);
-
-            ticketRepository.save(ticket);
-
-            return ticket;
+        User userAssigningTicket = userService.getUserByUsername(authResult.getName());
+        if (userAssigningTicket == null ){
+            return false;
         }
 
-        return null;
+        User userAssociatedWithTicket = userRepository.findById(ticket.getUserId()).orElse(null);
+        if (userAssociatedWithTicket == null){
+            return false;
+        }
+
+        TicketList userAssigningTicketTicketList = userAssigningTicket.getUsersList().getTicketList();
+        TicketList userAssociatedWithTicketTicketList = userAssociatedWithTicket.getUsersList().getTicketList();
+
+        if (userAssigningTicketTicketList != userAssociatedWithTicketTicketList){
+            return false;
+        }
+
+        ClientsOrganization clientsOrganization = clientsOrganizationService.findClientsOrganizationById(userAssigningTicket.getUsersList().getOrganization().getClientsOrganizationList(),ticket.getClientsOrganizationId());
+        if (clientsOrganization == null){
+            return false;
+        }
+
+        Contact contact = contactService.findContactById(clientsOrganization.getContactList(), ticket.getContactId());
+        if (contact == null) {
+            return false;
+        }
+
+        ticket.setUser(userAssociatedWithTicket);
+        ticket.setClientsOrganization(clientsOrganization);
+        ticket.setContact(contact);
+        ticket.setTicketList(userAssigningTicketTicketList);
+        ticket.setDateCreated(ZonedDateTime.now());
+        ticket.setLastModified(ZonedDateTime.now());
+        ticketRepository.save(ticket);
+
+        return true;
     }
 
     public boolean delete(TicketList ticketList,Long id) {

@@ -32,7 +32,7 @@ public class PriorityListController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        return new ResponseEntity<>(user.getUsersList().getOrganization().getPriorityList(), HttpStatus.OK);
+        return new ResponseEntity<>(user.getUsersList().getOrganization().getPriorityList().getPriorities(), HttpStatus.OK);
 
     }
 

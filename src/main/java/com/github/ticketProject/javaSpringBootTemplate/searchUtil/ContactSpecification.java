@@ -34,8 +34,8 @@ public class ContactSpecification implements Specification<Contact> {
                 return criteriaBuilder.greaterThanOrEqualTo(searchKey,searchValue);
             case ":":
                 return criteriaBuilder.equal(searchKey,searchValue);
-            case "::":
-                return criteriaBuilder.equal(contactListSearchKey,searchValue);
+//            case "::":
+//                return criteriaBuilder.equal(contactListSearchKey,searchValue);
             case "~":
                 //This will be the LIKE in the SQL language, so you will put %test% if you want anything containing the word test
                 //or other complex expressions like "_est%" and what not.

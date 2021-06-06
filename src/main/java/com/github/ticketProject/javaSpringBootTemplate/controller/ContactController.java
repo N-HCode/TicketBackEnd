@@ -11,6 +11,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -55,12 +57,18 @@ public class ContactController {
 
     @CrossOrigin
     @GetMapping("/search/{id}/{pageNo}")
-    public ResponseEntity<?> searchContactByCriteria(Authentication authResult,@RequestParam String searchTerm,@PathVariable int id,@PathVariable int pageNo){
+    public ResponseEntity<?> searchContactByCriteria(Authentication authResult,
+                                                     @RequestParam String searchTerm,
+                                                     @PathVariable int id,
+                                                     @PathVariable int pageNo){
 
         User user = userService.getUserByUsername(authResult.getName());
+
         if (user == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+
+
 
         ClientsOrganizationList clientsOrganizationList = user.getUsersList().getTicketList().getClientsOrganizationLists();
 

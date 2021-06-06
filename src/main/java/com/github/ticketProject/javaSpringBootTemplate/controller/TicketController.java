@@ -23,7 +23,9 @@ public class TicketController {
     private final ClientsOrganizationService clientsOrganizationService;
 
     @Autowired
-    public TicketController(TicketService service, UserService userService, ClientsOrganizationService clientsOrganizationService) {
+    public TicketController(TicketService service,
+                            UserService userService,
+                            ClientsOrganizationService clientsOrganizationService) {
         this.service = service;
         this.userService = userService;
         this.clientsOrganizationService = clientsOrganizationService;
@@ -94,13 +96,14 @@ public class TicketController {
 //        }
 //    }
 
-//    @CrossOrigin
-//    @PostMapping("/create")
-//    public ResponseEntity<?> createTicket(@RequestParam Long userId, @RequestBody Ticket ticket){
-//        Ticket responseBody = service.createTicket(userId, ticket);
-//        ResponseEntity<?> responseCreateTicket = new ResponseEntity<>(responseBody, HttpStatus.CREATED);
-//        return responseCreateTicket;
-//    }
+    @CrossOrigin
+    @PostMapping("/create")
+    public ResponseEntity<?> createTicket(Authentication authResult, @RequestBody Ticket ticket){
+        if (service.createTicket(authResult, ticket)){
+            return new ResponseEntity<>( HttpStatus.CREATED);
+        }
+        return new ResponseEntity<>( HttpStatus.BAD_REQUEST);
+    }
 
 //    @CrossOrigin
 //    @DeleteMapping("/{id}")

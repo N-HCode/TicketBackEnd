@@ -1,7 +1,6 @@
 package com.github.ticketProject.javaSpringBootTemplate.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -28,9 +27,13 @@ public class Ticket {
 
     // @JsonManagedReference and @JsonBackReference to solve infinite recursion problem
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn( name = "user_id")
+    @JoinColumn( name = "user")
     @JsonBackReference(value = "user-tickets")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "userId")
+    @JsonIdentityReference(alwaysAsId = true)
     private User user;
+
+    private Long userId;
 
 //    @ManyToOne(fetch = FetchType.LAZY)
 //    @JoinColumn( name = "organization_id")
@@ -38,29 +41,59 @@ public class Ticket {
 //    private Organization organization;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn( name = "contact_id")
+    @JoinColumn( name = "contact")
     @JsonBackReference( value = "contact-tickets")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+    @JsonIdentityReference(alwaysAsId = true)
     private Contact contact;
 
+    private Long contactId;
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn( name = "client_organization_id")
+    @JoinColumn( name = "client_organization")
     @JsonBackReference(value = "client_organization-tickets")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+    @JsonIdentityReference(alwaysAsId = true)
     private ClientsOrganization clientsOrganization;
 
+    private Long clientsOrganizationId;
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn( name = "ticket_list_id")
+    @JoinColumn( name = "ticket_list")
     @JsonBackReference(value = "ticket_list-ticket")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+    @JsonIdentityReference(alwaysAsId = true)
+
     private TicketList ticketList;
 
+    private Long ticketListId;
 
     public Ticket() {
     }
 
-    public Ticket(String subject, String description, String priority){
+    public Ticket(@NotNull String subject,
+                  @NotNull String description,
+                  String resolution,
+                  String priority,
+                  String status,
+                  User user,
+                  Contact contact,
+                  ClientsOrganization clientsOrganization,
+                  TicketList ticketList) {
+
         this.subject = subject;
         this.description = description;
+        this.resolution = resolution;
         this.priority = priority;
-        this.status = "new";
+        this.status = status;
+        this.user = user;
+        this.userId = user.getUserId();
+        this.contact = contact;
+        this.contactId = contact.getId();
+        this.clientsOrganization = clientsOrganization;
+        this.clientsOrganizationId = clientsOrganization.getId();
+        this.ticketList = ticketList;
+        this.ticketListId = ticketList.getId();
     }
 
     public long getTicketNumber() {
@@ -177,5 +210,37 @@ public class Ticket {
 
     public void setClientsOrganization(ClientsOrganization clientsOrganization) {
         this.clientsOrganization = clientsOrganization;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public Long getContactId() {
+        return contactId;
+    }
+
+    public void setContactId(Long contactId) {
+        this.contactId = contactId;
+    }
+
+    public Long getClientsOrganizationId() {
+        return clientsOrganizationId;
+    }
+
+    public void setClientsOrganizationId(Long clientsOrganizationId) {
+        this.clientsOrganizationId = clientsOrganizationId;
+    }
+
+    public Long getTicketListId() {
+        return ticketListId;
+    }
+
+    public void setTicketListId(Long ticketListId) {
+        this.ticketListId = ticketListId;
     }
 }

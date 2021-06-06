@@ -38,7 +38,7 @@ public class Organization {
             generator = "org_id_sequence" //We use the Sequence to generate the value
     )
     @Column(name="organization_id", updatable = false) // Make it so noone can update it
-    private Long Id;
+    private Long id;
 
     @NotNull
     @Column(name="organization_name", nullable = false,
@@ -136,7 +136,7 @@ public class Organization {
 
 
     public Long getId() {
-        return Id;
+        return id;
     }
 
     public String getOrganizationName() {

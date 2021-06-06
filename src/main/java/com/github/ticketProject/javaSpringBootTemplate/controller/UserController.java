@@ -1,8 +1,11 @@
 package com.github.ticketProject.javaSpringBootTemplate.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.ticketProject.javaSpringBootTemplate.jwt.UsernameAndPasswordAuthenticationRequest;
 import com.github.ticketProject.javaSpringBootTemplate.model.User;
 
 import com.github.ticketProject.javaSpringBootTemplate.service.UserService;
+import com.github.ticketProject.javaSpringBootTemplate.utilModel.UserBasicInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -132,6 +135,21 @@ public class UserController {
         //if it does it will reach this API and get an 200
         //Otherwise the it will not pass the filters and fail getting a 403 status
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @CrossOrigin
+    @GetMapping
+    public ResponseEntity<?> getSignedInUserInfo(Authentication authResult){
+
+        User user = service.getUserByUsername(authResult.getName());
+        if (user == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        UserBasicInfo userBasicInfo = new UserBasicInfo(user);
+
+
+        return new ResponseEntity<>(userBasicInfo, HttpStatus.OK);
     }
 
 

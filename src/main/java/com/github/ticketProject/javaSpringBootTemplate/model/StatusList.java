@@ -1,7 +1,6 @@
 package com.github.ticketProject.javaSpringBootTemplate.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -14,6 +13,8 @@ public class StatusList {
 
     @OneToOne
     @JsonBackReference(value="organization-status_list")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+    @JsonIdentityReference(alwaysAsId = true)
     private Organization organization;
 
     //@ElementCollection annotation is used to store a list of values as an entity attribute without needing to model an additional entity
