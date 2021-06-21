@@ -37,7 +37,7 @@ public class PriorityListController {
     }
 
     @CrossOrigin
-    @PutMapping("/add")
+    @PostMapping("/add")
     public ResponseEntity<?> addAPriority(Authentication authResult, @RequestBody String priority){
 
         User user = userService.getUserByUsername(authResult.getName());

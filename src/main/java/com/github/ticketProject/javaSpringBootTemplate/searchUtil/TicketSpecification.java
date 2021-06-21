@@ -2,20 +2,21 @@ package com.github.ticketProject.javaSpringBootTemplate.searchUtil;
 
 import com.github.ticketProject.javaSpringBootTemplate.model.Contact;
 import com.github.ticketProject.javaSpringBootTemplate.model.ContactList;
+import com.github.ticketProject.javaSpringBootTemplate.model.Ticket;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.*;
 
-public class ContactSpecification implements Specification<Contact> {
+public class TicketSpecification implements Specification<Ticket> {
 
     private SearchCriteria searchCriteria;
 
-    public ContactSpecification(SearchCriteria searchCriteria) {
+    public TicketSpecification(SearchCriteria searchCriteria) {
         this.searchCriteria = searchCriteria;
     }
 
     @Override
-    public Predicate toPredicate(Root<Contact> root,
+    public Predicate toPredicate(Root<Ticket> root,
                                  CriteriaQuery<?> criteriaQuery,
                                  CriteriaBuilder criteriaBuilder) {
 
@@ -24,7 +25,7 @@ public class ContactSpecification implements Specification<Contact> {
         //value is the search keyword that the user entered in
 
         Path<String> searchKey = root. <String> get(searchCriteria.getKey());
-//        Path<ContactList> contactListSearchKey = root.get(searchCriteria.getKey());
+
 
         String searchValue = searchCriteria.getValue().toString();
 
@@ -48,4 +49,5 @@ public class ContactSpecification implements Specification<Contact> {
 
         }
     }
+
 }

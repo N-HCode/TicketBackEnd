@@ -10,7 +10,8 @@ import java.time.ZonedDateTime;
 @Entity
 @Table(name = "ticket")
 public class Ticket {
-    @Id @GeneratedValue (strategy = GenerationType.IDENTITY) private long ticketNumber;
+    @Id @GeneratedValue (strategy = GenerationType.IDENTITY) private long id;
+    private long ticketNumber;
     @NotNull private String subject;
     @NotNull private String description;
     private String resolution;
@@ -96,8 +97,16 @@ public class Ticket {
         this.ticketListId = ticketList.getId();
     }
 
+    public long getId() {
+        return id;
+    }
+
     public long getTicketNumber() {
         return ticketNumber;
+    }
+
+    public void setTicketNumber(long ticketNumber) {
+        this.ticketNumber = ticketNumber;
     }
 
     public String getSubject() {

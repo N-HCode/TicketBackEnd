@@ -44,8 +44,11 @@ public class UserController {
         
         // check if the user was sent back from service to see if it passed
         if (userById.isPresent() && userById.get().getUsersList().equals(user.getUsersList())){
+
+            UserBasicInfo userBasicInfo = new UserBasicInfo(userById.get());
+
             // response to send back if success
-            return new ResponseEntity<>(userById, HttpStatus.OK);
+            return new ResponseEntity<>(userBasicInfo, HttpStatus.OK);
         }else{
             // response to send back if failure
             return new ResponseEntity<>("User not found",HttpStatus.NOT_FOUND);

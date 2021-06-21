@@ -43,6 +43,8 @@ public class TicketList {
     @JsonIdentityReference(alwaysAsId = true)
     private UsersList usersList;
 
+    private long totalTicket = 1;
+
     public TicketList() {
     }
 
@@ -86,5 +88,13 @@ public class TicketList {
 
     public void setUsersList(UsersList usersList) {
         this.usersList = usersList;
+    }
+
+    public long getTotalTicket() {
+        return totalTicket;
+    }
+
+    public void setTotalTicket(long totalTicket) {
+        this.totalTicket = totalTicket;
     }
 }

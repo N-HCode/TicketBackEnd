@@ -15,6 +15,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.websocket.server.PathParam;
+import java.time.ZonedDateTime;
+
 @Controller
 @RequestMapping(value = "/ticket")
 public class TicketController {
@@ -80,21 +83,42 @@ public class TicketController {
         return new ResponseEntity<>(allTicket, HttpStatus.OK);
     }
 
+    @CrossOrigin
+    @GetMapping("/search/{pageNo}/{numberPerPage}")
+    public ResponseEntity<?> findAllBasedOnStatus(Authentication authResult,
+                                                  @PathVariable int pageNo,
+                                                  @PathVariable int numberPerPage,
+                                                  @RequestParam String status){
+
+        User user = userService.getUserByUsername(authResult.getName());
+        if (user == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        Page<Ticket> results = service.findByCriteria(authResult,status, pageNo, numberPerPage);
+
+        return new ResponseEntity<>(results, HttpStatus.OK);
+    }
 
 
+    @CrossOrigin
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getTicketById(Authentication authResult, @PathVariable Long id){
 
-//    @CrossOrigin
-//    @GetMapping("/{id}")
-//    public ResponseEntity findById(@PathVariable Long id){
-//       Optional<Ticket> ticketById = service.findById(id);
-//        if (ticketById.isPresent()){
-//            // response to send back if success
-//            return new ResponseEntity<>(ticketById, HttpStatus.OK);
-//        }else{
-//            // response to send back if failure
-//            return new ResponseEntity<>("Ticket not found",HttpStatus.NOT_FOUND);
-//        }
-//    }
+        User user = userService.getUserByUsername(authResult.getName());
+        if (user == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        Ticket ticket = service.findById(user.getUsersList().getTicketList(),id).orElse(null);
+        if (ticket == null){
+            return new ResponseEntity<>( HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>(ticket, HttpStatus.OK);
+    }
+
+
 
     @CrossOrigin
     @PostMapping("/create")
@@ -113,25 +137,42 @@ public class TicketController {
 //        return responseDeleteTicket;
 //    }
 
-//    @CrossOrigin
-//    @PutMapping("/{id}")
-//    public ResponseEntity<?> editTicket(@PathVariable Long id, @RequestBody Ticket ticket){
-//        Ticket editedTicket = service.editTicket(id, ticket);
-//        ResponseEntity<?> responseEditTicket = new ResponseEntity<>(editedTicket, HttpStatus.OK);
-//        return responseEditTicket;
-//    }
-//
-//    @CrossOrigin
-//    @PutMapping("/close/{id}")
-//    public ResponseEntity<?> closeTicket(@PathVariable Long id){
-//
-//        ZonedDateTime closedDate = service.closeTicket(id);
-//
-//        if (closedDate != null){
-//            return new ResponseEntity<>(closedDate ,HttpStatus.OK);
-//        }else{
-//            return new ResponseEntity<>("Ticket Not Found",HttpStatus.NOT_FOUND);
-//        }
-//    }
+    @CrossOrigin
+    @PutMapping("/{id}")
+    public ResponseEntity<?> editTicket(Authentication authResult,
+                                        @PathVariable Long id,
+                                        @RequestBody Ticket ticket){
+
+        User user = userService.getUserByUsername(authResult.getName());
+        if (user == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        Ticket editedTicket = service.editTicket(user.getUsersList().getTicketList(),id, ticket);
+        if (editedTicket == null){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        ResponseEntity<?> responseEditTicket = new ResponseEntity<>(HttpStatus.OK);
+        return responseEditTicket;
+    }
+
+    @CrossOrigin
+    @PutMapping("/close/{id}")
+    public ResponseEntity<?> closeTicket(Authentication authResult, @PathVariable Long id){
+
+        User user = userService.getUserByUsername(authResult.getName());
+        if (user == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        ZonedDateTime closedDate = service.closeTicket(user.getUsersList().getTicketList(),id);
+
+        if (closedDate != null){
+            return new ResponseEntity<>(closedDate ,HttpStatus.OK);
+        }else{
+            return new ResponseEntity<>("Ticket Not Found",HttpStatus.NOT_FOUND);
+        }
+    }
 
 }
