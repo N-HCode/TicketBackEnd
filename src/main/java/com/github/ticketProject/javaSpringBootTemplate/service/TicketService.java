@@ -167,7 +167,10 @@ public class TicketService {
             foundTicket.setResolution(ticket.getResolution());
             foundTicket.setPriority(ticket.getPriority());
             foundTicket.setStatus(ticket.getStatus());
-            User newAssignedTo = userRepository.findById(ticket.getUser().getUserId()).orElse(ticket.getUser());
+            User newAssignedTo = userRepository.findById(ticket.getUserId()).orElse(null);
+            if (newAssignedTo == null) {
+                return null;
+            }
             foundTicket.setUser(newAssignedTo);
             return ticketRepository.save(foundTicket);
         } else {

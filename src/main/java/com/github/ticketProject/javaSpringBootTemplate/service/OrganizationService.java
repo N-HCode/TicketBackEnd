@@ -10,6 +10,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import static com.github.ticketProject.javaSpringBootTemplate.authorization.Roles.*;
+
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -149,7 +151,8 @@ public class OrganizationService {
 
     public Page<User> getUsersFromOrganization(UsersList usersList, int pageNo, int numberPerPage){
 
-        Pageable pageConfig = PageRequest.of(pageNo, numberPerPage);
+        //paging and sorting
+        Pageable pageConfig = PageRequest.of(pageNo, numberPerPage, Sort.by(Sort.Direction.ASC, "firstName") );
 
         return userRepository.findAllByUsersListEquals(usersList, pageConfig);
     }

@@ -7,9 +7,9 @@ import com.github.ticketProject.javaSpringBootTemplate.model.UsersList;
 import com.github.ticketProject.javaSpringBootTemplate.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletRequest;
 import java.time.ZonedDateTime;
 import java.util.Optional;
 
@@ -17,11 +17,12 @@ import java.util.Optional;
 public class UserService {
     private final UserRepository userRepository;
     private final RoleService roleService;
+    private final PasswordEncoder passwordEncoder;
 
 
 
     @Autowired
-    public UserService(UserRepository userRepository, RoleService roleService) {
+    public UserService(UserRepository userRepository, RoleService roleService, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
 
         // create default user for testing
@@ -29,6 +30,7 @@ public class UserService {
 //        createUser(defaultUser);
 
         this.roleService = roleService;
+        this.passwordEncoder = passwordEncoder;
     }
 
 
@@ -48,6 +50,8 @@ public class UserService {
         // if we got back no User from the check save this new User
         if(userToCheck == null) {
             ZonedDateTime timeAsOfNow = ZonedDateTime.now();
+            user.setUsersList(usersList);
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
             user.setDateCreated(timeAsOfNow);
             user.setLastModified(timeAsOfNow);
             userRepository.save(user);
@@ -92,22 +96,6 @@ public class UserService {
         }
     }
 
-
-//    public Organization addOrganizationToUser(Long idOfUser, Long idOfOrganization) {
-//        // find the user first
-//        Optional<User> user = findById(idOfUser);
-//        Optional<Organization> organization = organizationRepository.findById(idOfOrganization);
-//        // check if the user was found
-//        if(user.isPresent() && organization.isPresent()) {
-//            Organization organizationExist = organization.get();
-//            User userExist = user.get();
-////            userExist.setOrganization(organizationExist);
-//            userRepository.save(userExist);
-//            // set the organization as the user
-//            return organization.get();
-//        }
-//        return null;
-//    }
 
     public boolean checkUsernameIsTaken(String username) {
         // check if the username is already taken
