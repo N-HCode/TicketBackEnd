@@ -241,6 +241,8 @@ public class User implements UserDetails {
     }
 
     public void addRole(Role role){
+
+        userRoles.clear();
         userRoles.add(role);
     }
 

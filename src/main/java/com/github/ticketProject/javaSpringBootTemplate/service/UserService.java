@@ -13,6 +13,9 @@ import org.springframework.stereotype.Service;
 import java.time.ZonedDateTime;
 import java.util.Optional;
 
+import static com.github.ticketProject.javaSpringBootTemplate.authorization.Roles.ADMIN;
+import static com.github.ticketProject.javaSpringBootTemplate.authorization.Roles.USER;
+
 @Service
 public class UserService {
     private final UserRepository userRepository;
@@ -54,6 +57,17 @@ public class UserService {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             user.setDateCreated(timeAsOfNow);
             user.setLastModified(timeAsOfNow);
+            switch (user.getUserRole().toLowerCase()){
+                case "user":
+                    user.addRole(USER.getRoleInEnum());
+                    break;
+                case "admin":
+                    user.addRole(ADMIN.getRoleInEnum());
+                    break;
+                default:
+                    break;
+            }
+
             userRepository.save(user);
             return true;
         }
@@ -88,6 +102,17 @@ public class UserService {
             returnedUser.setPhoneNumber(user.getPhoneNumber());
             returnedUser.setLastModified(ZonedDateTime.now());
             returnedUser.setUserRole(user.getUserRole());
+            switch (user.getUserRole().toLowerCase()){
+                case "user":
+                    user.addRole(USER.getRoleInEnum());
+                    break;
+                case "admin":
+                    user.addRole(ADMIN.getRoleInEnum());
+                    break;
+                default:
+                    break;
+            }
+
             return userRepository.save(returnedUser);
 
         }
